@@ -51,7 +51,9 @@ class NavigatorsTest extends Component<IProps, IState> {
         <Button title="重置到首页" onPress={NavigationUtil.resetToHome} />
         <Button
           title="重置到详情"
-          onPress={() => NavigationUtil.resetToPage('Details', {title: '路由重定向跳转'})}
+          onPress={() =>
+            NavigationUtil.resetToPage('Details', { title: '路由重定向跳转' })
+          }
         />
         <Text>当前的路由树</Text>
       </View>

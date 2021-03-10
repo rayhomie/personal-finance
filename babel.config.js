@@ -9,5 +9,6 @@ module.exports = {
         rootPathPrefix: '@/',
       },
     ],
+    ['import', { libraryName: '@ant-design/react-native' }],
   ],
 };

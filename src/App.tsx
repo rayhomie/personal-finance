@@ -5,7 +5,8 @@ import * as dayjs from 'dayjs';
 import 'dayjs/locale/zh-cn'; // 导入本地化语言
 import dva from './models/dva';
 import models from './models/index';
-import AppNavigators from './navigator/AppNavigators';
+// import AppNavigators from './navigator/AppNavigators';
+import TabBar from './navigator/TabBar';
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 
 const dvaApp: any = dva.createApp({
@@ -21,7 +22,7 @@ const App = () => {
     <Provider store={store}>
       <StatusBar barStyle="dark-content" />
       <SafeAreaView style={styles.safeAreaView}>
-        <AppNavigators />
+        <TabBar />
       </SafeAreaView>
     </Provider>
   );

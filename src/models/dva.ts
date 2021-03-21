@@ -33,6 +33,7 @@ function createApp(opt: any) {
     },
   });
   if (!registered) {
+    // 注册不同命名空间的model
     opt.models.forEach((model: any) => app.model(model));
   }
   registered = true;

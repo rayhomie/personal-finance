@@ -1,3 +1,4 @@
 import home from './home';
+import app from './app';
 
-export default [home];
+export default [app, home];

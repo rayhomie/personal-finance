@@ -4,7 +4,7 @@ import { create } from 'dva-core';
 import createLoading from 'dva-loading';
 // @ts-ignore
 import immer from 'dva-immer';
-import { createLogger } from 'redux-logger';
+// import { createLogger } from 'redux-logger';
 
 let app: {
   use: (arg0: { onError(err: any): void }) => void;
@@ -23,7 +23,7 @@ let registered: boolean;
 
 function createApp(opt: any) {
   // redux 的日志
-  opt.onAction = [createLogger()];
+  // opt.onAction = [createLogger()];
   app = create(opt);
   app.use(immer());
   app.use(createLoading());

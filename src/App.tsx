@@ -14,7 +14,7 @@ const dvaApp: any = dva.createApp({
   models: models,
 });
 
-const store = dvaApp.getStore();
+export const store = dvaApp.getStore();
 dayjs.locale('zh-cn'); // 使用本地化语言
 
 const App = () => {

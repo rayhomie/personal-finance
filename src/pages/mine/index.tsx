@@ -7,9 +7,11 @@ import {
   StyleSheet,
   Image,
   StatusBar,
+  TouchableOpacity,
 } from 'react-native';
 import { ConnectProps, ConnectState } from '@/models/connect';
 import { connect } from '@/utils/connect';
+import NavigationUtil from '@/navigator/NavigationUtil';
 interface IProps extends ConnectState, ConnectProps {
   dataLoading?: boolean;
 }
@@ -21,6 +23,9 @@ interface IState {}
 }))
 class Mine extends Component<IProps, IState> {
   state: IState = {};
+  openUserInfo() {
+    NavigationUtil.toPage('用户信息');
+  }
   render() {
     const { dispatch } = this.props;
     return (
@@ -28,7 +33,11 @@ class Mine extends Component<IProps, IState> {
         <StatusBar />
         <View style={styles.header}>
           <View style={styles.avatar}>
-            <View style={styles.pic}>
+            <TouchableOpacity
+              activeOpacity={0.5}
+              style={styles.pic}
+              onPress={this.openUserInfo}
+            >
               <Image
                 style={styles.picImage}
                 source={{
@@ -37,10 +46,10 @@ class Mine extends Component<IProps, IState> {
                 }}
               />
               <Text style={styles.nickname}>高桥靓仔</Text>
-            </View>
-            <View style={styles.clock}>
+            </TouchableOpacity>
+            <TouchableOpacity activeOpacity={0.5} style={styles.clock}>
               <Text>打卡</Text>
-            </View>
+            </TouchableOpacity>
           </View>
           <View style={styles.tab}>
             <View style={styles.item}>
@@ -58,7 +67,9 @@ class Mine extends Component<IProps, IState> {
           </View>
           <View style={styles.bottom}>
             <View style={styles.bill}>
-              <Text style={styles.billTitle}>账单</Text>
+              <View style={styles.billTitleContainer}>
+                <Text style={styles.billTitle}>账单</Text>
+              </View>
               <View style={styles.billContent}>
                 <View style={styles.billDate}>
                   <Text>03月</Text>
@@ -121,6 +132,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginRight: 30,
+    shadowColor: '#000',
+    shadowOffset: { width: 2, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
   },
   tab: {
     width: screenWidth,
@@ -142,13 +157,20 @@ const styles = StyleSheet.create({
     width: screenWidth - 50,
     height: 100,
     marginLeft: 25,
-    backgroundColor: 'yellow',
+    shadowColor: '#000',
+    shadowOffset: { width: 2, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+  },
+  billTitleContainer: {
+    height: 40,
+    backgroundColor: 'white',
+    borderTopRightRadius: 10,
+    borderTopLeftRadius: 10,
   },
   billTitle: {
-    height: 40,
     fontSize: 18,
     fontWeight: 'bold',
-    backgroundColor: 'white',
     paddingTop: 10,
     paddingLeft: (screenWidth - 300) / 6, // 自适应定位
   },
@@ -158,6 +180,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-start',
+    borderBottomRightRadius: 10,
+    borderBottomLeftRadius: 10,
   },
   billDate: {
     borderRightWidth: 1,

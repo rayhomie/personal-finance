@@ -58,7 +58,26 @@ class Mine extends Component<IProps, IState> {
           </View>
           <View style={styles.bottom}>
             <View style={styles.bill}>
-              <Text>账单</Text>
+              <Text style={styles.billTitle}>账单</Text>
+              <View style={styles.billContent}>
+                <View style={styles.billDate}>
+                  <Text>03月</Text>
+                </View>
+                <View style={styles.billContentContainer}>
+                  <View style={styles.billItem}>
+                    <Text>收入</Text>
+                    <Text>0.00</Text>
+                  </View>
+                  <View style={styles.billItem}>
+                    <Text>支出</Text>
+                    <Text>0.00</Text>
+                  </View>
+                  <View style={styles.billItem}>
+                    <Text>结余</Text>
+                    <Text>0.00</Text>
+                  </View>
+                </View>
+              </View>
             </View>
             <Button
               title="登录"
@@ -120,11 +139,39 @@ const styles = StyleSheet.create({
   num: { fontWeight: 'bold', fontSize: 18 },
   bottom: { position: 'relative', top: -40 }, // 下部区域整体向上平移
   bill: {
-    width: screenWidth - 40,
-    height: 80,
-    marginLeft: 20,
+    width: screenWidth - 50,
+    height: 100,
+    marginLeft: 25,
     backgroundColor: 'yellow',
   },
+  billTitle: {
+    height: 40,
+    fontSize: 18,
+    fontWeight: 'bold',
+    backgroundColor: 'white',
+    paddingTop: 10,
+    paddingLeft: (screenWidth - 300) / 6, // 自适应定位
+  },
+  billContent: {
+    height: 60,
+    backgroundColor: 'white',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+  },
+  billDate: {
+    borderRightWidth: 1,
+    width: 70,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  billContentContainer: {
+    width: screenWidth - 120,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-around',
+  },
+  billItem: {},
 });
 
 export default Mine;

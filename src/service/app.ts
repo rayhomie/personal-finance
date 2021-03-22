@@ -8,3 +8,11 @@ export const login = (payload: { username: string; password: string }) => {
       data: payload,
     });
 };
+
+export const verifyToken = () => {
+  return () =>
+    request({
+      url: '',
+      method: 'GET',
+    });
+};

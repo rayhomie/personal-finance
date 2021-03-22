@@ -12,14 +12,13 @@ interface IState {}
   dataLoading: loading.effects['app/login'],
 }))
 class Mine extends Component<IProps, IState> {
-  componentDidMount() {}
   render() {
     const { dispatch } = this.props;
     return (
       <View>
         <Text>我的</Text>
         <Button
-          title="请求"
+          title="登录"
           onPress={() => {
             dispatch({
               type: 'app/login',

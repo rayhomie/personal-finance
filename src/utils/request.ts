@@ -38,11 +38,10 @@ instance.interceptors.request.use(
 instance.interceptors.response.use(
   response => {
     //拦截响应，做统一处理
-    if (response.data.code) {
-      switch (response.data.code) {
-        case 401:
-          store.dispatch({ type: 'app/save', payload: { isLogin: false } });
-      }
+    if (response.data.code === 401) {
+      store.dispatch({ type: 'app/save', payload: { isLogin: false } });
+    } else {
+      store.dispatch({ type: 'app/save', payload: { isLogin: true } });
     }
     return response;
   },

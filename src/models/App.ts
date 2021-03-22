@@ -1,6 +1,6 @@
 import { Reducer } from 'redux';
 import { Effect } from '@/models/connect';
-import { login as fetchLogin } from '@/service/app';
+import { login as fetchLogin, verifyToken } from '@/service/app';
 import AsyncStorage from '@react-native-community/async-storage';
 
 export interface AppState {
@@ -12,6 +12,7 @@ export interface AppModelType {
   state: AppState;
   effects: {
     login: Effect;
+    verifyToken: Effect;
   };
   reducers: {
     save: Reducer<AppState>;
@@ -40,7 +41,22 @@ const app: AppModelType = {
           payload: { isLogin: false },
         });
       }
-      yield console.log(res);
+      yield console.log('登录', res);
+    },
+    *verifyToken(_, { call, put }) {
+      const res = yield call(verifyToken());
+      if (res.data.code === 0) {
+        yield put({
+          type: 'save',
+          payload: { isLogin: true },
+        });
+      } else {
+        yield put({
+          type: 'save',
+          payload: { isLogin: false },
+        });
+      }
+      yield console.log('didmount', res);
     },
   },
   reducers: {

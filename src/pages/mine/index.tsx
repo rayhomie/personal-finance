@@ -12,20 +12,31 @@ import {
 import { ConnectProps, ConnectState } from '@/models/connect';
 import { connect } from '@/utils/connect';
 import NavigationUtil from '@/navigator/NavigationUtil';
+import Login from '@/pages/login/index';
+
 interface IProps extends ConnectState, ConnectProps {
   dataLoading?: boolean;
 }
 
-interface IState {}
+interface IState {
+  openLogin: boolean;
+}
 @connect(({ app, loading }: IProps) => ({
   app,
   dataLoading: loading.effects['app/login'],
 }))
 class Mine extends Component<IProps, IState> {
-  state: IState = {};
-  openUserInfo() {
-    NavigationUtil.toPage('用户信息');
-  }
+  state: IState = { openLogin: false };
+
+  openUserInfo = () => {
+    // NavigationUtil.toPage('注册登录');
+    this.setState({ openLogin: true });
+  };
+
+  loginClose = () => {
+    this.setState({ openLogin: false });
+  };
+
   render() {
     const { dispatch } = this.props;
     return (
@@ -101,6 +112,7 @@ class Mine extends Component<IProps, IState> {
             />
           </View>
         </View>
+        <Login visible={this.state.openLogin} onClose={this.loginClose} />
       </View>
     );
   }

@@ -8,6 +8,7 @@ import models from './models/index';
 // import AppNavigators from './navigator/AppNavigators';
 import TabBar from './navigator/TabBar';
 import { Colors } from 'react-native/Libraries/NewAppScreen';
+import { Provider as AntdProvider } from '@ant-design/react-native';
 
 const dvaApp: any = dva.createApp({
   initialState: {},
@@ -17,16 +18,20 @@ const dvaApp: any = dva.createApp({
 export const store = dvaApp.getStore();
 dayjs.locale('zh-cn'); // 使用本地化语言
 
-const App = () => {
-  return (
-    <Provider store={store}>
-      <StatusBar barStyle="dark-content" />
-      <SafeAreaView style={styles.safeAreaView}>
-        <TabBar />
-      </SafeAreaView>
-    </Provider>
-  );
-};
+class App extends React.Component {
+  render() {
+    return (
+      <Provider store={store}>
+        <AntdProvider>
+          <StatusBar barStyle="dark-content" />
+          <SafeAreaView style={styles.safeAreaView}>
+            <TabBar />
+          </SafeAreaView>
+        </AntdProvider>
+      </Provider>
+    );
+  }
+}
 
 const styles = StyleSheet.create({
   safeAreaView: {

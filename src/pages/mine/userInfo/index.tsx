@@ -3,12 +3,12 @@ import {
   Dimensions,
   View,
   Text,
-  Button,
   StyleSheet,
   Image,
   StatusBar,
   TouchableOpacity,
 } from 'react-native';
+import { Button } from '@ant-design/react-native';
 import { ConnectProps, ConnectState } from '@/models/connect';
 import { connect } from '@/utils/connect';
 import NavigationUtil from '@/navigator/NavigationUtil';
@@ -52,6 +52,9 @@ export default class UserInfo extends Component<IProps, IState> {
           <Text style={styles.left}>手机号</Text>
           <Text style={styles.right}>18280410797</Text>
         </TouchableOpacity>
+        <Button style={styles.loginOut} activeStyle={styles.activeStyle}>
+          <Text style={styles.fontButton}>退出登录</Text>
+        </Button>
       </View>
     );
   }
@@ -69,7 +72,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingLeft: 20,
     paddingRight: 20,
-    // marginBottom: 5,
     marginTop: 5,
     borderBottomWidth: 1,
     borderBottomColor: '#eee',
@@ -78,4 +80,7 @@ const styles = StyleSheet.create({
   picImage: { width: 30, height: 30 },
   left: {},
   right: {},
+  loginOut: { marginTop: 10, backgroundColor: 'pink' },
+  activeStyle: { backgroundColor: '#fbe6e6' },
+  fontButton: { color: 'white' },
 });

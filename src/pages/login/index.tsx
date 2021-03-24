@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
-import { Dimensions, View, Text, StyleSheet, TextInput } from 'react-native';
+import { Dimensions, View, Text, StyleSheet } from 'react-native';
 import { Button, Modal, SegmentedControl } from '@ant-design/react-native';
 import { ConnectProps, ConnectState } from '@/models/connect';
 import { connect } from '@/utils/connect';
+
+const { GiftedForm, GiftedFormManager } = require('react-native-gifted-form');
 
 interface IProps extends ConnectState, ConnectProps {
   // dataLoading?: boolean;
@@ -10,27 +12,31 @@ interface IProps extends ConnectState, ConnectProps {
   onClose: () => void;
 }
 
+type LoginFormType = {
+  username: string;
+  password: string;
+};
+
+type RegisterFormType = {
+  username: string;
+  password: string;
+  mobile_number: string;
+  email: string;
+};
+
 interface IState {
   showLogin: boolean;
   gender: number;
-  loginUsername: string;
-  loginPassword: string;
-  registerUsername: string;
-  registerPassword: string;
-  registerMobile_number: string;
-  registerEmail: string;
+  loginForm: LoginFormType;
+  registerForm: RegisterFormType;
 }
 
-const usernameRegex = /^[a-zA-Z0-9_]{4,12}$/g;
-const passwordNoSpaceRegex = /^[^\s]*$/g;
+const usernameRegex = /^[a-zA-Z0-9_]{3,16}$/;
+const passwordNoSpaceRegex = /^[^\s]*$/;
 // 最少6位，包括至少1个小写字母，1个数字
-const passwordRegex = /^.*(?=.{6,})(?=.*\d)(?=.*[a-z]).*$/g;
+const passwordRegex = /^.*(?=.{6,})(?=.*\d)(?=.*[a-z]).*$/;
 const phoneRegex = /^1[3|4|5|7|8][0-9]{9}$/;
-const emailRegex = /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/g;
-
-const phoneDelSpace = (value: string) => {
-  return value.split(' ').join('');
-};
+const emailRegex = /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/;
 
 @connect(({ app, loading }: IProps) => ({
   app,
@@ -40,45 +46,16 @@ export default class Login extends Component<IProps, IState> {
   state: IState = {
     showLogin: true,
     gender: 1,
-    loginUsername: '',
-    loginPassword: '',
-    registerUsername: '',
-    registerPassword: '',
-    registerMobile_number: '',
-    registerEmail: '',
-  };
-
-  loginUsernameChange = (value: string) => {
-    console.log(value);
-    this.setState({ loginUsername: value });
-  };
-
-  loginPasswordChange = (value: string) => {
-    this.setState({ loginPassword: value });
-  };
-
-  registerUsernameChange = (value: string) => {
-    this.setState({
-      registerUsername: value,
-    });
-  };
-
-  registerPasswordChange = (value: string) => {
-    this.setState({
-      registerPassword: value,
-    });
-  };
-
-  registerMobile_numberChange = (value: string) => {
-    this.setState({
-      registerMobile_number: phoneDelSpace(value),
-    });
-  };
-
-  registerEmailChange = (value: string) => {
-    this.setState({
-      registerEmail: value,
-    });
+    loginForm: {
+      username: '',
+      password: '',
+    },
+    registerForm: {
+      username: '',
+      password: '',
+      mobile_number: '',
+      email: '',
+    },
   };
 
   handleShowLogin = (value: string) => {
@@ -89,75 +66,20 @@ export default class Login extends Component<IProps, IState> {
     this.setState({ gender: value === '男' ? 1 : 0 });
   };
 
-  loginUsernameOnblur = (value?: string) => {
-    if (usernameRegex.test(value || '')) {
-      return;
-    } else {
-      this.setState({
-        loginUsername: '',
-      });
-    }
-  };
-
-  registerUsernameOnblur = () => {
-    if (!usernameRegex.test(this.state.registerUsername || '')) {
-      console.log(111);
-      this.setState({
-        registerUsername: '',
-      });
-    } else {
-      console.log(222);
-    }
-
-    console.log(33);
-  };
-
-  registerPasswordOnblur = (value?: string) => {
-    if (
-      passwordRegex.test(value || '') &&
-      passwordNoSpaceRegex.test(value || '')
-    ) {
-    } else {
-      this.setState({
-        registerPassword: '',
-      });
-    }
-  };
-
-  registerMobile_numberOnblur = (value?: string) => {
-    if (phoneRegex.test(phoneDelSpace(value || ''))) {
-      return;
-    } else {
-      this.setState({
-        registerMobile_number: '',
-      });
-    }
-  };
-
-  registerEmailOnblur = (value?: string) => {
-    if (emailRegex.test(value || '')) {
-      return;
-    } else {
-      this.setState({
-        registerEmail: '',
-      });
-    }
-  };
-
   UNSAFE_componentWillReceiveProps(pre: any) {
     if (pre.visible === false) {
-      this.setState({
-        showLogin: true,
-        gender: 1,
-        loginUsername: '',
-        loginPassword: '',
-        registerUsername: '',
-        registerPassword: '',
-        registerMobile_number: '',
-        registerEmail: '',
-      });
     }
   }
+
+  handleLoginValueChange = (values: LoginFormType) => {
+    console.log('handleValueChange', values);
+    this.setState({ loginForm: values });
+  };
+
+  handleRegisterValueChange = (values: RegisterFormType) => {
+    console.log('handleValueChange', values);
+    this.setState({ registerForm: values });
+  };
 
   render() {
     const { visible, onClose } = this.props;
@@ -170,69 +92,115 @@ export default class Login extends Component<IProps, IState> {
             style={styles.tabs}
             onValueChange={this.handleShowLogin}
           />
+
           {this.state.showLogin ? (
-            <View style={styles.login}>
-              <Text>用户名：</Text>
-              <TextInput
-                placeholder="请输入用户名"
-                maxLength={12}
-                value={this.state.loginUsername}
-                onChangeText={this.loginUsernameChange}
-                // onBlur={this.loginUsernameOnblur}
+            <GiftedForm
+              formName="loginForm"
+              onValueChange={this.handleLoginValueChange}
+              validators={{
+                username: {
+                  title: '用户名',
+                  validate: [
+                    {
+                      validator: 'isLength',
+                      arguments: [3, 16],
+                      message: '{TITLE}长度为{ARGS[0]}到{ARGS[1]}个字符',
+                    },
+                    {
+                      validator: 'matches',
+                      arguments: usernameRegex,
+                      message:
+                        '{TITLE}是由a～z或A~Z的英文字母、0～9的数字或下划线组成',
+                    },
+                  ],
+                },
+                password: {
+                  title: '密码',
+                  validate: [
+                    {
+                      validator: 'isLength',
+                      arguments: [6, 16],
+                      message: '{TITLE}长度为{ARGS[0]}到{ARGS[1]}个字符',
+                    },
+                    {
+                      validator: 'matches',
+                      arguments: passwordRegex,
+                      message: '{TITLE}至少包括1个小写字母，1个数字',
+                    },
+                    {
+                      validator: 'matches',
+                      arguments: passwordNoSpaceRegex,
+                      message: '{TITLE}中不能使用空格',
+                    },
+                  ],
+                },
+              }}
+            >
+              <GiftedForm.TextInputWidget
+                name="username"
+                title="username"
+                placeholder="please input username"
+                clearButtonMode="while-editing"
+                maxLength={16}
+                value={this.state.loginForm.username}
               />
-              <Text>密码：</Text>
-              <TextInput
-                placeholder="请输入密码"
-                maxLength={12}
-                value={this.state.loginPassword}
-                onChangeText={this.loginPasswordChange}
+              <GiftedForm.TextInputWidget
+                name="password"
+                title="password"
+                placeholder="please input password"
+                clearButtonMode="while-editing"
+                maxLength={16}
+                value={this.state.loginForm.password}
+                secureTextEntry={true}
               />
               <Button>登录</Button>
-            </View>
+            </GiftedForm>
           ) : (
-            <View style={styles.register}>
-              <Text>用户名：</Text>
-              <TextInput
-                placeholder="请输入用户名"
-                maxLength={12}
-                value={this.state.registerUsername}
-                onChangeText={this.registerUsernameChange}
-                onBlur={this.registerUsernameOnblur}
+            <GiftedForm
+              formName="registerForm"
+              onValueChange={this.handleRegisterValueChange}
+            >
+              <GiftedForm.TextInputWidget
+                name="registerUsername"
+                title="username"
+                placeholder="please input username"
+                clearButtonMode="while-editing"
+                value={this.state.registerForm.username}
               />
-              <Text>密码：</Text>
-              <TextInput
-                placeholder="请输入密码"
-                maxLength={12}
-                value={this.state.registerPassword}
-                onChangeText={this.registerPasswordChange}
-                // onBlur={this.registerPasswordOnblur}
+              <GiftedForm.TextInputWidget
+                name="registerPassword"
+                title="password"
+                placeholder="please input password"
+                clearButtonMode="while-editing"
+                value={this.state.registerForm.password}
+                secureTextEntry={true}
               />
               <View style={styles.sex}>
-                <Text style={styles.sexText}>性别：</Text>
+                <Text style={styles.sexText}>gender</Text>
                 <SegmentedControl
                   values={['男', '女']}
                   style={styles.sexControl}
                   onValueChange={this.handleSex}
                 />
               </View>
-              <Text>手机号：</Text>
-              <TextInput
-                keyboardType="phone-pad"
-                placeholder="请输入手机号"
-                value={this.state.registerMobile_number}
-                onChangeText={this.registerMobile_numberChange}
-                // onBlur={this.registerMobile_numberOnblur}
-              />
-              <Text>Email：</Text>
-              <TextInput
+              <GiftedForm.TextInputWidget
+                name="email"
+                title="email"
                 keyboardType="email-address"
-                placeholder="请输入email"
-                value={this.state.registerEmail}
-                onChangeText={this.registerEmailChange}
-                // onBlur={this.registerEmailOnblur}
+                placeholder="example@nomads.ly"
+                clearButtonMode="while-editing"
+                value={this.state.registerForm.email}
+              />
+              <GiftedForm.TextInputWidget
+                name="mobile_number"
+                title="mobile_number"
+                keyboardType="phone-pad"
+                placeholder="please input mobile_number"
+                clearButtonMode="while-editing"
+                value={this.state.registerForm.mobile_number}
               />
               <Button>注册</Button>
-            </View>
+            </GiftedForm>
           )}
           <Button onPress={onClose}>收起</Button>
         </View>
@@ -258,7 +226,8 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     paddingTop: 10,
     paddingBottom: 10,
+    backgroundColor: 'white',
   },
-  sexText: { fontSize: 17, marginLeft: 15 },
-  sexControl: { width: 200, height: 30, marginLeft: 30 },
+  sexText: { fontSize: 15, marginLeft: 10 },
+  sexControl: { width: 200, height: 30, marginLeft: 50 },
 });

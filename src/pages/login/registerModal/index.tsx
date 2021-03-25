@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Dimensions, View, Text, StyleSheet } from 'react-native';
 import { Button, Modal, SegmentedControl } from '@ant-design/react-native';
+import { register } from '@/service/app';
 const { GiftedForm, GiftedFormManager } = require('react-native-gifted-form');
 
 interface IProps {
@@ -27,6 +28,12 @@ const passwordRegex = /^.*(?=.{6,})(?=.*\d)(?=.*[a-z]).*$/;
 const phoneRegex = /^1[3|4|5|7|8][0-9]{9}$/;
 const emailRegex = /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/;
 
+const getValue = (key: string[]) =>
+  key.reduce((pre: any, cur) => {
+    pre[cur] = GiftedFormManager.getValue('registerForm', cur);
+    return pre;
+  }, {});
+
 export default class RegisterModal extends Component<IProps, IState> {
   state: IState = {
     gender: 1,
@@ -43,7 +50,6 @@ export default class RegisterModal extends Component<IProps, IState> {
   };
 
   handleRegisterValueChange = (values: RegisterFormType) => {
-    console.log('handleValueChange', values);
     this.setState({ registerForm: values });
   };
 
@@ -55,6 +61,7 @@ export default class RegisterModal extends Component<IProps, IState> {
           <GiftedForm
             formName="registerForm"
             onValueChange={this.handleRegisterValueChange}
+            clearOnClose
             validators={{
               username: {
                 title: '用户名',
@@ -156,7 +163,21 @@ export default class RegisterModal extends Component<IProps, IState> {
               clearButtonMode="while-editing"
               value={this.state.registerForm.mobile_number}
             />
-            <Button>注册</Button>
+            <Button
+              onPress={async () => {
+                const data = getValue([
+                  'username',
+                  'password',
+                  'mobile_number',
+                  'email',
+                ]);
+                data.gender = this.state.gender;
+                const res = await register(data)();
+                console.log(res);
+              }}
+            >
+              注册
+            </Button>
             <Button onPress={onClose}>收起</Button>
           </GiftedForm>
         </View>

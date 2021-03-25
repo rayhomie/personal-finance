@@ -172,6 +172,26 @@ export default class RegisterModal extends Component<IProps, IState> {
                   'email',
                 ]);
                 data.gender = this.state.gender;
+                if (!usernameRegex.test(data.username)) {
+                  console.log(
+                    '用户名是由3至16位，a～z或A~Z的英文字母、0～9的数字或下划线组成'
+                  );
+                  return;
+                }
+                if (!passwordRegex.test(data.password)) {
+                  console.log(
+                    '密码由至少包括1个小写字母，1个数字组成，且设置至少6位密码'
+                  );
+                  return;
+                }
+                if (!phoneRegex.test(data.mobile_number)) {
+                  console.log('请按照正确手机号格式输入');
+                  return;
+                }
+                if (!emailRegex.test(data.email)) {
+                  console.log('请按照正确邮箱格式输入');
+                  return;
+                }
                 const res = await register(data)();
                 console.log(res);
               }}

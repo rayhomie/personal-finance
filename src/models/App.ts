@@ -15,6 +15,7 @@ export interface AppModelType {
     login: Effect;
     verifyToken: Effect;
     register: Effect;
+    loginOut: Effect;
   };
   reducers: {
     save: Reducer<AppState>;
@@ -29,7 +30,8 @@ const app: AppModelType = {
   },
   effects: {
     *login({ payload }, { call, put }) {
-      const res = yield call(fetchLogin(payload));
+      const { success, fail, ...rest } = payload;
+      const res = yield call(fetchLogin(rest));
       if (res.data.code === 0) {
         yield put({
           type: 'save',
@@ -37,12 +39,14 @@ const app: AppModelType = {
         });
         yield AsyncStorage.setItem('token', res.data.data.token, () => {
           console.log('注入token成功');
+          success();
         });
       } else {
         yield put({
           type: 'save',
           payload: { isLogin: false },
         });
+        fail();
       }
       yield console.log('登录', res);
     },
@@ -53,6 +57,17 @@ const app: AppModelType = {
       } else {
         yield put({ type: 'save', payload: { isRegister: false } });
       }
+    },
+    *loginOut({ payload }, { put }) {
+      const { callback } = payload;
+      yield AsyncStorage.setItem('token', '', () => {
+        console.log('删除token成功');
+        callback();
+      });
+      yield put({
+        type: 'save',
+        payload: { isLogin: false },
+      });
     },
     *verifyToken(_, { call, put }) {
       const res = yield call(verifyToken());

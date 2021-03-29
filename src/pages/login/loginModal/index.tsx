@@ -118,14 +118,15 @@ export default class LoginModal extends Component<IProps, IState> {
                 ]);
                 await (dispatch as Dispatch)({
                   type: 'app/login',
-                  payload: { username, password },
+                  payload: {
+                    username,
+                    password,
+                    success: () =>
+                      Toast.success('登录成功', 1.5, () => onClose()),
+                    fail: () =>
+                      Toast.fail('登录失败，请检查账号或密码是否正确', 1.5),
+                  },
                 });
-                const isLogin = app?.isLogin;
-                if (isLogin) {
-                  Toast.success('登录成功', 1.5, () => onClose());
-                } else {
-                  Toast.fail('登录失败，请检查账号或密码是否正确', 1.5);
-                }
               }}
             >
               登录

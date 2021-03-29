@@ -8,7 +8,7 @@ import {
   StatusBar,
   TouchableOpacity,
 } from 'react-native';
-import { ConnectProps, ConnectState } from '@/models/connect';
+import { ConnectProps, ConnectState, Dispatch } from '@/models/connect';
 import { connect } from '@/utils/connect';
 import NavigationUtil from '@/navigator/NavigationUtil';
 import Login from '@/pages/login/index';
@@ -44,6 +44,11 @@ class Mine extends Component<IProps, IState> {
     if (nextProps?.app.isLogin) {
       this.setState({ openLogin: false });
     }
+  }
+
+  UNSAFE_componentWillMount() {
+    const { dispatch } = this.props;
+    (dispatch as Dispatch)({ type: 'app/verifyToken' });
   }
 
   render() {

@@ -51,11 +51,15 @@ const app: AppModelType = {
       yield console.log('登录', res);
     },
     *register({ payload }, { call, put }) {
-      const res = yield call(register(payload));
+      const { success, fail, ...rest } = payload;
+      const res = yield call(register(rest));
+      console.log(res);
       if (res.data.code === 0) {
         yield put({ type: 'save', payload: { isRegister: true } });
+        success();
       } else {
         yield put({ type: 'save', payload: { isRegister: false } });
+        fail();
       }
     },
     *loginOut({ payload }, { put }) {
@@ -87,7 +91,7 @@ const app: AppModelType = {
   },
   reducers: {
     save(state, { payload }) {
-      // console.log(payload);
+      // console.log({ ...state, ...payload });
       return { ...state, ...payload };
     },
   },

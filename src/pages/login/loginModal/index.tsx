@@ -47,7 +47,7 @@ export default class LoginModal extends Component<IProps, IState> {
   };
 
   render() {
-    const { visible, onClose, dispatch, app } = this.props;
+    const { visible, onClose, dispatch } = this.props;
     return (
       <Modal animationType="slide" visible={visible}>
         <View style={styles.container}>

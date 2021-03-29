@@ -37,8 +37,8 @@ instance.interceptors.request.use(
 // http response 拦截器
 instance.interceptors.response.use(
   response => {
-    //拦截响应，做统一处理
-    if (response.data.code === 401) {
+    //拦截响应，做统一处理（register字段为了解决一个bug）
+    if ([401, 1].includes(response.data.code) || response.data.register) {
       store.dispatch({ type: 'app/save', payload: { isLogin: false } });
     } else {
       store.dispatch({ type: 'app/save', payload: { isLogin: true } });

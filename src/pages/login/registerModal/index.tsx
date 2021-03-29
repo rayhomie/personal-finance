@@ -71,7 +71,7 @@ export default class RegisterModal extends Component<IProps, IState> {
   }
 
   render() {
-    const { visible, onClose, dispatch, app } = this.props;
+    const { visible, onClose, dispatch } = this.props;
     return (
       <Modal animationType="slide" visible={visible}>
         <View style={styles.container}>
@@ -241,14 +241,13 @@ export default class RegisterModal extends Component<IProps, IState> {
                 }
                 await (dispatch as Dispatch)({
                   type: 'app/register',
-                  payload: data,
+                  payload: {
+                    ...data,
+                    success: () =>
+                      Toast.success('注册成功', 1.5, () => onClose()),
+                    fail: () => Toast.fail('用户名已存在，注册失败', 1.5),
+                  },
                 });
-                const isRegister = app?.isRegister;
-                if (isRegister) {
-                  Toast.success('注册成功', 1.5, () => onClose());
-                } else {
-                  Toast.fail('用户名已存在，注册失败', 1.5);
-                }
               }}
             >
               注册

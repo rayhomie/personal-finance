@@ -5,7 +5,6 @@ import {
   Text,
   StyleSheet,
   Image,
-  StatusBar,
   TouchableOpacity,
 } from 'react-native';
 import { Button, Toast } from '@ant-design/react-native';

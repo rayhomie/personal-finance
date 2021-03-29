@@ -3,7 +3,6 @@ import {
   Dimensions,
   View,
   Text,
-  Button,
   StyleSheet,
   Image,
   StatusBar,
@@ -23,22 +22,31 @@ interface IState {
 }
 @connect(({ app, loading }: IProps) => ({
   app,
-  dataLoading: loading.effects['app/login'],
+  dataLoading: loading?.effects['app/login'],
 }))
 class Mine extends Component<IProps, IState> {
   state: IState = { openLogin: false };
 
   openUserInfo = () => {
-    // NavigationUtil.toPage('注册登录');
-    this.setState({ openLogin: true });
+    const { app } = this.props;
+    if (app?.isLogin) {
+      NavigationUtil.toPage('用户信息');
+    } else {
+      this.setState({ openLogin: true });
+    }
   };
 
   loginClose = () => {
     this.setState({ openLogin: false });
   };
 
+  UNSAFE_componentWillReceiveProps(nextProps: any) {
+    if (nextProps?.app.isLogin) {
+      this.setState({ openLogin: false });
+    }
+  }
+
   render() {
-    const { dispatch } = this.props;
     return (
       <View>
         <StatusBar />
@@ -101,15 +109,6 @@ class Mine extends Component<IProps, IState> {
                 </View>
               </View>
             </View>
-            <Button
-              title="登录"
-              onPress={() => {
-                dispatch({
-                  type: 'app/login',
-                  payload: { username: 'wangzhiqiang', password: '123456' },
-                });
-              }}
-            />
           </View>
         </View>
         <Login visible={this.state.openLogin} onClose={this.loginClose} />

@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import { Dimensions, View, StyleSheet } from 'react-native';
-import { Button, Modal } from '@ant-design/react-native';
+import { Button, Modal, Toast } from '@ant-design/react-native';
+import { ConnectProps, ConnectState, Dispatch } from '@/models/connect';
+import { connect } from '@/utils/connect';
 const { GiftedForm, GiftedFormManager } = require('react-native-gifted-form');
 
-interface IProps {
+interface IProps extends ConnectState, ConnectProps {
   visible: boolean;
   onClose: () => void;
 }
@@ -22,6 +24,16 @@ const passwordNoSpaceRegex = /^[^\s]*$/;
 // 最少6位，包括至少1个小写字母，1个数字
 const passwordRegex = /^.*(?=.{6,})(?=.*\d)(?=.*[a-z]).*$/;
 
+const getValue = (key: string[]) =>
+  key.reduce((pre: any, cur) => {
+    pre[cur] = GiftedFormManager.getValue('loginForm', cur);
+    return pre;
+  }, {});
+
+@connect(({ app, loading }: any) => ({
+  app,
+  dataLoading: loading.effects['app/login'],
+}))
 export default class LoginModal extends Component<IProps, IState> {
   state: IState = {
     loginForm: {
@@ -31,12 +43,11 @@ export default class LoginModal extends Component<IProps, IState> {
   };
 
   handleLoginValueChange = (values: LoginFormType) => {
-    console.log('handleValueChange', values);
     this.setState({ loginForm: values });
   };
 
   render() {
-    const { visible, onClose } = this.props;
+    const { visible, onClose, dispatch, app } = this.props;
     return (
       <Modal animationType="slide" visible={visible}>
         <View style={styles.container}>
@@ -99,7 +110,26 @@ export default class LoginModal extends Component<IProps, IState> {
               value={this.state.loginForm.password}
               secureTextEntry={true}
             />
-            <Button>登录</Button>
+            <Button
+              onPress={async () => {
+                const { username, password } = getValue([
+                  'username',
+                  'password',
+                ]);
+                await (dispatch as Dispatch)({
+                  type: 'app/login',
+                  payload: { username, password },
+                });
+                const isLogin = app?.isLogin;
+                if (isLogin) {
+                  Toast.success('登录成功', 1.5, () => onClose());
+                } else {
+                  Toast.fail('登录失败，请检查账号或密码是否正确', 1.5);
+                }
+              }}
+            >
+              登录
+            </Button>
             <Button onPress={onClose}>收起</Button>
           </GiftedForm>
         </View>

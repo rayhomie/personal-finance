@@ -25,9 +25,6 @@ type RegisterFormType = {
 interface IState {
   showRegister: boolean;
   showLogin: boolean;
-  gender: number;
-  loginForm: LoginFormType;
-  registerForm: RegisterFormType;
 }
 @connect(({ app, loading }: any) => ({
   app,
@@ -37,32 +34,13 @@ export default class Login extends Component<IProps, IState> {
   state: IState = {
     showLogin: false,
     showRegister: false,
-    gender: 1,
-    loginForm: {
-      username: '',
-      password: '',
-    },
-    registerForm: {
-      username: '',
-      password: '',
-      mobile_number: '',
-      email: '',
-    },
   };
 
-  handleSex = (value: string) => {
-    this.setState({ gender: value === '男' ? 1 : 0 });
-  };
-
-  handleLoginValueChange = (values: LoginFormType) => {
-    console.log('handleValueChange', values);
-    this.setState({ loginForm: values });
-  };
-
-  handleRegisterValueChange = (values: RegisterFormType) => {
-    console.log('handleValueChange', values);
-    this.setState({ registerForm: values });
-  };
+  UNSAFE_componentWillReceiveProps(nextProps: any) {
+    if (nextProps?.app.isRegister) {
+      this.setState({ showLogin: true });
+    }
+  }
 
   render() {
     const { visible, onClose } = this.props;

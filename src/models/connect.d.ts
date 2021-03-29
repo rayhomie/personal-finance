@@ -32,14 +32,14 @@ export interface ILocation {
  * @type P: Params matched in dynamic routing
  */
 export interface ConnectProps<P = any> {
-  dispatch: Dispatch;
+  dispatch?: Dispatch;
   location?: { [key: string]: any };
-  loading: ILoading;
+  loading?: ILoading;
 }
 
 export interface ConnectState {
-  home: IHomeState;
-  app: AppState;
+  home?: IHomeState;
+  app?: AppState;
 }
 
 export interface IZlAnyAction<T> extends AnyAction {

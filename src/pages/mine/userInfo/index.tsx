@@ -95,16 +95,24 @@ export default class UserInfo extends Component<IProps, IState> {
     this.getUserInfo();
   }
 
-  loginOut = async () => {
+  loginOut = () => {
     const { dispatch } = this.props;
-    (dispatch as Dispatch)({
-      type: 'app/loginOut',
-      payload: {
-        callback: () => {
-          NavigationUtil.goBack();
+    Modal.alert('退出登录', '退出登录会导致部分功能无法正常使用', [
+      { text: '取消', onPress: () => console.log('cancel'), style: 'cancel' },
+      {
+        text: '确认',
+        onPress: () => {
+          (dispatch as Dispatch)({
+            type: 'app/loginOut',
+            payload: {
+              callback: () => {
+                NavigationUtil.goBack();
+              },
+            },
+          });
         },
       },
-    });
+    ]);
   };
 
   passwordChange = () => {

@@ -8,10 +8,12 @@ import {
   StatusBar,
   TouchableOpacity,
 } from 'react-native';
+import { Toast } from '@ant-design/react-native';
 import { ConnectProps, ConnectState, Dispatch } from '@/models/connect';
 import { connect } from '@/utils/connect';
 import NavigationUtil from '@/navigator/NavigationUtil';
 import Login from '@/pages/login/index';
+import { userinfo } from '@/service/user';
 
 interface IProps extends ConnectState, ConnectProps {
   dataLoading?: boolean;
@@ -19,13 +21,20 @@ interface IProps extends ConnectState, ConnectProps {
 
 interface IState {
   openLogin: boolean;
+  avatar_url: string;
+  username: string;
 }
 @connect(({ app, loading }: IProps) => ({
   app,
   dataLoading: loading?.effects['app/login'],
 }))
 class Mine extends Component<IProps, IState> {
-  state: IState = { openLogin: false };
+  state: IState = {
+    openLogin: false,
+    avatar_url:
+      'https://lh3.googleusercontent.com/a-/AOh14GjMcc-Wd3Sc1H7rd2VmWfhPHxucsvaxbuCb-2tb=s96-c-rg-br100',
+    username: '未登录',
+  };
 
   openUserInfo = () => {
     const { app } = this.props;
@@ -43,6 +52,7 @@ class Mine extends Component<IProps, IState> {
   UNSAFE_componentWillReceiveProps(nextProps: any) {
     if (nextProps?.app.isLogin) {
       this.setState({ openLogin: false });
+      this.getUserInfo();
     }
   }
 
@@ -50,6 +60,20 @@ class Mine extends Component<IProps, IState> {
     const { dispatch } = this.props;
     (dispatch as Dispatch)({ type: 'app/verifyToken' });
   }
+
+  getUserInfo = () => {
+    userinfo()().then(d => {
+      if (d.data.code === 0) {
+        const { avatar_url, username } = d.data.docs;
+        this.setState({
+          avatar_url,
+          username,
+        });
+      } else {
+        Toast.fail('获取用户信息失败');
+      }
+    });
+  };
 
   render() {
     return (
@@ -65,11 +89,10 @@ class Mine extends Component<IProps, IState> {
               <Image
                 style={styles.picImage}
                 source={{
-                  uri:
-                    'https://lh3.googleusercontent.com/a-/AOh14GjMcc-Wd3Sc1H7rd2VmWfhPHxucsvaxbuCb-2tb=s96-c-rg-br100',
+                  uri: this.state.avatar_url,
                 }}
               />
-              <Text style={styles.nickname}>高桥靓仔</Text>
+              <Text style={styles.nickname}>{this.state.username}</Text>
             </TouchableOpacity>
             <TouchableOpacity activeOpacity={0.5} style={styles.clock}>
               <Text>打卡</Text>

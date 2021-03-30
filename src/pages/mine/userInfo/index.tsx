@@ -47,6 +47,12 @@ const emailRegex = /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/;
 const passwordRegex = /^.*(?=.{6,})(?=.*\d)(?=.*[a-z]).*$/;
 const passwordNoSpaceRegex = /^[^\s]*$/;
 
+const getValue = (key: string[]) =>
+  key.reduce((pre: any, cur) => {
+    pre[cur] = GiftedFormManager.getValue('passwordForm', cur);
+    return pre;
+  }, {});
+
 @connect(({ app, user, loading }: IProps) => ({
   app,
   user,
@@ -166,8 +172,57 @@ export default class UserInfo extends Component<IProps, IState> {
         />
       </GiftedForm>,
       [
-        { text: '取消', onPress: () => console.log('cancel'), style: 'cancel' },
-        { text: '确认', onPress: () => console.log('ok') },
+        {
+          text: '取消',
+          onPress: () => {
+            this.setState({
+              passwordForm: {
+                password: '',
+                confirmPassword: '',
+              },
+            });
+          },
+          style: 'cancel',
+        },
+        {
+          text: '确认',
+          onPress: () => {
+            const { password, confirmPassword } = getValue([
+              'password',
+              'confirmPassword',
+            ]);
+            if (password !== confirmPassword) {
+              Toast.fail('二次输入的密码和首次不一致！请重新输入', 1.5);
+              return;
+            }
+            if (!passwordRegex.test(password)) {
+              Toast.fail(
+                '密码由至少包括1个小写字母，1个数字组成，且设置至少6位密码',
+                1.5
+              );
+              return;
+            }
+            (this.props.dispatch as Dispatch)({
+              type: 'user/updatePassword',
+              payload: {
+                password,
+                success: () => {
+                  Toast.success('密码更改成功，请重新登陆', 1.5);
+                  this.setState({
+                    passwordForm: {
+                      password: '',
+                      confirmPassword: '',
+                    },
+                  });
+                  NavigationUtil.goBack();
+                },
+                fail: () => {
+                  Toast.fail('密码和之前的一致，未变动', 1.5);
+                },
+              },
+            });
+          },
+        },
       ]
     );
   };

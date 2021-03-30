@@ -1,6 +1,6 @@
 import { Reducer } from 'redux';
 import { Effect } from '@/models/connect';
-import { updateInfo, updateUsername } from '@/service/user';
+import { updateInfo, updateUsername, updatePassword } from '@/service/user';
 
 export interface UserState {}
 
@@ -10,6 +10,7 @@ export interface UserModelType {
   effects: {
     updateInfo: Effect;
     updateUsername: Effect;
+    updatePassword: Effect;
   };
   reducers: {
     save: Reducer<UserState>;
@@ -29,9 +30,18 @@ const user: UserModelType = {
         fail();
       }
     },
-    *updateUsername({ payload }, { call, put }) {
+    *updateUsername({ payload }, { call }) {
       const { success, fail, ...rest } = payload;
       const res = yield call(updateUsername(rest));
+      if (res.data.code === 401) {
+        success();
+      } else {
+        fail();
+      }
+    },
+    *updatePassword({ payload }, { call }) {
+      const { success, fail, ...rest } = payload;
+      const res = yield call(updatePassword(rest));
       if (res.data.code === 401) {
         success();
       } else {

@@ -32,3 +32,13 @@ export const updateUsername = (payload: { username: string }) => {
       data: payload,
     });
 };
+
+// 修改password
+export const updatePassword = (payload: { password: string }) => {
+  return () =>
+    request({
+      url: '/user/pwd',
+      method: 'POST',
+      data: payload,
+    });
+};

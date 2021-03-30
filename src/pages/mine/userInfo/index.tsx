@@ -17,6 +17,7 @@ import { ConnectProps, ConnectState, Dispatch } from '@/models/connect';
 import { connect } from '@/utils/connect';
 import { userinfo } from '@/service/user';
 import NavigationUtil from '@/navigator/NavigationUtil';
+const { GiftedForm, GiftedFormManager } = require('react-native-gifted-form');
 
 interface IProps extends ConnectState, ConnectProps {
   dataLoading?: boolean;
@@ -32,11 +33,19 @@ interface IState {
     _id: string;
   };
   gender: number;
+  passwordForm: PasswordFormType;
 }
+
+type PasswordFormType = {
+  password: string;
+  confirmPassword: string;
+};
 
 const usernameRegex = /^[a-zA-Z0-9_]{3,16}$/;
 const phoneRegex = /^1[3|4|5|7|8][0-9]{9}$/;
 const emailRegex = /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/;
+const passwordRegex = /^.*(?=.{6,})(?=.*\d)(?=.*[a-z]).*$/;
+const passwordNoSpaceRegex = /^[^\s]*$/;
 
 @connect(({ app, user, loading }: IProps) => ({
   app,
@@ -55,6 +64,14 @@ export default class UserInfo extends Component<IProps, IState> {
       _id: '',
     },
     gender: 1,
+    passwordForm: {
+      password: '',
+      confirmPassword: '',
+    },
+  };
+
+  handlePasswordValueChange = (values: PasswordFormType) => {
+    this.setState({ passwordForm: values });
   };
 
   getUserInfo = () => {
@@ -82,6 +99,77 @@ export default class UserInfo extends Component<IProps, IState> {
         },
       },
     });
+  };
+
+  passwordChange = () => {
+    Modal.alert(
+      '修改密码',
+      <GiftedForm
+        style={styles.GiftedForm}
+        formName="passwordForm"
+        scrollEnabled={false}
+        onValueChange={this.handlePasswordValueChange}
+        validators={{
+          password: {
+            title: '密码',
+            validate: [
+              {
+                validator: 'isLength',
+                arguments: [6, 16],
+                message: '{TITLE}长度为{ARGS[0]}到{ARGS[1]}个字符',
+              },
+              {
+                validator: 'matches',
+                arguments: passwordRegex,
+                message: '{TITLE}至少包括1个小写字母，1个数字',
+              },
+              {
+                validator: 'matches',
+                arguments: passwordNoSpaceRegex,
+                message: '{TITLE}中不能使用空格',
+              },
+            ],
+          },
+          confirmPassword: {
+            title: '确认密码',
+            validate: [
+              {
+                validator: (value: string) => {
+                  if (value === this.state.passwordForm.password) {
+                    return true;
+                  }
+                  return false;
+                },
+                message: '请保证两次密码一致',
+              },
+            ],
+          },
+        }}
+      >
+        <GiftedForm.TextInputWidget
+          name="password"
+          title=""
+          placeholder="请输入密码"
+          clearButtonMode="while-editing"
+          maxLength={16}
+          value={this.state.passwordForm.password}
+          secureTextEntry={true}
+        />
+        <GiftedForm.TextInputWidget
+          name="confirmPassword"
+          title=""
+          placeholder="请输入二次确认密码"
+          clearButtonMode="while-editing"
+          maxLength={16}
+          value={this.state.passwordForm.confirmPassword}
+          secureTextEntry={true}
+        />
+      </GiftedForm>,
+      [
+        { text: '取消', onPress: () => console.log('cancel'), style: 'cancel' },
+        { text: '确认', onPress: () => console.log('ok') },
+      ]
+    );
   };
 
   usernameChange = () => {
@@ -281,6 +369,13 @@ export default class UserInfo extends Component<IProps, IState> {
         <Button
           style={styles.loginOut}
           activeStyle={styles.activeStyle}
+          onPress={this.passwordChange}
+        >
+          <Text style={styles.fontButton}>修改密码</Text>
+        </Button>
+        <Button
+          style={styles.loginOut}
+          activeStyle={styles.activeStyle}
           onPress={this.loginOut}
         >
           <Text style={styles.fontButton}>退出登录</Text>
@@ -314,4 +409,5 @@ const styles = StyleSheet.create({
   activeStyle: { backgroundColor: '#fbe6e6' },
   fontButton: { color: 'white' },
   sexControl: { width: 200, height: 30 },
+  GiftedForm: { width: 250 },
 });

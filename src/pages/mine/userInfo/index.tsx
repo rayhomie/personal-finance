@@ -15,7 +15,6 @@ import {
 } from '@ant-design/react-native';
 import { ConnectProps, ConnectState, Dispatch } from '@/models/connect';
 import { connect } from '@/utils/connect';
-import { userinfo } from '@/service/user';
 import NavigationUtil from '@/navigator/NavigationUtil';
 const { GiftedForm, GiftedFormManager } = require('react-native-gifted-form');
 
@@ -24,15 +23,7 @@ interface IProps extends ConnectState, ConnectProps {
 }
 
 interface IState {
-  userInfo: {
-    avatar_url: string;
-    username: string;
-    gender: number;
-    email: string;
-    mobile_number: string;
-    _id: string;
-  };
-  gender: number;
+  gender: number | undefined;
   passwordForm: PasswordFormType;
 }
 
@@ -60,15 +51,6 @@ const getValue = (key: string[]) =>
 }))
 export default class UserInfo extends Component<IProps, IState> {
   state: IState = {
-    userInfo: {
-      avatar_url:
-        'https://lh3.googleusercontent.com/a-/AOh14GjMcc-Wd3Sc1H7rd2VmWfhPHxucsvaxbuCb-2tb=s96-c-rg-br100',
-      username: '已注销',
-      gender: 1,
-      email: '',
-      mobile_number: '',
-      _id: '',
-    },
     gender: 1,
     passwordForm: {
       password: '',
@@ -81,13 +63,14 @@ export default class UserInfo extends Component<IProps, IState> {
   };
 
   getUserInfo = () => {
-    userinfo()().then(d => {
-      if (d.data.code === 0) {
-        const data = d.data.docs;
-        this.setState({ userInfo: data, gender: data.gender });
-      } else {
-        Toast.fail('获取用户信息失败');
-      }
+    (this.props.dispatch as Dispatch)({
+      type: 'user/getUserInfo',
+      payload: {
+        success: () => {},
+        fail: () => {
+          Toast.fail('获取用户信息失败');
+        },
+      },
     });
   };
 
@@ -285,7 +268,7 @@ export default class UserInfo extends Component<IProps, IState> {
         {
           text: '取消',
           onPress: () => {
-            this.setState({ gender: this.state.userInfo.gender });
+            this.setState({ gender: this.props.user?.gender });
           },
           style: 'cancel',
         },
@@ -295,14 +278,14 @@ export default class UserInfo extends Component<IProps, IState> {
             (this.props.dispatch as Dispatch)({
               type: 'user/updateInfo',
               payload: {
-                gender: this.state.gender,
+                gender: this.props.user?.gender,
                 success: () => {
                   this.getUserInfo();
                   Toast.success('性别修改成功', 1.5);
                 },
                 fail: () => {
                   Toast.fail('请选择和现在不一样的性别', 1.5, () =>
-                    this.setState({ gender: this.state.userInfo.gender })
+                    this.setState({ gender: this.props.user?.gender })
                   );
                 },
               },
@@ -374,14 +357,8 @@ export default class UserInfo extends Component<IProps, IState> {
   };
 
   render() {
-    const {
-      avatar_url,
-      username,
-      gender,
-      email,
-      mobile_number,
-      _id,
-    } = this.state.userInfo;
+    const { avatar_url, username, gender, email, mobile_number, _id } = this
+      .props.user as any;
     return (
       <View>
         <TouchableOpacity activeOpacity={0.5} style={styles.container}>

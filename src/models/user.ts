@@ -1,13 +1,26 @@
 import { Reducer } from 'redux';
 import { Effect } from '@/models/connect';
-import { updateInfo, updateUsername, updatePassword } from '@/service/user';
+import {
+  userinfo,
+  updateInfo,
+  updateUsername,
+  updatePassword,
+} from '@/service/user';
 
-export interface UserState {}
+export interface UserState {
+  avatar_url: string;
+  username: string;
+  gender: number;
+  email: string;
+  mobile_number: string;
+  _id: string;
+}
 
 export interface UserModelType {
   namespace: 'user';
   state: UserState;
   effects: {
+    getUserInfo: Effect;
     updateInfo: Effect;
     updateUsername: Effect;
     updatePassword: Effect;
@@ -19,8 +32,30 @@ export interface UserModelType {
 
 const user: UserModelType = {
   namespace: 'user',
-  state: {},
+  state: {
+    avatar_url:
+      'https://lh3.googleusercontent.com/a-/AOh14GjMcc-Wd3Sc1H7rd2VmWfhPHxucsvaxbuCb-2tb=s96-c-rg-br100',
+    username: '已注销',
+    gender: 1,
+    email: '',
+    mobile_number: '',
+    _id: '',
+  },
   effects: {
+    *getUserInfo({ payload }, { call, put }) {
+      const { success, fail } = payload;
+      const res = yield call(userinfo());
+      if (res.data.code === 0) {
+        const { avatar_url, ...rest } = res.data.docs;
+        yield put({
+          type: 'save',
+          payload: { ...(avatar_url ? { avatar_url } : {}), ...rest },
+        });
+        success();
+      } else {
+        fail();
+      }
+    },
     *updateInfo({ payload }, { call }) {
       const { success, fail, ...rest } = payload;
       const res = yield call(updateInfo(rest));
@@ -51,6 +86,7 @@ const user: UserModelType = {
   },
   reducers: {
     save(state, { payload }) {
+      console.log(state, payload);
       return { ...state, ...payload };
     },
   },

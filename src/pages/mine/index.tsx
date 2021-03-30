@@ -13,7 +13,6 @@ import { ConnectProps, ConnectState, Dispatch } from '@/models/connect';
 import { connect } from '@/utils/connect';
 import NavigationUtil from '@/navigator/NavigationUtil';
 import Login from '@/pages/login/index';
-import { userinfo } from '@/service/user';
 
 interface IProps extends ConnectState, ConnectProps {
   dataLoading?: boolean;
@@ -21,19 +20,15 @@ interface IProps extends ConnectState, ConnectProps {
 
 interface IState {
   openLogin: boolean;
-  avatar_url: string;
-  username: string;
 }
-@connect(({ app, loading }: IProps) => ({
+@connect(({ app, user, loading }: IProps) => ({
   app,
+  user,
   dataLoading: loading?.effects['app/login'],
 }))
 class Mine extends Component<IProps, IState> {
   state: IState = {
     openLogin: false,
-    avatar_url:
-      'https://lh3.googleusercontent.com/a-/AOh14GjMcc-Wd3Sc1H7rd2VmWfhPHxucsvaxbuCb-2tb=s96-c-rg-br100',
-    username: '未登录',
   };
 
   openUserInfo = () => {
@@ -52,30 +47,30 @@ class Mine extends Component<IProps, IState> {
   UNSAFE_componentWillReceiveProps(nextProps: any) {
     if (nextProps?.app.isLogin) {
       this.setState({ openLogin: false });
-      this.getUserInfo();
     }
   }
 
   UNSAFE_componentWillMount() {
     const { dispatch } = this.props;
     (dispatch as Dispatch)({ type: 'app/verifyToken' });
+    this.getUserInfo();
   }
 
   getUserInfo = () => {
-    userinfo()().then(d => {
-      if (d.data.code === 0) {
-        const { avatar_url, username } = d.data.docs;
-        this.setState({
-          avatar_url,
-          username,
-        });
-      } else {
-        Toast.fail('获取用户信息失败');
-      }
+    (this.props.dispatch as Dispatch)({
+      type: 'user/getUserInfo',
+      payload: {
+        success: () => {},
+        fail: () => {
+          Toast.fail('获取用户信息失败');
+        },
+      },
     });
   };
 
   render() {
+    const { user } = this.props;
+    const { avatar_url, username } = user as any;
     return (
       <View>
         <StatusBar />
@@ -89,10 +84,10 @@ class Mine extends Component<IProps, IState> {
               <Image
                 style={styles.picImage}
                 source={{
-                  uri: this.state.avatar_url,
+                  uri: avatar_url,
                 }}
               />
-              <Text style={styles.nickname}>{this.state.username}</Text>
+              <Text style={styles.nickname}>{username}</Text>
             </TouchableOpacity>
             <TouchableOpacity activeOpacity={0.5} style={styles.clock}>
               <Text>打卡</Text>

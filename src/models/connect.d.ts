@@ -1,5 +1,6 @@
 import { IHomeState } from './home';
 import { AppState } from './app';
+import { UserState } from './user';
 import { AnyAction } from 'redux';
 
 export interface ILoading {
@@ -40,6 +41,7 @@ export interface ConnectProps<P = any> {
 export interface ConnectState {
   home?: IHomeState;
   app?: AppState;
+  user?: UserState;
 }
 
 export interface IZlAnyAction<T> extends AnyAction {

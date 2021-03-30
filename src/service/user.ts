@@ -22,3 +22,13 @@ export const updateInfo = (payload: {
       data: payload,
     });
 };
+
+// 修改username
+export const updateUsername = (payload: { username: string }) => {
+  return () =>
+    request({
+      url: '/user/username',
+      method: 'POST',
+      data: payload,
+    });
+};

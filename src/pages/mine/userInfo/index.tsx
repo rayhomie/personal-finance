@@ -34,8 +34,10 @@ interface IState {
   gender: number;
 }
 
+const usernameRegex = /^[a-zA-Z0-9_]{3,16}$/;
 const phoneRegex = /^1[3|4|5|7|8][0-9]{9}$/;
 const emailRegex = /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/;
+
 @connect(({ app, user, loading }: IProps) => ({
   app,
   user,
@@ -80,6 +82,39 @@ export default class UserInfo extends Component<IProps, IState> {
         },
       },
     });
+  };
+
+  usernameChange = () => {
+    Modal.prompt(
+      '修改用户名',
+      '',
+      (value: string) => {
+        if (!usernameRegex.test(value)) {
+          Toast.fail(
+            '用户名是由3至16位，a～z或A~Z的英文字母、0～9的数字或下划线组成',
+            1.5
+          );
+          return;
+        } else {
+          (this.props.dispatch as Dispatch)({
+            type: 'user/updateUsername',
+            payload: {
+              username: value,
+              success: () => {
+                Toast.success('用户名修改成功，请重新登陆', 1.5);
+                NavigationUtil.goBack();
+              },
+              fail: () => {
+                Toast.fail('输入的用户名已存在', 1.5);
+              },
+            },
+          });
+        }
+      },
+      'default',
+      '',
+      ['请输入用户名']
+    );
   };
 
   handleSex = (value: string) => {
@@ -211,7 +246,11 @@ export default class UserInfo extends Component<IProps, IState> {
           <Text style={styles.left}>ID</Text>
           <Text style={styles.right}>{_id}</Text>
         </TouchableOpacity>
-        <TouchableOpacity activeOpacity={0.5} style={styles.container}>
+        <TouchableOpacity
+          activeOpacity={0.5}
+          style={styles.container}
+          onPress={this.usernameChange}
+        >
           <Text style={styles.left}>用户名</Text>
           <Text style={styles.right}>{username}</Text>
         </TouchableOpacity>

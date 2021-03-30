@@ -30,8 +30,9 @@ const getValue = (key: string[]) =>
     return pre;
   }, {});
 
-@connect(({ app, loading }: any) => ({
+@connect(({ app, user, loading }: any) => ({
   app,
+  user,
   dataLoading: loading.effects['app/login'],
 }))
 export default class LoginModal extends Component<IProps, IState> {
@@ -121,8 +122,18 @@ export default class LoginModal extends Component<IProps, IState> {
                   payload: {
                     username,
                     password,
-                    success: () =>
-                      Toast.success('登录成功', 1.5, () => onClose()),
+                    success: () => {
+                      Toast.success('登录成功', 1.5, () => onClose());
+                      (dispatch as Dispatch)({
+                        type: 'user/getUserInfo',
+                        payload: {
+                          success: () => {},
+                          fail: () => {
+                            Toast.fail('获取用户信息失败');
+                          },
+                        },
+                      });
+                    },
                     fail: () =>
                       Toast.fail('登录失败，请检查账号或密码是否正确', 1.5),
                   },

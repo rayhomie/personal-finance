@@ -90,6 +90,18 @@ export default class UserInfo extends Component<IProps, IState> {
             payload: {
               callback: () => {
                 NavigationUtil.goBack();
+                (dispatch as Dispatch)({
+                  type: 'user/save',
+                  payload: {
+                    avatar_url:
+                      'https://lh3.googleusercontent.com/a-/AOh14GjMcc-Wd3Sc1H7rd2VmWfhPHxucsvaxbuCb-2tb=s96-c-rg-br100',
+                    username: '未登录',
+                    gender: 1,
+                    email: '',
+                    mobile_number: '',
+                    _id: '',
+                  },
+                });
               },
             },
           });

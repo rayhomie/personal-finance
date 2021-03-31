@@ -67,13 +67,14 @@ const mine: MineModelType = {
       const res = yield call(clock(rest));
       if (res.data.code === 0) {
         yield put({
-          type: 'getClockList',
-          payload: { success: () => {}, fail: () => {} },
-        });
-        yield put({
           type: 'getContinueCount',
           payload: { success: () => {}, fail: () => {} },
         });
+        yield put({
+          type: 'getClockList',
+          payload: { success: () => {}, fail: () => {} },
+        });
+        yield put({ type: 'save', payload: { isClock: res.data.isClock } });
         success();
       } else {
         fail();

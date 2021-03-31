@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import { Toast } from '@ant-design/react-native';
+import moment from 'moment';
 import { ConnectProps, ConnectState, Dispatch } from '@/models/connect';
 import { connect } from '@/utils/connect';
 import NavigationUtil from '@/navigator/NavigationUtil';
@@ -21,9 +22,10 @@ interface IProps extends ConnectState, ConnectProps {
 interface IState {
   openLogin: boolean;
 }
-@connect(({ app, user, loading }: IProps) => ({
+@connect(({ app, user, mine, loading }: IProps) => ({
   app,
   user,
+  mine,
   dataLoading: loading?.effects['app/login'],
 }))
 class Mine extends Component<IProps, IState> {
@@ -54,6 +56,7 @@ class Mine extends Component<IProps, IState> {
     const { dispatch } = this.props;
     (dispatch as Dispatch)({ type: 'app/verifyToken' });
     this.getUserInfo();
+    this.getClockInfo();
   }
 
   getUserInfo = () => {
@@ -62,15 +65,53 @@ class Mine extends Component<IProps, IState> {
       payload: {
         success: () => {},
         fail: () => {
-          Toast.fail('获取用户信息失败');
+          Toast.fail('获取用户信息失败', 1.5);
+        },
+      },
+    });
+  };
+
+  getClockInfo = () => {
+    (this.props.dispatch as Dispatch)({
+      type: 'mine/getClockList',
+      payload: {
+        success: () => {},
+        fail: () => {
+          Toast.fail('获取打卡信息失败', 1.5);
+        },
+      },
+    });
+    (this.props.dispatch as Dispatch)({
+      type: 'mine/getContinueCount',
+      payload: {
+        success: () => {},
+        fail: () => {
+          Toast.fail('获取连续打卡次数失败', 1.5);
+        },
+      },
+    });
+  };
+
+  clock = () => {
+    const clock_date = moment().format('YYYY-MM-DD HH:mm:ss');
+    (this.props.dispatch as Dispatch)({
+      type: 'mine/clock',
+      payload: {
+        clock_date,
+        success: () => {
+          Toast.success('打卡成功', 1.5);
+        },
+        fail: () => {
+          Toast.fail('今日已打卡', 1.5);
         },
       },
     });
   };
 
   render() {
-    const { user } = this.props;
+    const { user, mine } = this.props;
     const { avatar_url, username } = user as any;
+    const { clockTotal, clockContinueCount } = mine as any;
     return (
       <View>
         <StatusBar />
@@ -89,17 +130,21 @@ class Mine extends Component<IProps, IState> {
               />
               <Text style={styles.nickname}>{username}</Text>
             </TouchableOpacity>
-            <TouchableOpacity activeOpacity={0.5} style={styles.clock}>
+            <TouchableOpacity
+              activeOpacity={0.5}
+              style={styles.clock}
+              onPress={this.clock}
+            >
               <Text>打卡</Text>
             </TouchableOpacity>
           </View>
           <View style={styles.tab}>
             <View style={styles.item}>
-              <Text style={styles.num}>0</Text>
+              <Text style={styles.num}>{clockContinueCount}</Text>
               <Text>已连续打卡</Text>
             </View>
             <View style={styles.item}>
-              <Text style={styles.num}>0</Text>
+              <Text style={styles.num}>{clockTotal}</Text>
               <Text>记录总天数</Text>
             </View>
             <View style={styles.item}>

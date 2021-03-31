@@ -1,60 +1,85 @@
 import { Reducer } from 'redux';
 import { Effect } from '@/models/connect';
+import { getClockList, clock, getContinueCount } from '@/service/clock';
+import { PushNotificationIOS } from 'react-native';
 
+type ClockListType = {
+  _id?: string;
+  user_id?: string;
+  date?: string;
+  clock_date?: number;
+};
 export interface MineState {
-  data: string[];
-  v: string;
-  // 验证码
-  verCode: string;
-  number: number;
-  content: any[];
+  clockList: ClockListType[];
+  clockTotal: number;
+  clockContinueCount: number;
 }
 
 export interface MineModelType {
   namespace: 'mine';
   state: MineState;
   effects: {
-    zhihu: Effect;
+    getClockList: Effect;
+    clock: Effect;
+    getContinueCount: Effect;
   };
   reducers: {
     save: Reducer<MineState>;
   };
 }
 
-const fetchTest = async () => {
-  const res = await fetch(
-    'https://www.zhihu.com/api/v3/oauth/sms/supported_countries'
-  );
-  const data = await res.json();
-  console.log(data);
-  return data;
-};
-
 const mine: MineModelType = {
   namespace: 'mine',
   state: {
-    data: [],
-    v: '1.0',
-    verCode: '',
-    number: 1,
-    content: [],
+    clockList: [],
+    clockTotal: 0,
+    clockContinueCount: 0,
   },
   effects: {
-    /**
-     * 说明：获取百度网页
-     * @author allahbin
-     */
-    *zhihu(_, { call, put }) {
-      const res = yield call(fetchTest);
-      yield put({
-        type: 'save',
-        payload: {
-          content: res.data,
-        },
-      });
+    *getClockList({ payload }, { call, put }) {
+      const { success, fail } = payload;
+      const res = yield call(getClockList());
+      if (res.data.code === 0) {
+        yield put({
+          type: 'save',
+          payload: { clockList: res.data.docs, clockTotal: res.data.total },
+        });
+        success();
+      } else {
+        fail();
+      }
+    },
+    *clock({ payload }, { call, put }) {
+      const { success, fail, ...rest } = payload;
+      const res = yield call(clock(rest));
+      if (res.data.code === 0) {
+        yield put({
+          type: 'getClockList',
+          payload: { success: () => {}, fail: () => {} },
+        });
+        yield put({
+          type: 'getContinueCount',
+          payload: { success: () => {}, fail: () => {} },
+        });
+        success();
+      } else {
+        fail();
+      }
+    },
+    *getContinueCount({ payload }, { call, put }) {
+      const { success, fail } = payload;
+      const res = yield call(getContinueCount());
+      if (res.data.code === 0) {
+        yield put({
+          type: 'save',
+          payload: { clockContinueCount: res.data.continue_count },
+        });
+        success();
+      } else {
+        fail();
+      }
     },
   },
-
   reducers: {
     save(state, { payload }) {
       return { ...state, ...payload };

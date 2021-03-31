@@ -86,7 +86,6 @@ const user: UserModelType = {
   },
   reducers: {
     save(state, { payload }) {
-      console.log(state, payload);
       return { ...state, ...payload };
     },
   },

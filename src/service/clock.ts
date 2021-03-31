@@ -24,3 +24,11 @@ export const getContinueCount = () => {
       method: 'GET',
     });
 };
+
+export const getIsClock = () => {
+  return () =>
+    request({
+      url: '/clock/isClock',
+      method: 'GET',
+    });
+};

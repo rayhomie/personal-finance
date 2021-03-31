@@ -57,6 +57,8 @@ class Mine extends Component<IProps, IState> {
     (dispatch as Dispatch)({ type: 'app/verifyToken' });
     this.getUserInfo();
     this.getClockInfo();
+    this.getBillTotal();
+    this.getIsClock();
   }
 
   getUserInfo = () => {
@@ -108,10 +110,34 @@ class Mine extends Component<IProps, IState> {
     });
   };
 
+  getBillTotal = () => {
+    (this.props.dispatch as Dispatch)({
+      type: 'mine/getBillList',
+      payload: {
+        success: () => {},
+        fail: () => {
+          Toast.fail('获取账单信息失败', 1.5);
+        },
+      },
+    });
+  };
+
+  getIsClock = () => {
+    (this.props.dispatch as Dispatch)({
+      type: 'mine/getIsClock',
+      payload: {
+        success: () => {},
+        fail: () => {
+          Toast.fail('获取今日是否打卡失败', 1.5);
+        },
+      },
+    });
+  };
+
   render() {
     const { user, mine } = this.props;
     const { avatar_url, username } = user as any;
-    const { clockTotal, clockContinueCount } = mine as any;
+    const { clockTotal, clockContinueCount, billTotal, isClock } = mine as any;
     return (
       <View>
         <StatusBar />
@@ -135,7 +161,7 @@ class Mine extends Component<IProps, IState> {
               style={styles.clock}
               onPress={this.clock}
             >
-              <Text>打卡</Text>
+              <Text>{isClock === 0 ? '打卡' : '已打卡'}</Text>
             </TouchableOpacity>
           </View>
           <View style={styles.tab}>
@@ -148,7 +174,7 @@ class Mine extends Component<IProps, IState> {
               <Text>记录总天数</Text>
             </View>
             <View style={styles.item}>
-              <Text style={styles.num}>0</Text>
+              <Text style={styles.num}>{billTotal}</Text>
               <Text>记录总笔数</Text>
             </View>
           </View>

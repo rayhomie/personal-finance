@@ -1,7 +1,12 @@
 import { Reducer } from 'redux';
 import { Effect } from '@/models/connect';
-import { getClockList, clock, getContinueCount } from '@/service/clock';
-import { PushNotificationIOS } from 'react-native';
+import {
+  getClockList,
+  clock,
+  getContinueCount,
+  getIsClock,
+} from '@/service/clock';
+import { getBillList } from '@/service/bill';
 
 type ClockListType = {
   _id?: string;
@@ -13,6 +18,9 @@ export interface MineState {
   clockList: ClockListType[];
   clockTotal: number;
   clockContinueCount: number;
+  billList: any[];
+  billTotal: number;
+  isClock: number;
 }
 
 export interface MineModelType {
@@ -22,6 +30,8 @@ export interface MineModelType {
     getClockList: Effect;
     clock: Effect;
     getContinueCount: Effect;
+    getBillList: Effect;
+    getIsClock: Effect;
   };
   reducers: {
     save: Reducer<MineState>;
@@ -34,6 +44,9 @@ const mine: MineModelType = {
     clockList: [],
     clockTotal: 0,
     clockContinueCount: 0,
+    billList: [],
+    billTotal: 0,
+    isClock: 0,
   },
   effects: {
     *getClockList({ payload }, { call, put }) {
@@ -73,6 +86,32 @@ const mine: MineModelType = {
         yield put({
           type: 'save',
           payload: { clockContinueCount: res.data.continue_count },
+        });
+        success();
+      } else {
+        fail();
+      }
+    },
+    *getBillList({ payload }, { call, put }) {
+      const { success, fail } = payload;
+      const res = yield call(getBillList());
+      if (res.data.code === 0) {
+        yield put({
+          type: 'save',
+          payload: { billList: res.data.docs, billTotal: res.data.total },
+        });
+        success();
+      } else {
+        fail();
+      }
+    },
+    *getIsClock({ payload }, { call, put }) {
+      const { success, fail } = payload;
+      const res = yield call(getIsClock());
+      if (res.data.code === 0) {
+        yield put({
+          type: 'save',
+          payload: { isClock: res.data.isClock },
         });
         success();
       } else {

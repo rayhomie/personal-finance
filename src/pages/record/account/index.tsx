@@ -7,7 +7,7 @@ import {
   ScrollView,
   Image,
 } from 'react-native';
-import { Button, Toast } from '@ant-design/react-native';
+import { Button, Toast, SegmentedControl } from '@ant-design/react-native';
 import { ConnectProps, ConnectState, Dispatch } from '@/models/connect';
 import { connect } from 'react-redux';
 import NavigationUtil from '@/navigator/NavigationUtil';
@@ -19,23 +19,40 @@ interface AccountProps extends ConnectState, ConnectProps {
   dataLoading?: boolean;
 }
 
-interface IState {}
-
-const payList = category_list.pay;
-
 const Account: React.FC<AccountProps> = props => {
-  const categoryItem = () => {
-    return payList.map((i: any) => (
+  const [payOrIncome, setPayOrIncome] = useState<'pay' | 'income'>('pay'); // 0为支出
+
+  const categoryItem = (list: any) => {
+    const IM: any = ImageManager;
+    return list.map((i: any) => (
       <View style={styles.category_item} key={i.id}>
-        <Image style={styles.category_icon} source={ImageManager[i.icon_l]} />
+        <Image style={styles.category_icon} source={IM[i.icon_l]} />
         <Text style={styles.category_name}>{i.name}</Text>
       </View>
     ));
   };
 
+  const handleTab = (e: any) => {
+    if (e.nativeEvent.selectedSegmentIndex === 0) {
+      setPayOrIncome('pay');
+    } else {
+      setPayOrIncome('income');
+    }
+  };
+
   return (
-    <ScrollView>
-      <View style={styles.bill_category}>{categoryItem()}</View>
+    <View>
+      <SegmentedControl
+        values={['支出', '收入']}
+        selectedIndex={0}
+        onChange={handleTab}
+      />
+      <ScrollView>
+        <View style={styles.bill_category} key={payOrIncome}>
+          {categoryItem(category_list[payOrIncome])}
+        </View>
+      </ScrollView>
+
       <Button
         onPress={() => {
           NavigationUtil.toPage('分类设置');
@@ -43,7 +60,7 @@ const Account: React.FC<AccountProps> = props => {
       >
         添加分类
       </Button>
-    </ScrollView>
+    </View>
   );
 };
 

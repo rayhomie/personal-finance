@@ -686,5 +686,7 @@ export const ImageManager = {
   'cc_home_tools': require('@/assets/image/cc_home_tools.png'),
   'cc_home_tools_l': require('@/assets/image/cc_home_tools_l.png'),
   'cc_home_tools_s': require('@/assets/image/cc_home_tools_s.png'),
+  'tabbar_settings_s': require('@/assets/image/tabbar_settings_s.png'),
+  'tabbar_settings_n': require('@/assets/image/tabbar_settings_n.png')
 }
 

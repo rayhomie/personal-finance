@@ -5,6 +5,7 @@ import {
   StyleSheet,
   Dimensions,
   ScrollView,
+  TouchableOpacity,
   Image,
 } from 'react-native';
 import { Button, Toast, SegmentedControl } from '@ant-design/react-native';
@@ -25,10 +26,14 @@ const Account: React.FC<AccountProps> = props => {
   const categoryItem = (list: any) => {
     const IM: any = ImageManager;
     return list.map((i: any) => (
-      <View style={styles.category_item} key={i.id}>
+      <TouchableOpacity
+        style={styles.category_item}
+        key={i.id}
+        onPress={() => handleClick(i.id)}
+      >
         <Image style={styles.category_icon} source={IM[i.icon_l]} />
         <Text style={styles.category_name}>{i.name}</Text>
-      </View>
+      </TouchableOpacity>
     ));
   };
 
@@ -40,8 +45,14 @@ const Account: React.FC<AccountProps> = props => {
     }
   };
 
+  const handleClick = (value: any) => {
+    if (value === 'setting') {
+      NavigationUtil.toPage('分类设置');
+    }
+  };
+
   return (
-    <View>
+    <View style={styles.container}>
       <SegmentedControl
         values={['支出', '收入']}
         selectedIndex={0}
@@ -49,17 +60,12 @@ const Account: React.FC<AccountProps> = props => {
       />
       <ScrollView>
         <View style={styles.bill_category} key={payOrIncome}>
-          {categoryItem(category_list[payOrIncome])}
+          {categoryItem([
+            ...category_list[payOrIncome],
+            { id: 'setting', name: '设置', icon_l: 'tabbar_settings_s' },
+          ])}
         </View>
       </ScrollView>
-
-      <Button
-        onPress={() => {
-          NavigationUtil.toPage('分类设置');
-        }}
-      >
-        添加分类
-      </Button>
     </View>
   );
 };
@@ -67,9 +73,11 @@ const Account: React.FC<AccountProps> = props => {
 const category_item_width = 70;
 const category_icon_width = 50;
 const screenWidth = Dimensions.get('window').width;
+const screenHeight = Dimensions.get('window').height;
 const space = (screenWidth - category_item_width * 4) / 5;
 
 const styles = StyleSheet.create({
+  container: { width: screenWidth, height: screenHeight - 180 },
   bill_category: {
     width: screenWidth,
     // backgroundColor: 'pink',

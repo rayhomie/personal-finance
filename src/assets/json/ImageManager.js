@@ -1,3 +1,4 @@
+/* eslint-disable no-dupe-keys */
 /* eslint-disable prettier/prettier */
 export const ImageManager = {
   'cc_entertainmente_game': require('@/assets/image/cc_entertainmente_game.png'),

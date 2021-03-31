@@ -11,6 +11,9 @@ import { Button, Toast } from '@ant-design/react-native';
 import { ConnectProps, ConnectState, Dispatch } from '@/models/connect';
 import { connect } from 'react-redux';
 import NavigationUtil from '@/navigator/NavigationUtil';
+import { ImageManager } from '@/assets/json/ImageManager';
+
+const category_list = require('@/assets/json/Category.json');
 
 interface AccountProps extends ConnectState, ConnectProps {
   dataLoading?: boolean;
@@ -18,23 +21,18 @@ interface AccountProps extends ConnectState, ConnectProps {
 
 interface IState {}
 
-const arr = new Array(10).fill('');
+const payList = category_list.pay;
 
 const Account: React.FC<AccountProps> = props => {
   const categoryItem = () => {
-    return arr.map((i, index) => (
-      <View style={styles.category_item} key={index}>
-        <Image
-          style={styles.category_icon}
-          source={{
-            uri:
-              'https://lh3.googleusercontent.com/a-/AOh14GjMcc-Wd3Sc1H7rd2VmWfhPHxucsvaxbuCb-2tb=s96-c-rg-br100',
-          }}
-        />
-        <Text style={styles.category_name}>餐饮</Text>
+    return payList.map((i: any) => (
+      <View style={styles.category_item} key={i.id}>
+        <Image style={styles.category_icon} source={ImageManager[i.icon_l]} />
+        <Text style={styles.category_name}>{i.name}</Text>
       </View>
     ));
   };
+
   return (
     <ScrollView>
       <View style={styles.bill_category}>{categoryItem()}</View>

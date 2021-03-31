@@ -5,6 +5,7 @@ import { ConnectProps, ConnectState, Dispatch } from '@/models/connect';
 import { connect } from 'react-redux';
 import NavigationUtil from '@/navigator/NavigationUtil';
 
+
 interface CategorySettingProps extends ConnectState, ConnectProps {
   dataLoading?: boolean;
 }

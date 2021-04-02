@@ -54,7 +54,7 @@ export const update = (payload: {
 // 只能删除自定义分类
 export const Delete = (payload: { id?: string; name?: string }) => () =>
   request({
-    url: '/bill_category/update',
+    url: '/bill_category/delete',
     method: 'DELETE',
     data: payload,
   });

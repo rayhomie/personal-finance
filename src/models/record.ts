@@ -1,6 +1,6 @@
 import { Reducer } from 'redux';
 import { Effect } from '@/models/connect';
-import { getList } from '@/service/bill_category';
+import { getList, Delete } from '@/service/bill_category';
 
 type noSystemItemType = {
   is_income: number;
@@ -22,6 +22,7 @@ export interface RecordModelType {
   state: RecordState;
   effects: {
     getNoSystem: Effect;
+    delCategory: Effect;
   };
   reducers: {
     save: Reducer<RecordState>;
@@ -34,7 +35,6 @@ const record: RecordModelType = {
   effects: {
     *getNoSystem({ payload }, { call, put }) {
       const res = yield call(getList({ ...payload, is_system: 0 }));
-      console.log(res);
       if (res.data.code === 0) {
         yield put({
           type: 'save',
@@ -42,6 +42,15 @@ const record: RecordModelType = {
             noSystemList: res.data.docs,
           },
         });
+      }
+    },
+    *delCategory({ payload }, { call }) {
+      const { success, fail, ...rest } = payload;
+      const res = yield call(Delete(rest));
+      if (res.data.code === 0) {
+        success();
+      } else {
+        fail();
       }
     },
   },

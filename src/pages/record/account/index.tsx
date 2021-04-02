@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
   Image,
 } from 'react-native';
-import { Button, Toast, SegmentedControl } from '@ant-design/react-native';
+import { SegmentedControl } from '@ant-design/react-native';
 import { ConnectProps, ConnectState, Dispatch } from '@/models/connect';
 import { connect } from 'react-redux';
 import NavigationUtil from '@/navigator/NavigationUtil';
@@ -76,9 +76,8 @@ const Account: React.FC<AccountProps> = props => {
   };
 
   const handleClick = (value: any) => {
-    console.log(value);
     if (value === 'setting') {
-      NavigationUtil.toPage('分类设置');
+      NavigationUtil.toPage('分类设置', { payOrIncome });
     }
   };
 

@@ -31,7 +31,7 @@ const Account: React.FC<AccountProps> = props => {
         key={i.id}
         onPress={() => handleClick(i.id)}
       >
-        <Image style={styles.category_icon} source={IM[i.icon_l]} />
+        <Image style={styles.category_icon} source={IM[i.icon_n]} />
         <Text style={styles.category_name}>{i.name}</Text>
       </TouchableOpacity>
     ));
@@ -62,7 +62,7 @@ const Account: React.FC<AccountProps> = props => {
         <View style={styles.bill_category} key={payOrIncome}>
           {categoryItem([
             ...category_list[payOrIncome],
-            { id: 'setting', name: '设置', icon_l: 'tabbar_settings_s' },
+            { id: 'setting', name: '设置', icon_n: 'tabbar_settings_n' },
           ])}
         </View>
       </ScrollView>

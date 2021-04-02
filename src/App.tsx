@@ -6,7 +6,7 @@ import 'dayjs/locale/zh-cn'; // 导入本地化语言
 import dva from './models/dva';
 import models from './models/index';
 // import AppNavigators from './navigator/AppNavigators';
-import TabBar from './navigator/TabBar';
+import Router from './navigator/router';
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 import { Provider as AntdProvider } from '@ant-design/react-native';
 
@@ -25,7 +25,7 @@ class App extends React.Component {
         <AntdProvider>
           <StatusBar barStyle="dark-content" />
           <SafeAreaView style={styles.safeAreaView}>
-            <TabBar />
+            <Router />
           </SafeAreaView>
         </AntdProvider>
       </Provider>

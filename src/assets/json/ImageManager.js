@@ -1,6 +1,7 @@
 /* eslint-disable no-dupe-keys */
 /* eslint-disable prettier/prettier */
 export const ImageManager = {
+  'category_delete': require('@/assets/image/category_delete.png'),
   'cc_entertainmente_game': require('@/assets/image/cc_entertainmente_game.png'),
   'cc_entertainmente_game_l': require('@/assets/image/cc_entertainmente_game_l.png'),
   'cc_entertainmente_game_s': require('@/assets/image/cc_entertainmente_game_s.png'),

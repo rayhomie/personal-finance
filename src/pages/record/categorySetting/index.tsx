@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -25,6 +26,25 @@ interface CategorySettingState {}
 
 const CategorySetting: React.FC<CategorySettingProps> = props => {
   const [payOrIncome, setPayOrIncome] = useState<'pay' | 'income'>('pay'); // 0为支出
+  const [categoryList, setCategoryList] = useState<any[]>(
+    category_list[payOrIncome]
+  );
+  const { dispatch, record } = props;
+  const { noSystemList } = record as any;
+
+  useEffect(() => {
+    (dispatch as Dispatch)({
+      type: 'record/getNoSystem',
+      payload: { is_income: payOrIncome === 'pay' ? 0 : 1 },
+    });
+  }, [payOrIncome]);
+
+  useEffect(() => {
+    setCategoryList([
+      ...category_list[payOrIncome],
+      ...(noSystemList ? noSystemList : []),
+    ]);
+  }, [noSystemList, payOrIncome]);
 
   const handleTab = (e: any) => {
     if (e.nativeEvent.selectedSegmentIndex === 0) {
@@ -36,10 +56,17 @@ const CategorySetting: React.FC<CategorySettingProps> = props => {
 
   const renderItem = ({ item }: any) => {
     return (
-      <TouchableOpacity>
-        <Image source={IM[item.icon_n]} />
-        <Text>{item.name}</Text>
-      </TouchableOpacity>
+      <View style={styles.item}>
+        {item.is_system === 1 ? (
+          <View style={styles.delete} />
+        ) : (
+          <TouchableOpacity>
+            <Image style={styles.delete} source={IM.category_delete} />
+          </TouchableOpacity>
+        )}
+        <Image style={styles.icon} source={IM[item.icon_n]} />
+        <Text style={styles.name}>{item.name}</Text>
+      </View>
     );
   };
 
@@ -54,7 +81,7 @@ const CategorySetting: React.FC<CategorySettingProps> = props => {
         <FlatList
           key={payOrIncome}
           style={styles.FlatList}
-          data={category_list[payOrIncome]}
+          data={categoryList}
           renderItem={renderItem}
           keyExtractor={item => item.name}
         />
@@ -68,13 +95,26 @@ const screenWidth = Dimensions.get('window').width;
 const styles = StyleSheet.create({
   container: { width: screenWidth, paddingBottom: 100 },
   FlatList: {},
+  item: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    paddingLeft: 20,
+    height: 50,
+    borderBottomColor: '#eee',
+    borderBottomWidth: 2,
+  },
+  delete: { width: 25, height: 25 },
+  icon: { width: 40, height: 40, marginLeft: 10 },
+  name: { fontSize: 15, marginLeft: 10 },
 });
 
 export default connect(
-  ({ app, user, mine, loading }: CategorySettingProps) => ({
+  ({ app, user, mine, record, loading }: CategorySettingProps) => ({
     app,
     user,
     mine,
+    record,
     loading,
   })
 )(CategorySetting);

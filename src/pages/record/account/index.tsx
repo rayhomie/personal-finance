@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useState, useEffect, useMemo } from 'react';
 import {
   View,
   Text,
@@ -16,26 +17,55 @@ import { ImageManager } from '@/assets/json/ImageManager';
 
 const category_list = require('@/assets/json/Category.json');
 
+const IM: any = ImageManager;
 interface AccountProps extends ConnectState, ConnectProps {
   dataLoading?: boolean;
 }
 
 const Account: React.FC<AccountProps> = props => {
   const [payOrIncome, setPayOrIncome] = useState<'pay' | 'income'>('pay'); // 0为支出
+  const [categoryList, setCategoryList] = useState<any[]>(
+    category_list[payOrIncome]
+  );
+  const { dispatch, record } = props;
+  const { noSystemList } = record as any;
 
-  const categoryItem = (list: any) => {
-    const IM: any = ImageManager;
-    return list.map((i: any) => (
-      <TouchableOpacity
-        style={styles.category_item}
-        key={i.id}
-        onPress={() => handleClick(i.id)}
-      >
-        <Image style={styles.category_icon} source={IM[i.icon_n]} />
-        <Text style={styles.category_name}>{i.name}</Text>
-      </TouchableOpacity>
-    ));
-  };
+  useEffect(() => {
+    (dispatch as Dispatch)({
+      type: 'record/getNoSystem',
+      payload: { is_income: payOrIncome === 'pay' ? 0 : 1 },
+    });
+  }, [payOrIncome]);
+
+  useEffect(() => {
+    setCategoryList([
+      ...category_list[payOrIncome],
+      ...(noSystemList ? noSystemList : []),
+      { id: 'setting', name: '设置', icon_n: 'tabbar_settings_n' },
+    ]);
+  }, [noSystemList, payOrIncome]);
+
+  const categoryItem = useMemo(
+    () => (list: any[]) => {
+      return list?.map((i: any) => (
+        <TouchableOpacity
+          style={styles.category_item}
+          key={i.id}
+          onPress={() => {
+            if (i._id) {
+              handleClick(i._id);
+              return;
+            }
+            handleClick(i.id);
+          }}
+        >
+          <Image style={styles.category_icon} source={IM[i.icon_n]} />
+          <Text style={styles.category_name}>{i.name}</Text>
+        </TouchableOpacity>
+      ));
+    },
+    [categoryList]
+  );
 
   const handleTab = (e: any) => {
     if (e.nativeEvent.selectedSegmentIndex === 0) {
@@ -46,6 +76,7 @@ const Account: React.FC<AccountProps> = props => {
   };
 
   const handleClick = (value: any) => {
+    console.log(value);
     if (value === 'setting') {
       NavigationUtil.toPage('分类设置');
     }
@@ -60,10 +91,7 @@ const Account: React.FC<AccountProps> = props => {
       />
       <ScrollView>
         <View style={styles.bill_category} key={payOrIncome}>
-          {categoryItem([
-            ...category_list[payOrIncome],
-            { id: 'setting', name: '设置', icon_n: 'tabbar_settings_n' },
-          ])}
+          {categoryItem(categoryList)}
         </View>
       </ScrollView>
     </View>
@@ -73,14 +101,12 @@ const Account: React.FC<AccountProps> = props => {
 const category_item_width = 70;
 const category_icon_width = 50;
 const screenWidth = Dimensions.get('window').width;
-const screenHeight = Dimensions.get('window').height;
 const space = (screenWidth - category_item_width * 4) / 5;
 
 const styles = StyleSheet.create({
-  container: { width: screenWidth, height: screenHeight - 180 },
+  container: { width: screenWidth, paddingBottom: 50 },
   bill_category: {
     width: screenWidth,
-    // backgroundColor: 'pink',
     color: 'pink',
     flexDirection: 'row',
     flexWrap: 'wrap',
@@ -103,9 +129,12 @@ const styles = StyleSheet.create({
   category_name: { fontSize: 14 },
 });
 
-export default connect(({ app, user, mine, loading }: AccountProps) => ({
-  app,
-  user,
-  mine,
-  dataLoading: loading?.effects['app/login'],
-}))(Account);
+export default connect(
+  ({ app, user, mine, record, loading }: AccountProps) => ({
+    app,
+    user,
+    record,
+    mine,
+    dataLoading: loading?.effects['app/login'],
+  })
+)(Account);

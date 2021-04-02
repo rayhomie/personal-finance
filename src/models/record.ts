@@ -1,57 +1,48 @@
 import { Reducer } from 'redux';
 import { Effect } from '@/models/connect';
+import { getList } from '@/service/bill_category';
 
+type noSystemItemType = {
+  is_income: number;
+  is_system: number;
+  _id: string;
+  icon_n: string;
+  icon_l: string;
+  icon_s: string;
+  name: string;
+  user_id: string;
+  id: string;
+};
 export interface RecordState {
-  data: string[];
-  v: string;
-  // 验证码
-  verCode: string;
-  number: number;
-  content: any[];
+  noSystemList: noSystemItemType[];
 }
 
 export interface RecordModelType {
   namespace: 'record';
   state: RecordState;
   effects: {
-    zhihu: Effect;
+    getNoSystem: Effect;
   };
   reducers: {
     save: Reducer<RecordState>;
   };
 }
 
-const fetchTest = async () => {
-  const res = await fetch(
-    'https://www.zhihu.com/api/v3/oauth/sms/supported_countries'
-  );
-  const data = await res.json();
-  console.log(data);
-  return data;
-};
-
 const record: RecordModelType = {
   namespace: 'record',
-  state: {
-    data: [],
-    v: '1.0',
-    verCode: '',
-    number: 1,
-    content: [],
-  },
+  state: { noSystemList: [] },
   effects: {
-    /**
-     * 说明：获取百度网页
-     * @author allahbin
-     */
-    *zhihu(_, { call, put }) {
-      const res = yield call(fetchTest);
-      yield put({
-        type: 'save',
-        payload: {
-          content: res.data,
-        },
-      });
+    *getNoSystem({ payload }, { call, put }) {
+      const res = yield call(getList({ ...payload, is_system: 0 }));
+      console.log(res);
+      if (res.data.code === 0) {
+        yield put({
+          type: 'save',
+          payload: {
+            noSystemList: res.data.docs,
+          },
+        });
+      }
     },
   },
 

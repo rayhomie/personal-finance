@@ -74,4 +74,12 @@ export default class NavigationUtil {
       console.error('引入navigationRef失败');
     }
   }
+
+  static getParams() {
+    if (navigationRef.current) {
+      return navigationRef.current.getCurrentRoute()?.params;
+    } else {
+      console.error('引入navigationRef失败');
+    }
+  }
 }

@@ -2,7 +2,7 @@
   {
     "id": 1,
     "name": "娱乐",
-    "list": [
+    "data": [
       {
         "id": 1,
         "section_id": 1,
@@ -141,7 +141,7 @@
   {
     "id": 2,
     "name": "饮食",
-    "list": [
+    "data": [
       {
         "id": 20,
         "section_id": 2,
@@ -287,7 +287,7 @@
   {
     "id": 3,
     "name": "医疗",
-    "list": [
+    "data": [
       {
         "id": 40,
         "section_id": 3,
@@ -363,7 +363,7 @@
   {
     "id": 4,
     "name": "学习",
-    "list": [
+    "data": [
       {
         "id": 50,
         "section_id": 4,
@@ -439,7 +439,7 @@
   {
     "id": 5,
     "name": "交通",
-    "list": [
+    "data": [
       {
         "id": 60,
         "section_id": 5,
@@ -550,7 +550,7 @@
   {
     "id": 6,
     "name": "购物",
-    "list": [
+    "data": [
       {
         "id": 75,
         "section_id": 6,
@@ -752,7 +752,7 @@
   {
     "id": 7,
     "name": "生活",
-    "list": [
+    "data": [
       {
         "id": 103,
         "section_id": 7,
@@ -842,7 +842,7 @@
   {
     "id": 8,
     "name": "个人",
-    "list": [
+    "data": [
       {
         "id": 115,
         "section_id": 8,
@@ -925,7 +925,7 @@
   {
     "id": 9,
     "name": "家居",
-    "list": [
+    "data": [
       {
         "id": 126,
         "section_id": 9,
@@ -1036,7 +1036,7 @@
   {
     "id": 10,
     "name": "家庭",
-    "list": [
+    "data": [
       {
         "id": 141,
         "section_id": 10,
@@ -1112,7 +1112,7 @@
   {
     "id": 11,
     "name": "健身",
-    "list": [
+    "data": [
       {
         "id": 151,
         "section_id": 11,
@@ -1202,7 +1202,7 @@
   {
     "id": 12,
     "name": "办公",
-    "list": [
+    "data": [
       {
         "id": 163,
         "section_id": 12,
@@ -1271,7 +1271,7 @@
   {
     "id": 13,
     "name": "收入",
-    "list": [
+    "data": [
       {
         "id": 172,
         "section_id": 13,
@@ -1347,7 +1347,7 @@
   {
     "id": 14,
     "name": "其他",
-    "list": [
+    "data": [
       {
         "id": 182,
         "section_id": 14,

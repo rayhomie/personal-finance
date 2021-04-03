@@ -7,7 +7,10 @@ import Record from '@/pages/record/index';
 import Chart from '@/pages/chart/index';
 import Mine from '@/pages/mine/index';
 import Account from '@/pages/record/account/index';
-import CategorySetting from '@/pages/record/categorySetting/index';
+import CategorySetting, {
+  Add as CategorySettingAdd,
+} from '@/pages/record/categorySetting/index';
+import Add from '@/pages/record/categorySetting/add';
 import UserInfo from '@/pages/mine/userInfo/index';
 
 const Stack = createStackNavigator();
@@ -28,7 +31,14 @@ export default function Router() {
         <Stack.Screen name="记账app" component={renderTabBar} />
         <Stack.Screen name="用户信息" component={UserInfo} />
         <Stack.Screen name="记账" component={Account} />
-        <Stack.Screen name="分类设置" component={CategorySetting} />
+        <Stack.Screen
+          name="分类设置"
+          component={CategorySetting}
+          options={{
+            headerRight: CategorySettingAdd,
+          }}
+        />
+        <Stack.Screen name="添加分类" component={Add} />
       </Stack.Navigator>
     </NavigationContainer>
   );

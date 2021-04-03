@@ -43,10 +43,7 @@ const CategorySetting: React.FC<CategorySettingProps> = props => {
   const { noSystemList } = record as any;
 
   useEffect(() => {
-    setPayOrIncome(
-      (NavigationUtil.navigation.current as any).getCurrentRoute().params
-        .payOrIncome
-    );
+    setPayOrIncome((NavigationUtil.getParams() as any).payOrIncome);
   }, []);
 
   useEffect(() => {
@@ -190,6 +187,7 @@ const styles = StyleSheet.create({
   button: { flexDirection: 'row' },
   cancel: { width: screenWidth / 2, height: 60, borderRadius: 0 },
   del: { width: screenWidth / 2, height: 60, borderRadius: 0 },
+  add: { fontSize: 16, color: '#006fff' },
 });
 
 export default connect(
@@ -201,3 +199,15 @@ export default connect(
     loading,
   })
 )(CategorySetting);
+
+export const Add = () => {
+  return (
+    <TouchableOpacity
+      onPress={() => {
+        NavigationUtil.toPage('添加分类');
+      }}
+    >
+      <Text style={styles.add}>添加分类</Text>
+    </TouchableOpacity>
+  );
+};

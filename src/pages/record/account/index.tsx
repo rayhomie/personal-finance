@@ -28,14 +28,14 @@ const Account: React.FC<AccountProps> = props => {
     category_list[payOrIncome]
   );
   const { dispatch, record } = props;
-  const { noSystemList } = record as any;
+  const { noSystemList, addSuccess } = record as any;
 
   useEffect(() => {
     (dispatch as Dispatch)({
       type: 'record/getNoSystem',
       payload: { is_income: payOrIncome === 'pay' ? 0 : 1 },
     });
-  }, [payOrIncome]);
+  }, [addSuccess, payOrIncome]);
 
   useEffect(() => {
     setCategoryList([

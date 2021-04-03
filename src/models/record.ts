@@ -1,6 +1,6 @@
 import { Reducer } from 'redux';
 import { Effect } from '@/models/connect';
-import { getList, Delete } from '@/service/bill_category';
+import { getList, Delete, insert } from '@/service/bill_category';
 
 type noSystemItemType = {
   is_income: number;
@@ -15,6 +15,7 @@ type noSystemItemType = {
 };
 export interface RecordState {
   noSystemList: noSystemItemType[];
+  addSuccess: number; //控制刷新列表
 }
 
 export interface RecordModelType {
@@ -23,6 +24,7 @@ export interface RecordModelType {
   effects: {
     getNoSystem: Effect;
     delCategory: Effect;
+    insertCategory: Effect;
   };
   reducers: {
     save: Reducer<RecordState>;
@@ -31,7 +33,7 @@ export interface RecordModelType {
 
 const record: RecordModelType = {
   namespace: 'record',
-  state: { noSystemList: [] },
+  state: { noSystemList: [], addSuccess: Math.random() * 100000 },
   effects: {
     *getNoSystem({ payload }, { call, put }) {
       const res = yield call(getList({ ...payload, is_system: 0 }));
@@ -48,6 +50,19 @@ const record: RecordModelType = {
       const { success, fail, ...rest } = payload;
       const res = yield call(Delete(rest));
       if (res.data.code === 0) {
+        success();
+      } else {
+        fail();
+      }
+    },
+    *insertCategory({ payload }, { call, put }) {
+      const { success, fail, ...rest } = payload;
+      const res = yield call(insert(rest));
+      if (res.data.code === 0) {
+        yield put({
+          type: 'save',
+          payload: { addSuccess: Math.random() * 100000 },
+        });
         success();
       } else {
         fail();

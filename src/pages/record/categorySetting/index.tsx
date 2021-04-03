@@ -88,11 +88,11 @@ const CategorySetting: React.FC<CategorySettingProps> = props => {
             type: 'record/getNoSystem',
             payload: { is_income: payOrIncome === 'pay' ? 0 : 1 },
           });
-          Toast.success(`”${name}“分类删除成功`);
+          Toast.success(`”${name}“分类删除成功`, 1.5);
           setVisible(false);
         },
         fail: () => {
-          Toast.fail(`”${name}“分类删除失败，请重试`);
+          Toast.fail(`”${name}“分类删除失败，请重试`, 1.5);
           setVisible(false);
         },
         id,

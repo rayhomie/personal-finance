@@ -1,6 +1,13 @@
 import { Reducer } from 'redux';
 import { Effect } from '@/models/connect';
-import { getList, Delete, insert, update } from '@/service/bill_category';
+import {
+  getList,
+  Delete,
+  insert,
+  update,
+  getSystemCategory,
+} from '@/service/bill_category';
+import { add as addBill } from '@/service//bill';
 
 type noSystemItemType = {
   is_income: number;
@@ -16,6 +23,7 @@ type noSystemItemType = {
 export interface RecordState {
   noSystemList: noSystemItemType[];
   addSuccess: number; //控制刷新列表
+  querySystemCategory: any;
 }
 
 export interface RecordModelType {
@@ -26,6 +34,8 @@ export interface RecordModelType {
     delCategory: Effect;
     insertCategory: Effect;
     updateCategory: Effect;
+    getSystemCategory: Effect;
+    addBill: Effect;
   };
   reducers: {
     save: Reducer<RecordState>;
@@ -34,7 +44,11 @@ export interface RecordModelType {
 
 const record: RecordModelType = {
   namespace: 'record',
-  state: { noSystemList: [], addSuccess: Math.random() * 100000 },
+  state: {
+    noSystemList: [],
+    addSuccess: Math.random() * 100000,
+    querySystemCategory: {},
+  },
   effects: {
     *getNoSystem({ payload }, { call, put }) {
       const res = yield call(getList({ ...payload, is_system: 0 }));
@@ -77,6 +91,29 @@ const record: RecordModelType = {
           type: 'save',
           payload: { addSuccess: Math.random() * 100000 },
         });
+        success();
+      } else {
+        fail();
+      }
+    },
+    *getSystemCategory({ payload }, { call, put }) {
+      const { success, fail, ...rest } = payload;
+      const res = yield call(getSystemCategory(rest));
+      console.log(res);
+      if (res.data.code === 0) {
+        yield put({
+          type: 'save',
+          payload: { querySystemCategory: res.data.docs },
+        });
+        success();
+      } else {
+        fail();
+      }
+    },
+    *addBill({ payload }, { call }) {
+      const { success, fail, ...rest } = payload;
+      const res = yield call(addBill(rest));
+      if (res.data.code === 0) {
         success();
       } else {
         fail();

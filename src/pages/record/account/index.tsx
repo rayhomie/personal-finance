@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect, useMemo } from 'react';
 import {
@@ -9,7 +10,12 @@ import {
   TouchableOpacity,
   Image,
 } from 'react-native';
-import { SegmentedControl } from '@ant-design/react-native';
+import {
+  SegmentedControl,
+  Modal,
+  InputItem,
+  Toast,
+} from '@ant-design/react-native';
 import { ConnectProps, ConnectState, Dispatch } from '@/models/connect';
 import { connect } from 'react-redux';
 import NavigationUtil from '@/navigator/NavigationUtil';
@@ -27,8 +33,13 @@ const Account: React.FC<AccountProps> = props => {
   const [categoryList, setCategoryList] = useState<any[]>(
     category_list[payOrIncome]
   );
+  const [visible, setVisible] = useState<boolean>(false);
+  const [compute, setCompute] = useState<string>('');
+  const [input, setInput] = useState<string>('');
+  const [clickItem, setClickItem] = useState<any>({});
   const { dispatch, record } = props;
-  const { noSystemList, addSuccess } = record as any;
+  const { noSystemList, addSuccess, querySystemCategory } = record as any;
+  const dispatchRecord = dispatch as Dispatch;
 
   useEffect(() => {
     (dispatch as Dispatch)({
@@ -45,6 +56,13 @@ const Account: React.FC<AccountProps> = props => {
     ]);
   }, [noSystemList, payOrIncome]);
 
+  const onCloseModal = () => {
+    setVisible(false);
+    setCompute('');
+    setInput('');
+    setClickItem({});
+  };
+
   const categoryItem = useMemo(
     () => (list: any[]) => {
       return list?.map((i: any) => (
@@ -52,19 +70,18 @@ const Account: React.FC<AccountProps> = props => {
           style={styles.category_item}
           key={i.id}
           onPress={() => {
-            if (i._id) {
-              handleClick(i._id);
-              return;
-            }
-            handleClick(i.id);
+            handleClick(i);
           }}
         >
-          <Image style={styles.category_icon} source={IM[i.icon_n]} />
+          <Image
+            style={styles.category_icon}
+            source={clickItem.icon_n === i.icon_n ? IM[i.icon_s] : IM[i.icon_n]}
+          />
           <Text style={styles.category_name}>{i.name}</Text>
         </TouchableOpacity>
       ));
     },
-    [categoryList]
+    [categoryList, clickItem]
   );
 
   const handleTab = (e: any) => {
@@ -75,9 +92,121 @@ const Account: React.FC<AccountProps> = props => {
     }
   };
 
-  const handleClick = (value: any) => {
-    if (value === 'setting') {
+  const handleClick = (item: any) => {
+    setClickItem(item);
+    if (item.id === 'setting') {
       NavigationUtil.toPage('分类设置', { payOrIncome });
+      return;
+    }
+    setVisible(true);
+    if (!item._id) {
+      dispatchRecord({
+        type: 'record/getSystemCategory',
+        payload: {
+          id: item.id,
+          success: () => {},
+          fail: () => {
+            Toast.fail('服务器错误请客服', 1.5);
+          },
+        },
+      });
+    } else {
+      console.log('不是');
+    }
+  };
+
+  const handleDone = () => {
+    if (compute === '') {
+      Toast.fail('请输入金额', 1.5);
+      return;
+    }
+    const category_id = !clickItem._id
+      ? querySystemCategory._id
+      : clickItem._id;
+
+    dispatchRecord({
+      type: 'record/addBill',
+      payload: {
+        success: () => {
+          Toast.success('添加账单成功', 1.5);
+          onCloseModal();
+          NavigationUtil.goBack();
+        },
+        fail: () => {
+          Toast.fail('添加账单失败，联系客服', 1.5);
+        },
+        category_id: category_id,
+        amount: Number(compute),
+        remark: input,
+      },
+    });
+  };
+
+  const handleCompute = (sign: string) => {
+    if (compute) {
+      const plus = compute.split('+');
+      const sub = compute.split('-');
+      if (plus.length === 2) {
+        if (plus[0] !== '') {
+          if (plus[1] !== '') {
+            setCompute((Number(plus[0]) + Number(plus[1])).toString() + sign);
+            return;
+          } else {
+            setCompute(plus[0] + sign);
+            return;
+          }
+        } else {
+          return;
+        }
+      }
+      if (sub.length === 2) {
+        if (sub[0] !== '') {
+          if (sub[1] !== '') {
+            setCompute((Number(sub[0]) - Number(sub[1])).toString() + sign);
+            return;
+          } else {
+            setCompute(sub[0] + sign);
+            return;
+          }
+        } else {
+          return;
+        }
+      }
+
+      if (sub.length === 3) {
+        if (sub[2] !== '') {
+          setCompute((-Number(sub[1]) - Number(sub[2])).toString() + sign);
+          return;
+        } else {
+          setCompute('-' + sub[1] + sign);
+          return;
+        }
+      }
+      setCompute(compute + sign);
+    }
+  };
+
+  const renderDone = () => {
+    const hasSign = compute.split('');
+    if (
+      hasSign.includes('+') ||
+      (hasSign.includes('-') && hasSign[0] !== '-')
+    ) {
+      return (
+        <TouchableOpacity onPress={() => handleCompute('')}>
+          <View style={styles.itemDone}>
+            <Text>=</Text>
+          </View>
+        </TouchableOpacity>
+      );
+    } else {
+      return (
+        <TouchableOpacity onPress={() => handleDone()}>
+          <View style={styles.itemDone}>
+            <Text>完成</Text>
+          </View>
+        </TouchableOpacity>
+      );
     }
   };
 
@@ -93,6 +222,169 @@ const Account: React.FC<AccountProps> = props => {
           {categoryItem(categoryList)}
         </View>
       </ScrollView>
+      <Modal
+        popup
+        visible={visible}
+        animationType="slide-up"
+        onClose={onCloseModal}
+      >
+        <View style={styles.board}>
+          <View style={styles.remark}>
+            <View style={styles.key}>
+              <InputItem
+                placeholder="点击写备注..."
+                onChange={value => setInput(value)}
+                clear
+                value={input}
+              >
+                备注:
+              </InputItem>
+            </View>
+            <View style={styles.showRes}>
+              <Text style={{ fontSize: 20 }}>{compute}</Text>
+            </View>
+          </View>
+          <View style={styles.keyboard}>
+            <TouchableOpacity
+              onPress={() => {
+                setCompute(compute + 7);
+              }}
+            >
+              <View style={styles.item}>
+                <Text>7</Text>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                setCompute(compute + 8);
+              }}
+            >
+              <View style={styles.item}>
+                <Text>8</Text>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                setCompute(compute + 9);
+              }}
+            >
+              <View style={styles.item}>
+                <Text>9</Text>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity>
+              <View style={styles.item}>
+                <Text>今天</Text>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                setCompute(compute + 4);
+              }}
+            >
+              <View style={styles.item}>
+                <Text>4</Text>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                setCompute(compute + 5);
+              }}
+            >
+              <View style={styles.item}>
+                <Text>5</Text>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                setCompute(compute + 6);
+              }}
+            >
+              <View style={styles.item}>
+                <Text>6</Text>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                handleCompute('+');
+              }}
+            >
+              <View style={styles.item}>
+                <Text>+</Text>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                setCompute(compute + 1);
+              }}
+            >
+              <View style={styles.item}>
+                <Text>1</Text>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                setCompute(compute + 2);
+              }}
+            >
+              <View style={styles.item}>
+                <Text>2</Text>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                setCompute(compute + 3);
+              }}
+            >
+              <View style={styles.item}>
+                <Text>3</Text>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                handleCompute('-');
+              }}
+            >
+              <View style={styles.item}>
+                <Text>-</Text>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                onCloseModal();
+              }}
+            >
+              <View style={styles.itemCancal}>
+                <Text>取消</Text>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                setCompute(compute + 0);
+              }}
+            >
+              <View style={styles.item}>
+                <Text>0</Text>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                setCompute(res =>
+                  res
+                    .split('')
+                    .slice(0, res.length - 1)
+                    .join('')
+                );
+              }}
+            >
+              <View style={styles.item}>
+                <Text>{'<='}</Text>
+              </View>
+            </TouchableOpacity>
+            {renderDone()}
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -101,6 +393,15 @@ const category_item_width = 70;
 const category_icon_width = 50;
 const screenWidth = Dimensions.get('window').width;
 const space = (screenWidth - category_item_width * 4) / 5;
+const commonStyle: any = {
+  width: screenWidth / 4,
+  height: 260 / 4,
+  alignItems: 'center',
+  justifyContent: 'center',
+  borderLeftWidth: 1,
+  borderBottomWidth: 1,
+  borderColor: '#eee',
+};
 
 const styles = StyleSheet.create({
   container: { width: screenWidth, paddingBottom: 50 },
@@ -126,6 +427,29 @@ const styles = StyleSheet.create({
     borderRadius: category_icon_width / 2,
   },
   category_name: { fontSize: 14 },
+  board: { width: screenWidth, height: 300 },
+  remark: {
+    width: screenWidth,
+    flexDirection: 'row',
+  },
+  key: { width: (screenWidth * 3) / 4 },
+  showRes: {
+    width: screenWidth / 4,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderBottomWidth: 1,
+    borderBottomColor: '#eee',
+  },
+  keyboard: {
+    width: screenWidth,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+  },
+  item: {
+    ...commonStyle,
+  },
+  itemDone: { ...commonStyle, backgroundColor: 'pink' },
+  itemCancal: { ...commonStyle, backgroundColor: '#eee' },
 });
 
 export default connect(

@@ -9,6 +9,7 @@ import {
   ScrollView,
   TouchableOpacity,
   Image,
+  Button as NativeButton,
 } from 'react-native';
 import {
   SegmentedControl,
@@ -41,6 +42,26 @@ const Account: React.FC<AccountProps> = props => {
   const { dispatch, record } = props;
   const { noSystemList, addSuccess, querySystemCategory } = record as any;
   const dispatchRecord = dispatch as Dispatch;
+
+  const [date, setDate] = useState(new Date(1598051730000));
+  const [mode, setMode] = useState('date');
+  const [show, setShow] = useState(false);
+
+  const onChange = (event, selectedDate) => {
+    const currentDate = selectedDate || date;
+    setShow(true);
+    setDate(currentDate);
+  };
+  const showMode = currentMode => {
+    setShow(true);
+    setMode(currentMode);
+  };
+  const showDatepicker = () => {
+    showMode('date');
+  };
+  const showTimepicker = () => {
+    showMode('time');
+  };
 
   useEffect(() => {
     (dispatch as Dispatch)({
@@ -386,6 +407,23 @@ const Account: React.FC<AccountProps> = props => {
           </View>
         </View>
       </Modal>
+
+      <View>
+        <NativeButton onPress={showDatepicker} title="Show date picker!" />
+      </View>
+      <View>
+        <NativeButton onPress={showTimepicker} title="Show time picker!" />
+      </View>
+      {show && (
+        <DateTimePicker
+          testID="dateTimePicker"
+          value={date}
+          mode={mode}
+          is24Hour={true}
+          display="default"
+          onChange={onChange}
+        />
+      )}
     </View>
   );
 };

@@ -26,7 +26,6 @@ const IM: any = ImageManager;
 
 interface CategorySettingProps extends ConnectState, ConnectProps {}
 
-interface CategorySettingState {}
 type curDelType = {
   id: string;
   name: string;
@@ -101,6 +100,10 @@ const CategorySetting: React.FC<CategorySettingProps> = props => {
     });
   };
 
+  const updateCate = (item: any) => {
+    NavigationUtil.toPage('添加分类', { isAdd: false, selectedItem: item });
+  };
+
   const renderItem = ({ item }: any) => {
     return (
       <View style={styles.item}>
@@ -113,10 +116,24 @@ const CategorySetting: React.FC<CategorySettingProps> = props => {
             <Image style={styles.delete} source={IM.category_delete} />
           </TouchableOpacity>
         )}
-        <Image style={styles.icon} source={IM[item.icon_n]} />
-        <Text style={styles.name}>
-          {item.is_system === 1 ? item.name : `${item.name}（自定义）`}
-        </Text>
+        {item.is_system === 1 ? (
+          <>
+            <Image style={styles.icon} source={IM[item.icon_n]} />
+            <Text style={styles.name}>
+              {item.is_system === 1 ? item.name : `${item.name}（自定义）`}
+            </Text>
+          </>
+        ) : (
+          <TouchableOpacity
+            style={styles.touch}
+            onPress={() => updateCate({ item })}
+          >
+            <Image style={styles.icon} source={IM[item.icon_n]} />
+            <Text style={styles.name}>
+              {item.is_system === 1 ? item.name : `${item.name}（自定义）`}
+            </Text>
+          </TouchableOpacity>
+        )}
       </View>
     );
   };
@@ -183,11 +200,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  touch: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
   tip: { fontSize: 20 },
   button: { flexDirection: 'row' },
   cancel: { width: screenWidth / 2, height: 60, borderRadius: 0 },
   del: { width: screenWidth / 2, height: 60, borderRadius: 0 },
-  add: { fontSize: 16, color: '#006fff' },
+  add: { fontSize: 16, color: '#006fff', marginRight: 10 },
 });
 
 export default connect(
@@ -204,7 +225,7 @@ export const Add = () => {
   return (
     <TouchableOpacity
       onPress={() => {
-        NavigationUtil.toPage('添加分类');
+        NavigationUtil.toPage('添加分类', { isAdd: true });
       }}
     >
       <Text style={styles.add}>添加分类</Text>

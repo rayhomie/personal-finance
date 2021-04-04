@@ -16,6 +16,8 @@ interface ListProps {
   sections: SectionsType;
   containerStyle?: any;
   handleSelect?: (item: any) => void;
+  isAdd: boolean;
+  select: any;
 }
 type SectionsType = {
   id?: string;
@@ -24,14 +26,24 @@ type SectionsType = {
 }[];
 
 const List: React.FC<ListProps> = props => {
-  const { sections, containerStyle = {}, handleSelect = () => {} } = props;
-  const [selected, setSelected] = useState<any>({
-    icon_l: 'cc_entertainmente_game_l',
-    icon_n: 'cc_entertainmente_game',
-    icon_s: 'cc_entertainmente_game_s',
-    id: 1,
-    section_id: 1,
-  });
+  const {
+    sections,
+    containerStyle = {},
+    handleSelect = () => {},
+    isAdd,
+    select,
+  } = props;
+  const [selected, setSelected] = useState<any>(
+    isAdd
+      ? {
+          icon_l: 'cc_entertainmente_game_l',
+          icon_n: 'cc_entertainmente_game',
+          icon_s: 'cc_entertainmente_game_s',
+          id: 1,
+          section_id: 1,
+        }
+      : { ...select?.item }
+  );
 
   useEffect(() => {
     handleSelect(selected);
@@ -49,10 +61,10 @@ const List: React.FC<ListProps> = props => {
               {item.data.map(i => {
                 return (
                   <TouchableOpacity
-                    key={i.id}
+                    key={i.icon_s}
                     style={styles.touch}
                     onPress={() => {
-                      if (selected.id !== i.id) {
+                      if (selected.icon_s !== i.icon_s) {
                         setSelected(i);
                       }
                     }}
@@ -60,7 +72,9 @@ const List: React.FC<ListProps> = props => {
                     <Image
                       style={styles.item}
                       source={
-                        selected.id === i.id ? IM[i.icon_s] : IM[i.icon_n]
+                        selected.icon_s === i.icon_s
+                          ? IM[i.icon_s]
+                          : IM[i.icon_n]
                       }
                     />
                   </TouchableOpacity>

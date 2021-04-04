@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, Image, Dimensions } from 'react-native';
 import {
   Button,
@@ -21,8 +22,11 @@ interface AddProps extends ConnectState, ConnectProps {}
 const Add: React.FC<AddProps> = props => {
   const { dispatch } = props;
   const [payOrIncome, setPayOrIncome] = useState<'pay' | 'income'>('pay'); // 0为支出
-  const [selected, setSelected] = useState<any>(1);
+  const [selected, setSelected] = useState<any>({
+    ...(NavigationUtil.getParams() as any).selectedItem?.item,
+  });
   const [input, setInput] = useState<string>('');
+  const [updateItem, setUpdateItem] = useState<any>('');
 
   const handleTab = (e: any) => {
     if (e.nativeEvent.selectedSegmentIndex === 0) {
@@ -31,6 +35,14 @@ const Add: React.FC<AddProps> = props => {
       setPayOrIncome('income');
     }
   };
+
+  useEffect(() => {
+    if (!(NavigationUtil.getParams() as any).isAdd) {
+      setPayOrIncome(selected.is_income === 0 ? 'pay' : 'income');
+      setInput(selected.name);
+      setUpdateItem(selected);
+    }
+  }, []);
 
   const handleAdd = () => {
     const { icon_n, icon_s, icon_l } = selected;
@@ -58,6 +70,33 @@ const Add: React.FC<AddProps> = props => {
     });
   };
 
+  const handleUpdate = () => {
+    const { icon_n, icon_s, icon_l } = selected;
+    if (!input) {
+      Toast.fail('请输入类别名称', 1.5);
+      return;
+    }
+    (dispatch as Dispatch)({
+      type: 'record/updateCategory',
+      payload: {
+        success: () => {
+          Toast.success('修改自定义分类成功', 1.5);
+          NavigationUtil.goBack();
+        },
+        fail: () => {
+          Toast.success('分类名称已存在', 1.5);
+        },
+        query_id: updateItem._id,
+        query_name: updateItem.name,
+        name: input,
+        is_income: payOrIncome === 'pay' ? 0 : 1,
+        icon_n,
+        icon_s,
+        icon_l,
+      },
+    });
+  };
+
   return (
     <View style={styles.container}>
       <SegmentedControl
@@ -74,6 +113,7 @@ const Add: React.FC<AddProps> = props => {
             onChange={value => {
               setInput(value);
             }}
+            value={input}
           >
             <Image style={styles.InputImg} source={IM[selected.icon_s]} />
           </InputItem>
@@ -82,10 +122,12 @@ const Add: React.FC<AddProps> = props => {
           style={styles.add}
           type="primary"
           onPress={() => {
-            handleAdd();
+            (NavigationUtil.getParams() as any).isAdd
+              ? handleAdd()
+              : handleUpdate();
           }}
         >
-          添加
+          {(NavigationUtil.getParams() as any).isAdd ? '添加' : '修改'}
         </Button>
       </View>
       <List
@@ -93,6 +135,8 @@ const Add: React.FC<AddProps> = props => {
         handleSelect={item => {
           setSelected(item);
         }}
+        select={(NavigationUtil.getParams() as any).selectedItem}
+        isAdd={(NavigationUtil.getParams() as any).isAdd}
       />
     </View>
   );

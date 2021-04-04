@@ -38,7 +38,11 @@ export default function Router() {
             headerRight: CategorySettingAdd,
           }}
         />
-        <Stack.Screen name="添加分类" component={Add} />
+        <Stack.Screen
+          name="添加分类"
+          component={Add}
+          options={{ headerTitle: () => <></> }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

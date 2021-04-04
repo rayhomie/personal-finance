@@ -16,6 +16,7 @@ import {
   InputItem,
   Toast,
 } from '@ant-design/react-native';
+import DateTimePicker from '@react-native-community/datetimepicker';
 import { ConnectProps, ConnectState, Dispatch } from '@/models/connect';
 import { connect } from 'react-redux';
 import NavigationUtil from '@/navigator/NavigationUtil';

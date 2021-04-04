@@ -52,7 +52,7 @@ const Account: React.FC<AccountProps> = props => {
     setCategoryList([
       ...category_list[payOrIncome],
       ...(noSystemList ? noSystemList : []),
-      { id: 'setting', name: '设置', icon_n: 'tabbar_settings_n' },
+      { id: 'setting', name: '设置', icon_n: 'tabbar_settings_s' },
     ]);
   }, [noSystemList, payOrIncome]);
 

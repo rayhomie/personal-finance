@@ -1,8 +1,5 @@
 import request from '@/utils/request';
 
-export const getNowTime = () =>
-  request({ url: '/bill/nowTime', method: 'GET' });
-
 export const getBillList = () => () =>
   request({
     url: '/bill/list',

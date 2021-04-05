@@ -32,7 +32,9 @@ type curDelType = {
 };
 
 const CategorySetting: React.FC<CategorySettingProps> = props => {
-  const [payOrIncome, setPayOrIncome] = useState<'pay' | 'income'>('pay'); // 0为支出
+  const [payOrIncome, setPayOrIncome] = useState<'pay' | 'income'>(
+    (NavigationUtil.getParams() as any).payOrIncome || 'pay'
+  ); // 0为支出
   const [categoryList, setCategoryList] = useState<any[]>(
     category_list[payOrIncome]
   );
@@ -40,10 +42,6 @@ const CategorySetting: React.FC<CategorySettingProps> = props => {
   const [curDel, setCurDel] = useState<curDelType>({ id: '', name: '' });
   const { dispatch, record } = props;
   const { noSystemList } = record as any;
-
-  useEffect(() => {
-    setPayOrIncome((NavigationUtil.getParams() as any).payOrIncome);
-  }, []);
 
   useEffect(() => {
     (dispatch as Dispatch)({

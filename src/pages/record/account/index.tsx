@@ -9,7 +9,6 @@ import {
   ScrollView,
   TouchableOpacity,
   Image,
-  Button as NativeButton,
 } from 'react-native';
 import {
   SegmentedControl,
@@ -20,6 +19,7 @@ import {
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { ConnectProps, ConnectState, Dispatch } from '@/models/connect';
 import { connect } from 'react-redux';
+import moment from 'moment';
 import NavigationUtil from '@/navigator/NavigationUtil';
 import { ImageManager } from '@/assets/json/ImageManager';
 
@@ -43,25 +43,7 @@ const Account: React.FC<AccountProps> = props => {
   const { noSystemList, addSuccess, querySystemCategory } = record as any;
   const dispatchRecord = dispatch as Dispatch;
 
-  const [date, setDate] = useState(new Date(1598051730000));
-  const [mode, setMode] = useState('date');
-  const [show, setShow] = useState(false);
-
-  const onChange = (event, selectedDate) => {
-    const currentDate = selectedDate || date;
-    setShow(true);
-    setDate(currentDate);
-  };
-  const showMode = currentMode => {
-    setShow(true);
-    setMode(currentMode);
-  };
-  const showDatepicker = () => {
-    showMode('date');
-  };
-  const showTimepicker = () => {
-    showMode('time');
-  };
+  const [date, setDate] = useState(new Date());
 
   useEffect(() => {
     (dispatch as Dispatch)({
@@ -74,7 +56,13 @@ const Account: React.FC<AccountProps> = props => {
     setCategoryList([
       ...category_list[payOrIncome],
       ...(noSystemList ? noSystemList : []),
-      { id: 'setting', name: '设置', icon_n: 'tabbar_settings_s' },
+      {
+        id: 'setting',
+        name: '设置',
+        icon_n: 'tabbar_settings_s',
+        icon_s: 'tabbar_settings_s',
+        icon_l: 'tabbar_settings_s',
+      },
     ]);
   }, [noSystemList, payOrIncome]);
 
@@ -120,6 +108,7 @@ const Account: React.FC<AccountProps> = props => {
       NavigationUtil.toPage('分类设置', { payOrIncome });
       return;
     }
+    setDate(new Date());
     setVisible(true);
     if (!item._id) {
       dispatchRecord({
@@ -159,6 +148,7 @@ const Account: React.FC<AccountProps> = props => {
         },
         category_id: category_id,
         amount: Number(compute),
+        bill_time: moment(date).unix(),
         remark: input,
       },
     });
@@ -294,11 +284,19 @@ const Account: React.FC<AccountProps> = props => {
                 <Text>9</Text>
               </View>
             </TouchableOpacity>
-            <TouchableOpacity>
-              <View style={styles.item}>
-                <Text>今天</Text>
-              </View>
-            </TouchableOpacity>
+            <View style={styles.itemDate}>
+              <DateTimePicker
+                testID="dateTimePicker"
+                value={date}
+                mode={'date'}
+                is24Hour={true}
+                display="default"
+                onChange={(event, selectedDate) => {
+                  const currentDate = selectedDate || date;
+                  setDate(currentDate);
+                }}
+              />
+            </View>
             <TouchableOpacity
               onPress={() => {
                 setCompute(compute + 4);
@@ -407,23 +405,6 @@ const Account: React.FC<AccountProps> = props => {
           </View>
         </View>
       </Modal>
-
-      <View>
-        <NativeButton onPress={showDatepicker} title="Show date picker!" />
-      </View>
-      <View>
-        <NativeButton onPress={showTimepicker} title="Show time picker!" />
-      </View>
-      {show && (
-        <DateTimePicker
-          testID="dateTimePicker"
-          value={date}
-          mode={mode}
-          is24Hour={true}
-          display="default"
-          onChange={onChange}
-        />
-      )}
     </View>
   );
 };
@@ -489,6 +470,15 @@ const styles = StyleSheet.create({
   },
   itemDone: { ...commonStyle, backgroundColor: 'pink' },
   itemCancal: { ...commonStyle, backgroundColor: '#eee' },
+  itemDate: {
+    width: screenWidth / 4,
+    height: 260 / 4,
+    borderLeftWidth: 1,
+    borderBottomWidth: 1,
+    borderColor: '#eee',
+    paddingLeft: 8,
+    paddingTop: 15,
+  },
 });
 
 export default connect(

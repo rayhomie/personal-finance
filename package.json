@@ -21,6 +21,7 @@
     "@react-navigation/material-top-tabs": "^5.2.7",
     "@react-navigation/native": "^5.4.2",
     "@react-navigation/stack": "^5.3.9",
+    "@types/qs": "^6.9.6",
     "axios": "^0.21.1",
     "dva-core": "^2.0.2",
     "dva-immer": "^0.4.19",

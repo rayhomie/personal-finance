@@ -289,6 +289,7 @@ const Account: React.FC<AccountProps> = props => {
                 testID="dateTimePicker"
                 value={date}
                 mode={'date'}
+                locale="zh_CN"
                 is24Hour={true}
                 display="default"
                 onChange={(event, selectedDate) => {

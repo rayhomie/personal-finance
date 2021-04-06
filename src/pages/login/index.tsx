@@ -46,7 +46,7 @@ export default class Login extends Component<IProps, IState> {
     const { visible, onClose } = this.props;
     const { showRegister, showLogin } = this.state;
     return (
-      <Modal animationType="slide" visible={visible}>
+      <Modal popup animationType="slide-up" visible={visible}>
         <View style={styles.container}>
           <LoginModal
             visible={showLogin}
@@ -82,15 +82,16 @@ export default class Login extends Component<IProps, IState> {
 }
 
 const screenWidth = Dimensions.get('window').width;
-const screenHeight = Dimensions.get('window').height;
 
 const styles = StyleSheet.create({
   container: {
-    width: screenWidth,
-    height: screenHeight,
-    marginTop: 100,
+    paddingVertical: 20,
+    paddingHorizontal: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   tabs: { width: screenWidth },
+
   login: {},
   register: {},
   sex: {

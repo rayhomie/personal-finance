@@ -34,6 +34,7 @@ type ClassifyListType = {
 export interface RecordState {
   noSystemList: noSystemItemType[];
   addSuccess: number; //控制刷新列表
+  addBillSuccess: number; //控制列表刷新
   querySystemCategory: any;
   incomeTotal: number;
   payTotal: number;
@@ -67,6 +68,7 @@ const record: RecordModelType = {
     incomeTotal: 0,
     payTotal: 0,
     classifyList: [],
+    addBillSuccess: Math.random() * 100000,
   },
   effects: {
     *getNoSystem({ payload }, { call, put }) {
@@ -129,10 +131,14 @@ const record: RecordModelType = {
         fail();
       }
     },
-    *addBill({ payload }, { call }) {
+    *addBill({ payload }, { call, put }) {
       const { success, fail, ...rest } = payload;
       const res = yield call(addBill(rest));
       if (res.data.code === 0) {
+        yield put({
+          type: 'save',
+          payload: { addBillSuccess: Math.random() * 100000 },
+        });
         success();
       } else {
         fail();
@@ -140,7 +146,6 @@ const record: RecordModelType = {
     },
     *getCurMonthTotal({ payload }, { call, put }) {
       const res = yield call(getCurMonthTotal(payload));
-      console.log(res);
       if (res.data.code === 0 && res.data.docs) {
         let payTotal = 0;
         let incomeTotal = 0;
@@ -156,9 +161,14 @@ const record: RecordModelType = {
         yield put({ type: 'save', payload: { incomeTotal: 0, payTotal: 0 } });
       }
     },
-    *getClassifyList({ payload }, { call }) {
+    *getClassifyList({ payload }, { call, put }) {
       const res = yield call(getClassifyList(payload));
       console.log(res);
+      if (res.data.code === 0) {
+        yield put({ type: 'save', payload: { classifyList: res.data.docs } });
+      } else {
+        yield put({ type: 'save', payload: { classifyList: [] } });
+      }
     },
   },
 

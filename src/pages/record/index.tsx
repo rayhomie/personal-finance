@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import {
   View,
   Text,
@@ -7,22 +7,36 @@ import {
   TouchableOpacity,
   Dimensions,
   Image,
+  ScrollView,
 } from 'react-native';
-import { Button, Toast, Modal } from '@ant-design/react-native';
+import { Modal } from '@ant-design/react-native';
 import { ConnectProps, ConnectState, Dispatch } from '@/models/connect';
 import { connect } from 'react-redux';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import moment from 'moment';
 import NavigationUtil from '@/navigator/NavigationUtil';
+import { ImageManager } from '@/assets/json/ImageManager';
+
+const IM: any = ImageManager;
 interface RecordProps extends ConnectState, ConnectProps {
   dataLoading?: boolean;
 }
 
 interface IState {}
 
+enum WeekMap {
+  '日',
+  '一',
+  '二',
+  '三',
+  '四',
+  '五',
+  '六',
+}
+
 const Record: React.FC<RecordProps> = props => {
   const { dispatch, record } = props;
-  const { incomeTotal, payTotal } = record as any;
+  const { incomeTotal, payTotal, classifyList, addBillSuccess } = record as any;
   const dispatchRecord = dispatch as Dispatch;
   const [date, setDate] = useState(new Date());
   const [visible, setVisible] = useState<boolean>(false);
@@ -36,13 +50,17 @@ const Record: React.FC<RecordProps> = props => {
       type: 'record/getClassifyList',
       payload: { startMonth: moment(date).format('YYYY-MM') },
     });
-  }, []);
+  }, [addBillSuccess]);
 
   const onCloseModal = () => {
     setVisible(false);
     setDate(new Date());
     dispatchRecord({
       type: 'record/getCurMonthTotal',
+      payload: { startMonth: moment(new Date()).format('YYYY-MM') },
+    });
+    dispatchRecord({
+      type: 'record/getClassifyList',
       payload: { startMonth: moment(new Date()).format('YYYY-MM') },
     });
   };
@@ -53,10 +71,68 @@ const Record: React.FC<RecordProps> = props => {
       type: 'record/getCurMonthTotal',
       payload: { startMonth: moment(date).format('YYYY-MM') },
     });
+    dispatchRecord({
+      type: 'record/getClassifyList',
+      payload: { startMonth: moment(date).format('YYYY-MM') },
+    });
   };
 
+  const renderList = useMemo(
+    () => (list: any) => {
+      return list.map((item: any) => (
+        <>
+          <View style={styles.title} key={item.date}>
+            <View style={styles.titleItem}>
+              <Text style={styles.titleText}>
+                {moment.unix(item.date).format('MM月DD日')}
+              </Text>
+              <Text style={styles.titleText}>
+                {`星期${WeekMap[moment.unix(item.date).weekday()]}`}
+              </Text>
+            </View>
+            <View style={styles.titleItem}>
+              {item.income !== 0 && (
+                <Text style={styles.titleText}>{`收入：${item.income}`}</Text>
+              )}
+              {item.expend !== 0 && (
+                <Text style={styles.titleText}>{`支出：${item.expend}`}</Text>
+              )}
+            </View>
+          </View>
+          {item.item.map((i: any, index: number) => (
+            <View style={styles.itemContainer} key={i._id}>
+              <View style={styles.item}>
+                <TouchableOpacity style={styles.cateImgContainer}>
+                  <Image
+                    style={styles.cateImg}
+                    source={IM[i.category[0].icon_l]}
+                  />
+                </TouchableOpacity>
+                <View
+                  style={
+                    index !== item.item.length - 1
+                      ? styles.right
+                      : styles.lastRiht
+                  }
+                >
+                  <Text style={styles.name}>
+                    {i.remark !== '' ? i.remark : i.category[0].name}
+                  </Text>
+                  <Text style={styles.account}>
+                    {i.category[0].is_income === 0 ? -i.amount : i.amount}
+                  </Text>
+                </View>
+              </View>
+            </View>
+          ))}
+        </>
+      ));
+    },
+    [classifyList]
+  );
+
   return (
-    <View>
+    <View style={{ backgroundColor: '#fff' }}>
       <View style={styles.header}>
         <TouchableOpacity
           onPress={() => {
@@ -86,7 +162,16 @@ const Record: React.FC<RecordProps> = props => {
           <Text style={styles.bottomText}>{Number(payTotal).toFixed(2)}</Text>
         </TouchableOpacity>
       </View>
-
+      <ScrollView style={styles.listContainer}>
+        {classifyList.length ? (
+          renderList(classifyList)
+        ) : (
+          <View style={styles.noRes}>
+            <Image source={require('@/assets/image/no_data.png')} />
+            <Text style={styles.noResText}>暂无数据</Text>
+          </View>
+        )}
+      </ScrollView>
       <Modal
         popup
         visible={visible}
@@ -136,6 +221,7 @@ export const Add = () => {
 };
 
 const screenWidth = Dimensions.get('window').width;
+
 const headerItemStyle: any = {
   alignItems: 'flex-start',
   justifyContent: 'space-between',
@@ -147,7 +233,8 @@ const styles = StyleSheet.create({
     width: screenWidth,
     flexDirection: 'row',
     justifyContent: 'flex-start',
-    backgroundColor: 'pink',
+    paddingTop: 10,
+    paddingBottom: 10,
   },
   headerItem: { ...headerItemStyle, width: screenWidth / 4, marginLeft: 20 },
   headerItemMonth: {
@@ -190,6 +277,53 @@ const styles = StyleSheet.create({
   datePicker: {
     width: screenWidth,
     justifyContent: 'center',
+  },
+  listContainer: {
+    width: screenWidth,
+    marginBottom: 70,
+  },
+  title: {
+    width: screenWidth,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    height: 30,
+    borderBottomWidth: 0.4,
+    borderBottomColor: '#cdcdcd',
+  },
+  titleItem: { flexDirection: 'row' },
+  titleText: { color: '#bfbfbf', marginLeft: 10, marginRight: 10 },
+  itemContainer: {},
+  item: { flexDirection: 'row', height: 50 },
+  cateImgContainer: {
+    width: 60,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  right: {
+    width: screenWidth - 60,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    borderBottomWidth: 0.4,
+    borderBottomColor: '#cdcdcd',
+  },
+  lastRiht: {
+    width: screenWidth - 60,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  cateImg: { width: 30, height: 30, borderRadius: 15 },
+  name: { marginLeft: 10, fontSize: 18 },
+  account: { marginRight: 10, fontSize: 18 },
+  noRes: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: 550,
+  },
+  noResText: {
+    color: '#cbcbcb',
   },
   add: { fontSize: 16, color: '#006fff', marginRight: 10 },
 });

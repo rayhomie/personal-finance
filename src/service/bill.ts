@@ -28,3 +28,22 @@ export const getClassifyList = (payload: { startMonth: string }) => () =>
     url: `/bill/classifyList?${qs.stringify(payload)}`,
     method: 'GET',
   });
+
+export const update = (payload: {
+  amount: number;
+  remark: string;
+  id: string;
+  category_id: string;
+}) => () =>
+  request({
+    url: '/bill/update',
+    method: 'POST',
+    data: payload,
+  });
+
+export const Delete = (payload: { id: string }) => () =>
+  request({
+    url: '/bill/delete',
+    method: 'DELETE',
+    data: payload,
+  });

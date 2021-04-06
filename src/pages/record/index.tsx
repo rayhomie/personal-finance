@@ -115,12 +115,16 @@ const Record: React.FC<RecordProps> = props => {
                       : styles.lastRiht
                   }
                 >
-                  <Text style={styles.name}>
-                    {i.remark !== '' ? i.remark : i.category[0].name}
-                  </Text>
-                  <Text style={styles.account}>
-                    {i.category[0].is_income === 0 ? -i.amount : i.amount}
-                  </Text>
+                  <TouchableOpacity>
+                    <Text style={styles.name}>
+                      {i.remark !== '' ? i.remark : i.category[0].name}
+                    </Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity>
+                    <Text style={styles.account}>
+                      {i.category[0].is_income === 0 ? -i.amount : i.amount}
+                    </Text>
+                  </TouchableOpacity>
                 </View>
               </View>
             </View>

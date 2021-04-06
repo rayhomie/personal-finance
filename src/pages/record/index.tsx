@@ -80,8 +80,8 @@ const Record: React.FC<RecordProps> = props => {
   const renderList = useMemo(
     () => (list: any) => {
       return list.map((item: any) => (
-        <>
-          <View style={styles.title} key={item.date}>
+        <View key={item.date}>
+          <View style={styles.title}>
             <View style={styles.titleItem}>
               <Text style={styles.titleText}>
                 {moment.unix(item.date).format('MM月DD日')}
@@ -129,7 +129,7 @@ const Record: React.FC<RecordProps> = props => {
               </View>
             </View>
           ))}
-        </>
+        </View>
       ));
     },
     [classifyList]

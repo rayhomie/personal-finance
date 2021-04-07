@@ -1,44 +1,28 @@
-import React, { useState } from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useState, useEffect } from 'react';
 import { Dimensions, View, StyleSheet } from 'react-native';
 import { Button, Modal } from '@ant-design/react-native';
 import { connect } from 'react-redux';
-import { ConnectProps, ConnectState } from '@/models/connect';
+import { ConnectProps, ConnectState, Dispatch } from '@/models/connect';
 import LoginModal from './loginModal/index';
 import RegisterModal from './registerModal/index';
 
-interface IProps extends ConnectProps, ConnectState {
-  visible: boolean;
-  onClose: () => void;
-}
-
-type LoginFormType = {
-  username: string;
-  password: string;
-};
-
-type RegisterFormType = {
-  username: string;
-  password: string;
-  mobile_number: string;
-  email: string;
-};
-
-interface IState {
-  showRegister: boolean;
-  showLogin: boolean;
-}
+interface IProps extends ConnectProps, ConnectState {}
 
 const Login: React.FC<IProps> = props => {
-  const { app, visible, onClose } = props;
+  const { app, dispatch } = props;
+  const dispatchApp = dispatch as Dispatch;
   const [showLogin, setShowLogin] = useState<boolean>(false);
   const [showRegister, setShowRegister] = useState<boolean>(false);
 
-  if (app?.isRegister) {
-    setShowLogin(true);
-  }
+  useEffect(() => {
+    if (app?.isRegister) {
+      setShowLogin(true);
+    }
+  }, [app?.isRegister]);
 
   return (
-    <Modal popup animationType="slide-up" visible={visible}>
+    <Modal popup animationType="slide-up" visible={app?.openLogin}>
       <View style={styles.container}>
         <LoginModal
           visible={showLogin}
@@ -66,7 +50,13 @@ const Login: React.FC<IProps> = props => {
         >
           注册
         </Button>
-        <Button onPress={onClose}>收起</Button>
+        <Button
+          onPress={() => {
+            dispatchApp({ type: 'app/save', payload: { openLogin: false } });
+          }}
+        >
+          收起
+        </Button>
       </View>
     </Modal>
   );

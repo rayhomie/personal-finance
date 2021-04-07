@@ -14,24 +14,19 @@ import moment from 'moment';
 import { ConnectProps, ConnectState, Dispatch } from '@/models/connect';
 import { connect } from 'react-redux';
 import NavigationUtil from '@/navigator/NavigationUtil';
-import Login from '@/pages/login/index';
 
 interface IProps extends ConnectState, ConnectProps {
   dataLoading?: boolean;
 }
 
-interface IState {
-  openLogin: boolean;
-}
 const Mine: React.FC<IProps> = props => {
   const { user, mine, app, dispatch } = props;
+  const dispatchApp = dispatch as Dispatch;
   const { avatar_url, username } = user as any;
   const { clockTotal, clockContinueCount, billTotal, isClock } = mine as any;
 
-  const [openLogin, setOpenLogin] = useState<boolean>(false);
-
   useEffect(() => {
-    (dispatch as Dispatch)({ type: 'app/verifyToken' });
+    dispatchApp({ type: 'app/verifyToken' });
     getUserInfo();
     getClockInfo();
     getBillTotal();
@@ -40,24 +35,20 @@ const Mine: React.FC<IProps> = props => {
 
   useEffect(() => {
     if (app?.isLogin) {
-      setOpenLogin(false);
+      dispatchApp({ type: 'app/save', payload: { openLogin: false } });
     }
-  }, [app]);
+  }, [app?.isLogin]);
 
   const openUserInfo = () => {
     if (app?.isLogin) {
       NavigationUtil.toPage('用户信息');
     } else {
-      setOpenLogin(true);
+      dispatchApp({ type: 'app/save', payload: { openLogin: true } });
     }
   };
 
-  const loginClose = () => {
-    setOpenLogin(false);
-  };
-
   const getUserInfo = () => {
-    (dispatch as Dispatch)({
+    dispatchApp({
       type: 'user/getUserInfo',
       payload: {
         success: () => {},
@@ -69,7 +60,7 @@ const Mine: React.FC<IProps> = props => {
   };
 
   const getClockInfo = () => {
-    (dispatch as Dispatch)({
+    dispatchApp({
       type: 'mine/getClockList',
       payload: {
         success: () => {},
@@ -78,7 +69,7 @@ const Mine: React.FC<IProps> = props => {
         },
       },
     });
-    (dispatch as Dispatch)({
+    dispatchApp({
       type: 'mine/getContinueCount',
       payload: {
         success: () => {},
@@ -91,7 +82,7 @@ const Mine: React.FC<IProps> = props => {
 
   const clock = () => {
     const clock_date = moment().format('YYYY-MM-DD HH:mm:ss');
-    (dispatch as Dispatch)({
+    dispatchApp({
       type: 'mine/clock',
       payload: {
         clock_date,
@@ -106,7 +97,7 @@ const Mine: React.FC<IProps> = props => {
   };
 
   const getBillTotal = () => {
-    (dispatch as Dispatch)({
+    dispatchApp({
       type: 'mine/getBillList',
       payload: {
         success: () => {},
@@ -118,7 +109,7 @@ const Mine: React.FC<IProps> = props => {
   };
 
   const getIsClock = () => {
-    (dispatch as Dispatch)({
+    dispatchApp({
       type: 'mine/getIsClock',
       payload: {
         success: () => {},
@@ -196,7 +187,6 @@ const Mine: React.FC<IProps> = props => {
           </View>
         </View>
       </View>
-      <Login visible={openLogin} onClose={loginClose} />
     </View>
   );
 };

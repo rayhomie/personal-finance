@@ -57,7 +57,10 @@ const RegisterModal: React.FC<IProps> = props => {
   };
 
   useEffect(() => {
-    (dispatch as Dispatch)({ type: 'save', payload: { isRegister: false } });
+    (dispatch as Dispatch)({
+      type: 'app/save',
+      payload: { isRegister: false },
+    });
   }, []);
 
   return (

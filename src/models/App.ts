@@ -6,6 +6,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 export interface AppState {
   isLogin: boolean;
   isRegister: boolean;
+  openLogin: boolean;
 }
 
 export interface AppModelType {
@@ -27,20 +28,24 @@ const app: AppModelType = {
   state: {
     isLogin: false,
     isRegister: false,
+    openLogin: false,
   },
   effects: {
     *login({ payload }, { call, put }) {
       const { success, fail, ...rest } = payload;
       const res = yield call(fetchLogin(rest));
       if (res.data.code === 0) {
+        yield console.log('000');
         yield put({
           type: 'save',
           payload: { isLogin: true },
         });
+        yield console.log('111');
         yield AsyncStorage.setItem('token', res.data.data.token, () => {
           console.log('注入token成功');
           success();
         });
+        yield console.log('222');
       } else {
         yield put({
           type: 'save',
@@ -91,7 +96,6 @@ const app: AppModelType = {
   },
   reducers: {
     save(state, { payload }) {
-      // console.log({ ...state, ...payload });
       return { ...state, ...payload };
     },
   },

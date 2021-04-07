@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { SafeAreaView, StatusBar, StyleSheet } from 'react-native';
 import { Provider } from 'react-redux';
 import * as dayjs from 'dayjs';
@@ -9,6 +9,7 @@ import models from './models/index';
 import Router from './navigator/router';
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 import { Provider as AntdProvider } from '@ant-design/react-native';
+import Login from '@/pages/login/index';
 
 const dvaApp: any = dva.createApp({
   initialState: {},
@@ -17,21 +18,19 @@ const dvaApp: any = dva.createApp({
 
 export const store = dvaApp.getStore();
 dayjs.locale('zh-cn'); // 使用本地化语言
-
-class App extends React.Component {
-  render() {
-    return (
-      <Provider store={store}>
-        <AntdProvider>
-          <StatusBar barStyle="dark-content" />
-          <SafeAreaView style={styles.safeAreaView}>
-            <Router />
-          </SafeAreaView>
-        </AntdProvider>
-      </Provider>
-    );
-  }
-}
+const App = () => {
+  return (
+    <Provider store={store}>
+      <AntdProvider>
+        <StatusBar barStyle="dark-content" />
+        <SafeAreaView style={styles.safeAreaView}>
+          <Router />
+          <Login />
+        </SafeAreaView>
+      </AntdProvider>
+    </Provider>
+  );
+};
 
 const styles = StyleSheet.create({
   safeAreaView: {

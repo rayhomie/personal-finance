@@ -94,6 +94,9 @@ const Mine: React.FC<IProps> = props => {
         fail: () => {
           Toast.fail('今日已打卡', 1.5);
         },
+        fail401: () => {
+          dispatchApp({ type: 'app/save', payload: { openLogin: true } });
+        },
       },
     });
   };

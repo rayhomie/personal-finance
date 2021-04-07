@@ -63,8 +63,9 @@ const mine: MineModelType = {
       }
     },
     *clock({ payload }, { call, put }) {
-      const { success, fail, ...rest } = payload;
+      const { success, fail, fail401, ...rest } = payload;
       const res = yield call(clock(rest));
+      console.log(res);
       if (res.data.code === 0) {
         yield put({
           type: 'getContinueCount',
@@ -76,6 +77,8 @@ const mine: MineModelType = {
         });
         yield put({ type: 'save', payload: { isClock: res.data.isClock } });
         success();
+      } else if (res.data.code === 401) {
+        fail401();
       } else {
         fail();
       }

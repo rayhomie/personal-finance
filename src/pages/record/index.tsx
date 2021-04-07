@@ -16,6 +16,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import moment from 'moment';
 import NavigationUtil from '@/navigator/NavigationUtil';
 import { ImageManager } from '@/assets/json/ImageManager';
+import { verifyToken } from '@/service/app';
 
 const IM: any = ImageManager;
 interface RecordProps extends ConnectState, ConnectProps {
@@ -35,10 +36,9 @@ enum WeekMap {
 }
 
 const Record: React.FC<RecordProps> = props => {
-  const { dispatch, record, app } = props;
+  const { dispatch, record } = props;
   const { incomeTotal, payTotal, classifyList, addBillSuccess } = record as any;
   const dispatchRecord = dispatch as Dispatch;
-  const dispatchApp = dispatch as Dispatch;
   const [date, setDate] = useState(new Date());
   const [visible, setVisible] = useState<boolean>(false);
   const [inputModal, setInputModal] = useState<{
@@ -47,6 +47,16 @@ const Record: React.FC<RecordProps> = props => {
     id: string;
   }>({ input: '', title: '备注', id: '' });
   const [visibleInput, setVisibleInput] = useState<boolean>(false);
+
+  useEffect(() => {
+    verifyToken()().then(res => {
+      if (res.data.code !== 0) {
+        setTimeout(() => {
+          NavigationUtil.toPage('我的');
+        }, 1500);
+      }
+    });
+  }, []);
 
   useEffect(() => {
     dispatchRecord({
@@ -58,14 +68,6 @@ const Record: React.FC<RecordProps> = props => {
       payload: { startMonth: moment(date).format('YYYY-MM') },
     });
   }, [addBillSuccess]);
-
-  useEffect(() => {
-    if (app?.isLogin) {
-      dispatchApp({ type: 'app/save', payload: { openLogin: false } });
-    } else {
-      dispatchApp({ type: 'app/save', payload: { openLogin: true } });
-    }
-  }, [app?.isLogin]);
 
   const onCloseInput = () => {
     setInputModal(pre => ({ ...pre, input: '', id: '' }));

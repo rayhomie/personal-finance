@@ -22,7 +22,15 @@ const Login: React.FC<IProps> = props => {
   }, [app?.isRegister]);
 
   return (
-    <Modal popup animationType="slide-up" visible={app?.openLogin}>
+    <Modal
+      popup
+      animationType="slide-up"
+      visible={app?.openLogin}
+      onClose={() =>
+        dispatchApp({ type: 'app/save', payload: { openLogin: false } })
+      }
+      maskClosable
+    >
       <View style={styles.container}>
         <LoginModal
           visible={showLogin}
@@ -49,13 +57,6 @@ const Login: React.FC<IProps> = props => {
           }}
         >
           注册
-        </Button>
-        <Button
-          onPress={() => {
-            dispatchApp({ type: 'app/save', payload: { openLogin: false } });
-          }}
-        >
-          收起
         </Button>
       </View>
     </Modal>

@@ -1,11 +1,12 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import { Dimensions, View, StyleSheet } from 'react-native';
 import { Button, Modal } from '@ant-design/react-native';
-import { connect } from '@/utils/connect';
+import { connect } from 'react-redux';
+import { ConnectProps, ConnectState } from '@/models/connect';
 import LoginModal from './loginModal/index';
 import RegisterModal from './registerModal/index';
 
-interface IProps {
+interface IProps extends ConnectProps, ConnectState {
   visible: boolean;
   onClose: () => void;
 }
@@ -26,60 +27,50 @@ interface IState {
   showRegister: boolean;
   showLogin: boolean;
 }
-@connect(({ app, loading }: any) => ({
-  app,
-  dataLoading: loading.effects['app/login'],
-}))
-export default class Login extends Component<IProps, IState> {
-  state: IState = {
-    showLogin: false,
-    showRegister: false,
-  };
 
-  UNSAFE_componentWillReceiveProps(nextProps: any) {
-    if (nextProps?.app.isRegister) {
-      this.setState({ showLogin: true });
-    }
+const Login: React.FC<IProps> = props => {
+  const { app, visible, onClose } = props;
+  const [showLogin, setShowLogin] = useState<boolean>(false);
+  const [showRegister, setShowRegister] = useState<boolean>(false);
+
+  if (app?.isRegister) {
+    setShowLogin(true);
   }
 
-  render() {
-    const { visible, onClose } = this.props;
-    const { showRegister, showLogin } = this.state;
-    return (
-      <Modal popup animationType="slide-up" visible={visible}>
-        <View style={styles.container}>
-          <LoginModal
-            visible={showLogin}
-            onClose={() => {
-              this.setState({ showLogin: false });
-            }}
-          />
-          <RegisterModal
-            visible={showRegister}
-            onClose={() => {
-              this.setState({ showRegister: false });
-            }}
-          />
-          <Button
-            onPress={() => {
-              this.setState({ showLogin: true });
-            }}
-          >
-            登录
-          </Button>
-          <Button
-            onPress={() => {
-              this.setState({ showRegister: true });
-            }}
-          >
-            注册
-          </Button>
-          <Button onPress={onClose}>收起</Button>
-        </View>
-      </Modal>
-    );
-  }
-}
+  return (
+    <Modal popup animationType="slide-up" visible={visible}>
+      <View style={styles.container}>
+        <LoginModal
+          visible={showLogin}
+          onClose={() => {
+            setShowLogin(false);
+          }}
+        />
+        <RegisterModal
+          visible={showRegister}
+          onClose={() => {
+            setShowRegister(false);
+          }}
+        />
+        <Button
+          onPress={() => {
+            setShowLogin(true);
+          }}
+        >
+          登录
+        </Button>
+        <Button
+          onPress={() => {
+            setShowRegister(true);
+          }}
+        >
+          注册
+        </Button>
+        <Button onPress={onClose}>收起</Button>
+      </View>
+    </Modal>
+  );
+};
 
 const screenWidth = Dimensions.get('window').width;
 
@@ -108,3 +99,11 @@ const styles = StyleSheet.create({
   sexText: { fontSize: 15, marginLeft: 10 },
   sexControl: { width: 200, height: 30, marginLeft: 50 },
 });
+
+export default connect(({ app, user, mine, record, loading }: IProps) => ({
+  app,
+  user,
+  record,
+  mine,
+  dataLoading: loading?.effects['app/login'],
+}))(Login);

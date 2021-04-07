@@ -1,4 +1,5 @@
-import React, { Component } from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useState, useEffect } from 'react';
 import {
   Dimensions,
   View,
@@ -11,7 +12,7 @@ import {
 import { Toast } from '@ant-design/react-native';
 import moment from 'moment';
 import { ConnectProps, ConnectState, Dispatch } from '@/models/connect';
-import { connect } from '@/utils/connect';
+import { connect } from 'react-redux';
 import NavigationUtil from '@/navigator/NavigationUtil';
 import Login from '@/pages/login/index';
 
@@ -22,47 +23,41 @@ interface IProps extends ConnectState, ConnectProps {
 interface IState {
   openLogin: boolean;
 }
-@connect(({ app, user, mine, loading }: IProps) => ({
-  app,
-  user,
-  mine,
-  dataLoading: loading?.effects['app/login'],
-}))
-class Mine extends Component<IProps, IState> {
-  state: IState = {
-    openLogin: false,
-  };
+const Mine: React.FC<IProps> = props => {
+  const { user, mine, app, dispatch } = props;
+  const { avatar_url, username } = user as any;
+  const { clockTotal, clockContinueCount, billTotal, isClock } = mine as any;
 
-  openUserInfo = () => {
-    const { app } = this.props;
+  const [openLogin, setOpenLogin] = useState<boolean>(false);
+
+  useEffect(() => {
+    (dispatch as Dispatch)({ type: 'app/verifyToken' });
+    getUserInfo();
+    getClockInfo();
+    getBillTotal();
+    getIsClock();
+  }, []);
+
+  useEffect(() => {
+    if (app?.isLogin) {
+      setOpenLogin(false);
+    }
+  }, [app]);
+
+  const openUserInfo = () => {
     if (app?.isLogin) {
       NavigationUtil.toPage('用户信息');
     } else {
-      this.setState({ openLogin: true });
+      setOpenLogin(true);
     }
   };
 
-  loginClose = () => {
-    this.setState({ openLogin: false });
+  const loginClose = () => {
+    setOpenLogin(false);
   };
 
-  UNSAFE_componentWillReceiveProps(nextProps: any) {
-    if (nextProps?.app.isLogin) {
-      this.setState({ openLogin: false });
-    }
-  }
-
-  UNSAFE_componentWillMount() {
-    const { dispatch } = this.props;
-    (dispatch as Dispatch)({ type: 'app/verifyToken' });
-    this.getUserInfo();
-    this.getClockInfo();
-    this.getBillTotal();
-    this.getIsClock();
-  }
-
-  getUserInfo = () => {
-    (this.props.dispatch as Dispatch)({
+  const getUserInfo = () => {
+    (dispatch as Dispatch)({
       type: 'user/getUserInfo',
       payload: {
         success: () => {},
@@ -73,8 +68,8 @@ class Mine extends Component<IProps, IState> {
     });
   };
 
-  getClockInfo = () => {
-    (this.props.dispatch as Dispatch)({
+  const getClockInfo = () => {
+    (dispatch as Dispatch)({
       type: 'mine/getClockList',
       payload: {
         success: () => {},
@@ -83,7 +78,7 @@ class Mine extends Component<IProps, IState> {
         },
       },
     });
-    (this.props.dispatch as Dispatch)({
+    (dispatch as Dispatch)({
       type: 'mine/getContinueCount',
       payload: {
         success: () => {},
@@ -94,9 +89,9 @@ class Mine extends Component<IProps, IState> {
     });
   };
 
-  clock = () => {
+  const clock = () => {
     const clock_date = moment().format('YYYY-MM-DD HH:mm:ss');
-    (this.props.dispatch as Dispatch)({
+    (dispatch as Dispatch)({
       type: 'mine/clock',
       payload: {
         clock_date,
@@ -110,8 +105,8 @@ class Mine extends Component<IProps, IState> {
     });
   };
 
-  getBillTotal = () => {
-    (this.props.dispatch as Dispatch)({
+  const getBillTotal = () => {
+    (dispatch as Dispatch)({
       type: 'mine/getBillList',
       payload: {
         success: () => {},
@@ -122,8 +117,8 @@ class Mine extends Component<IProps, IState> {
     });
   };
 
-  getIsClock = () => {
-    (this.props.dispatch as Dispatch)({
+  const getIsClock = () => {
+    (dispatch as Dispatch)({
       type: 'mine/getIsClock',
       payload: {
         success: () => {},
@@ -134,82 +129,77 @@ class Mine extends Component<IProps, IState> {
     });
   };
 
-  render() {
-    const { user, mine } = this.props;
-    const { avatar_url, username } = user as any;
-    const { clockTotal, clockContinueCount, billTotal, isClock } = mine as any;
-    return (
-      <View>
-        <StatusBar />
-        <View style={styles.header}>
-          <View style={styles.avatar}>
-            <TouchableOpacity
-              activeOpacity={0.5}
-              style={styles.pic}
-              onPress={this.openUserInfo}
-            >
-              <Image
-                style={styles.picImage}
-                source={{
-                  uri: avatar_url,
-                }}
-              />
-              <Text style={styles.nickname}>{username}</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              activeOpacity={0.5}
-              style={styles.clock}
-              onPress={this.clock}
-            >
-              <Text>{isClock === 0 ? '打卡' : '已打卡'}</Text>
-            </TouchableOpacity>
+  return (
+    <View>
+      <StatusBar />
+      <View style={styles.header}>
+        <View style={styles.avatar}>
+          <TouchableOpacity
+            activeOpacity={0.5}
+            style={styles.pic}
+            onPress={openUserInfo}
+          >
+            <Image
+              style={styles.picImage}
+              source={{
+                uri: avatar_url,
+              }}
+            />
+            <Text style={styles.nickname}>{username}</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            activeOpacity={0.5}
+            style={styles.clock}
+            onPress={clock}
+          >
+            <Text>{isClock === 0 ? '打卡' : '已打卡'}</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.tab}>
+          <View style={styles.item}>
+            <Text style={styles.num}>{clockContinueCount}</Text>
+            <Text>已连续打卡</Text>
           </View>
-          <View style={styles.tab}>
-            <View style={styles.item}>
-              <Text style={styles.num}>{clockContinueCount}</Text>
-              <Text>已连续打卡</Text>
-            </View>
-            <View style={styles.item}>
-              <Text style={styles.num}>{clockTotal}</Text>
-              <Text>记录总天数</Text>
-            </View>
-            <View style={styles.item}>
-              <Text style={styles.num}>{billTotal}</Text>
-              <Text>记录总笔数</Text>
-            </View>
+          <View style={styles.item}>
+            <Text style={styles.num}>{clockTotal}</Text>
+            <Text>记录总天数</Text>
           </View>
-          <View style={styles.bottom}>
-            <View style={styles.bill}>
-              <View style={styles.billTitleContainer}>
-                <Text style={styles.billTitle}>账单</Text>
+          <View style={styles.item}>
+            <Text style={styles.num}>{billTotal}</Text>
+            <Text>记录总笔数</Text>
+          </View>
+        </View>
+        <View style={styles.bottom}>
+          <View style={styles.bill}>
+            <View style={styles.billTitleContainer}>
+              <Text style={styles.billTitle}>账单</Text>
+            </View>
+            <View style={styles.billContent}>
+              <View style={styles.billDate}>
+                <Text>03月</Text>
               </View>
-              <View style={styles.billContent}>
-                <View style={styles.billDate}>
-                  <Text>03月</Text>
+              <View style={styles.billContentContainer}>
+                <View style={styles.billItem}>
+                  <Text>收入</Text>
+                  <Text>0.00</Text>
                 </View>
-                <View style={styles.billContentContainer}>
-                  <View style={styles.billItem}>
-                    <Text>收入</Text>
-                    <Text>0.00</Text>
-                  </View>
-                  <View style={styles.billItem}>
-                    <Text>支出</Text>
-                    <Text>0.00</Text>
-                  </View>
-                  <View style={styles.billItem}>
-                    <Text>结余</Text>
-                    <Text>0.00</Text>
-                  </View>
+                <View style={styles.billItem}>
+                  <Text>支出</Text>
+                  <Text>0.00</Text>
+                </View>
+                <View style={styles.billItem}>
+                  <Text>结余</Text>
+                  <Text>0.00</Text>
                 </View>
               </View>
             </View>
           </View>
         </View>
-        <Login visible={this.state.openLogin} onClose={this.loginClose} />
       </View>
-    );
-  }
-}
+      <Login visible={openLogin} onClose={loginClose} />
+    </View>
+  );
+};
 
 const screenWidth = Dimensions.get('window').width;
 
@@ -303,4 +293,10 @@ const styles = StyleSheet.create({
   billItem: {},
 });
 
-export default Mine;
+export default connect(({ app, user, mine, record, loading }: IProps) => ({
+  app,
+  user,
+  record,
+  mine,
+  dataLoading: loading?.effects['app/login'],
+}))(Mine);

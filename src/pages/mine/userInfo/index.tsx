@@ -1,4 +1,5 @@
-import React, { Component } from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useState, useEffect } from 'react';
 import {
   Dimensions,
   View,
@@ -14,7 +15,7 @@ import {
   SegmentedControl,
 } from '@ant-design/react-native';
 import { ConnectProps, ConnectState, Dispatch } from '@/models/connect';
-import { connect } from '@/utils/connect';
+import { connect } from 'react-redux';
 import NavigationUtil from '@/navigator/NavigationUtil';
 const { GiftedForm, GiftedFormManager } = require('react-native-gifted-form');
 
@@ -44,26 +45,20 @@ const getValue = (key: string[]) =>
     return pre;
   }, {});
 
-@connect(({ app, user, loading }: IProps) => ({
-  app,
-  user,
-  dataLoading: loading?.effects['app/login'],
-}))
-export default class UserInfo extends Component<IProps, IState> {
-  state: IState = {
-    gender: 1,
-    passwordForm: {
-      password: '',
-      confirmPassword: '',
-    },
+const UserInfo: React.FC<IState> = props => {
+  const { dispatch, user } = props as any;
+  const [gender, setGender] = useState<number>(1);
+  const [passwordForm, setPasswordForm] = useState<PasswordFormType>({
+    password: '',
+    confirmPassword: '',
+  });
+
+  const handlePasswordValueChange = (values: PasswordFormType) => {
+    setPasswordForm(values);
   };
 
-  handlePasswordValueChange = (values: PasswordFormType) => {
-    this.setState({ passwordForm: values });
-  };
-
-  getUserInfo = () => {
-    (this.props.dispatch as Dispatch)({
+  const getUserInfo = () => {
+    (dispatch as Dispatch)({
       type: 'user/getUserInfo',
       payload: {
         success: () => {},
@@ -74,12 +69,11 @@ export default class UserInfo extends Component<IProps, IState> {
     });
   };
 
-  UNSAFE_componentWillMount() {
-    this.getUserInfo();
-  }
+  useEffect(() => {
+    getUserInfo();
+  }, []);
 
-  loginOut = () => {
-    const { dispatch } = this.props;
+  const loginOut = () => {
     Modal.alert('退出登录', '退出登录会导致部分功能无法正常使用', [
       { text: '取消', onPress: () => console.log('cancel'), style: 'cancel' },
       {
@@ -110,14 +104,14 @@ export default class UserInfo extends Component<IProps, IState> {
     ]);
   };
 
-  passwordChange = () => {
+  const passwordChange = () => {
     Modal.alert(
       '修改密码',
       <GiftedForm
         style={styles.GiftedForm}
         formName="passwordForm"
         scrollEnabled={false}
-        onValueChange={this.handlePasswordValueChange}
+        onValueChange={handlePasswordValueChange}
         validators={{
           password: {
             title: '密码',
@@ -144,7 +138,7 @@ export default class UserInfo extends Component<IProps, IState> {
             validate: [
               {
                 validator: (value: string) => {
-                  if (value === this.state.passwordForm.password) {
+                  if (value === passwordForm.password) {
                     return true;
                   }
                   return false;
@@ -161,7 +155,7 @@ export default class UserInfo extends Component<IProps, IState> {
           placeholder="请输入密码"
           clearButtonMode="while-editing"
           maxLength={16}
-          value={this.state.passwordForm.password}
+          value={passwordForm.password}
           secureTextEntry={true}
         />
         <GiftedForm.TextInputWidget
@@ -170,7 +164,7 @@ export default class UserInfo extends Component<IProps, IState> {
           placeholder="请输入二次确认密码"
           clearButtonMode="while-editing"
           maxLength={16}
-          value={this.state.passwordForm.confirmPassword}
+          value={passwordForm.confirmPassword}
           secureTextEntry={true}
         />
       </GiftedForm>,
@@ -178,11 +172,9 @@ export default class UserInfo extends Component<IProps, IState> {
         {
           text: '取消',
           onPress: () => {
-            this.setState({
-              passwordForm: {
-                password: '',
-                confirmPassword: '',
-              },
+            setPasswordForm({
+              password: '',
+              confirmPassword: '',
             });
           },
           style: 'cancel',
@@ -205,17 +197,15 @@ export default class UserInfo extends Component<IProps, IState> {
               );
               return;
             }
-            (this.props.dispatch as Dispatch)({
+            (dispatch as Dispatch)({
               type: 'user/updatePassword',
               payload: {
                 password,
                 success: () => {
                   Toast.success('密码更改成功，请重新登陆', 1.5);
-                  this.setState({
-                    passwordForm: {
-                      password: '',
-                      confirmPassword: '',
-                    },
+                  setPasswordForm({
+                    password: '',
+                    confirmPassword: '',
                   });
                   NavigationUtil.goBack();
                 },
@@ -230,7 +220,7 @@ export default class UserInfo extends Component<IProps, IState> {
     );
   };
 
-  usernameChange = () => {
+  const usernameChange = () => {
     Modal.prompt(
       '修改用户名',
       '',
@@ -242,7 +232,7 @@ export default class UserInfo extends Component<IProps, IState> {
           );
           return;
         } else {
-          (this.props.dispatch as Dispatch)({
+          (dispatch as Dispatch)({
             type: 'user/updateUsername',
             payload: {
               username: value,
@@ -263,41 +253,41 @@ export default class UserInfo extends Component<IProps, IState> {
     );
   };
 
-  handleSex = (value: string) => {
-    this.setState({ gender: value === '男' ? 1 : 0 });
+  const handleSex = (value: string) => {
+    setGender(value === '男' ? 1 : 0);
   };
 
-  genderChange = () => {
+  const genderChange = () => {
     Modal.alert(
       '修改性别',
       <SegmentedControl
         values={['女', '男']}
-        selectedIndex={this.state.gender}
+        selectedIndex={gender}
         style={styles.sexControl}
-        onValueChange={this.handleSex}
+        onValueChange={handleSex}
       />,
       [
         {
           text: '取消',
           onPress: () => {
-            this.setState({ gender: this.props.user?.gender });
+            setGender(user?.gender);
           },
           style: 'cancel',
         },
         {
           text: '确认',
           onPress: () => {
-            (this.props.dispatch as Dispatch)({
+            (dispatch as Dispatch)({
               type: 'user/updateInfo',
               payload: {
-                gender: this.props.user?.gender,
+                gender: user?.gender,
                 success: () => {
-                  this.getUserInfo();
+                  getUserInfo();
                   Toast.success('性别修改成功', 1.5);
                 },
                 fail: () => {
                   Toast.fail('请选择和现在不一样的性别', 1.5, () =>
-                    this.setState({ gender: this.props.user?.gender })
+                    setGender(user?.gender)
                   );
                 },
               },
@@ -308,7 +298,7 @@ export default class UserInfo extends Component<IProps, IState> {
     );
   };
 
-  mobileChange = () => {
+  const mobileChange = () => {
     Modal.prompt(
       '修改手机号',
       '',
@@ -317,12 +307,12 @@ export default class UserInfo extends Component<IProps, IState> {
           Toast.fail('请按照正确手机号格式输入', 1.5);
           return;
         } else {
-          (this.props.dispatch as Dispatch)({
+          (dispatch as Dispatch)({
             type: 'user/updateInfo',
             payload: {
               mobile_number: value,
               success: () => {
-                this.getUserInfo();
+                getUserInfo();
                 Toast.success('手机号修改成功', 1.5);
               },
               fail: () => {
@@ -338,7 +328,7 @@ export default class UserInfo extends Component<IProps, IState> {
     );
   };
 
-  emailChange = () => {
+  const emailChange = () => {
     Modal.prompt(
       '修改邮箱',
       '',
@@ -347,12 +337,12 @@ export default class UserInfo extends Component<IProps, IState> {
           Toast.fail('请按照正确邮箱格式输入', 1.5);
           return;
         } else {
-          (this.props.dispatch as Dispatch)({
+          (dispatch as Dispatch)({
             type: 'user/updateInfo',
             payload: {
               email: value,
               success: () => {
-                this.getUserInfo();
+                getUserInfo();
                 Toast.success('邮箱修改成功', 1.5);
               },
               fail: () => {
@@ -368,74 +358,71 @@ export default class UserInfo extends Component<IProps, IState> {
     );
   };
 
-  render() {
-    const { avatar_url, username, gender, email, mobile_number, _id } = this
-      .props.user as any;
-    return (
-      <View>
-        <TouchableOpacity activeOpacity={0.5} style={styles.container}>
-          <Text style={styles.avatar}>头像</Text>
-          <Image
-            style={styles.picImage}
-            source={{
-              uri: avatar_url,
-            }}
-          />
-        </TouchableOpacity>
-        <TouchableOpacity activeOpacity={0.5} style={styles.container}>
-          <Text style={styles.left}>ID</Text>
-          <Text style={styles.right}>{_id}</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          activeOpacity={0.5}
-          style={styles.container}
-          onPress={this.usernameChange}
-        >
-          <Text style={styles.left}>用户名</Text>
-          <Text style={styles.right}>{username}</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          activeOpacity={0.5}
-          style={styles.container}
-          onPress={this.genderChange}
-        >
-          <Text style={styles.left}>性别</Text>
-          <Text style={styles.right}>{gender === 0 ? '女' : '男'}</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          activeOpacity={0.5}
-          style={styles.container}
-          onPress={this.mobileChange}
-        >
-          <Text style={styles.left}>手机号</Text>
-          <Text style={styles.right}>{mobile_number}</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          activeOpacity={0.5}
-          style={styles.container}
-          onPress={this.emailChange}
-        >
-          <Text style={styles.left}>邮箱</Text>
-          <Text style={styles.right}>{email}</Text>
-        </TouchableOpacity>
-        <Button
-          style={styles.loginOut}
-          activeStyle={styles.activeStyle}
-          onPress={this.passwordChange}
-        >
-          <Text style={styles.fontButton}>修改密码</Text>
-        </Button>
-        <Button
-          style={styles.loginOut}
-          activeStyle={styles.activeStyle}
-          onPress={this.loginOut}
-        >
-          <Text style={styles.fontButton}>退出登录</Text>
-        </Button>
-      </View>
-    );
-  }
-}
+  const { avatar_url, username, email, mobile_number, _id } = user as any;
+  return (
+    <View>
+      <TouchableOpacity activeOpacity={0.5} style={styles.container}>
+        <Text style={styles.avatar}>头像</Text>
+        <Image
+          style={styles.picImage}
+          source={{
+            uri: avatar_url,
+          }}
+        />
+      </TouchableOpacity>
+      <TouchableOpacity activeOpacity={0.5} style={styles.container}>
+        <Text style={styles.left}>ID</Text>
+        <Text style={styles.right}>{_id}</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        activeOpacity={0.5}
+        style={styles.container}
+        onPress={usernameChange}
+      >
+        <Text style={styles.left}>用户名</Text>
+        <Text style={styles.right}>{username}</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        activeOpacity={0.5}
+        style={styles.container}
+        onPress={genderChange}
+      >
+        <Text style={styles.left}>性别</Text>
+        <Text style={styles.right}>{user?.gender === 0 ? '女' : '男'}</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        activeOpacity={0.5}
+        style={styles.container}
+        onPress={mobileChange}
+      >
+        <Text style={styles.left}>手机号</Text>
+        <Text style={styles.right}>{mobile_number}</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        activeOpacity={0.5}
+        style={styles.container}
+        onPress={emailChange}
+      >
+        <Text style={styles.left}>邮箱</Text>
+        <Text style={styles.right}>{email}</Text>
+      </TouchableOpacity>
+      <Button
+        style={styles.loginOut}
+        activeStyle={styles.activeStyle}
+        onPress={passwordChange}
+      >
+        <Text style={styles.fontButton}>修改密码</Text>
+      </Button>
+      <Button
+        style={styles.loginOut}
+        activeStyle={styles.activeStyle}
+        onPress={loginOut}
+      >
+        <Text style={styles.fontButton}>退出登录</Text>
+      </Button>
+    </View>
+  );
+};
 
 const screenWidth = Dimensions.get('window').width;
 
@@ -463,3 +450,11 @@ const styles = StyleSheet.create({
   sexControl: { width: 200, height: 30 },
   GiftedForm: { width: 250 },
 });
+
+export default connect(({ app, user, mine, record, loading }: IProps) => ({
+  app,
+  user,
+  record,
+  mine,
+  dataLoading: loading?.effects['app/login'],
+}))(UserInfo);

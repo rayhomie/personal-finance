@@ -7,7 +7,7 @@ import {
   Text,
   TouchableOpacity,
 } from 'react-native';
-import { Button, Modal } from '@ant-design/react-native';
+import { Modal } from '@ant-design/react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { connect } from 'react-redux';
 import { ConnectProps, ConnectState, Dispatch } from '@/models/connect';

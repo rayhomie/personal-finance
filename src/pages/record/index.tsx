@@ -208,7 +208,7 @@ const Record: React.FC<RecordProps> = props => {
   };
 
   return (
-    <View style={{ backgroundColor: '#fff' }}>
+    <View style={styles.allContainer}>
       <View style={styles.header}>
         <TouchableOpacity
           onPress={() => {
@@ -285,6 +285,7 @@ const Record: React.FC<RecordProps> = props => {
         visible={visibleInput}
         animationType="slide"
         onClose={onCloseInput}
+        maskClosable
         style={styles.modalInput}
       >
         <View style={styles.modalHeader}>
@@ -318,12 +319,16 @@ export const Add = () => {
         NavigationUtil.toPage('记账');
       }}
     >
-      <Text style={styles.add}>记账</Text>
+      <Image
+        style={styles.add}
+        source={require('@/assets/image/tabbar_add_n.png')}
+      />
     </TouchableOpacity>
   );
 };
 
 const screenWidth = Dimensions.get('window').width;
+const screenHeight = Dimensions.get('window').height;
 
 const headerItemStyle: any = {
   alignItems: 'flex-start',
@@ -332,6 +337,7 @@ const headerItemStyle: any = {
 };
 
 const styles = StyleSheet.create({
+  allContainer: { backgroundColor: '#fff', height: screenHeight },
   header: {
     width: screenWidth,
     flexDirection: 'row',
@@ -390,7 +396,7 @@ const styles = StyleSheet.create({
   },
   listContainer: {
     width: screenWidth,
-    marginBottom: 70,
+    marginBottom: 130,
   },
   title: {
     width: screenWidth,
@@ -441,7 +447,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   inputItem: { width: screenWidth / 3 },
-  add: { fontSize: 16, color: '#006fff', marginRight: 10 },
+  add: { width: 50, height: 50 },
 });
 
 export default connect(({ app, record }: RecordProps) => ({

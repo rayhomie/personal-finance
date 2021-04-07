@@ -6,7 +6,6 @@ import {
   Text,
   StyleSheet,
   Image,
-  StatusBar,
   TouchableOpacity,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
@@ -128,14 +127,14 @@ const Mine: React.FC<IProps> = props => {
 
   return (
     <View>
-      <StatusBar />
       <View style={styles.header}>
         <LinearGradient
           start={{ x: 0.0, y: 0.0 }}
-          end={{ x: 1.0, y: 1.0 }}
+          end={{ x: 0.5, y: 1.0 }}
           // locations={[0, 0.5, 0.6]}
-          colors={['#2ec173', '#2ea1b9']}
+          // colors={['#2ec173', '#2ea1b9']}
           // colors={['#FF5980', '#FFA882']}
+          colors={['#fff', '#ffeaaa']}
         >
           <View style={styles.avatar}>
             <TouchableOpacity
@@ -200,6 +199,24 @@ const Mine: React.FC<IProps> = props => {
             </View>
           </View>
         </View>
+        <LinearGradient
+          start={{ x: 0.0, y: 0.0 }}
+          end={{ x: 0.5, y: 0.65 }}
+          locations={[0, 0.2, 0.5, 0.7, 0.9, 1]}
+          // colors={['#2ec173', '#2ea1b9']}
+          // colors={['#FF5980', '#FFA882']}
+          colors={[
+            '#fff1c7',
+            '#ffeaaa',
+            '#ffeebc',
+            '#fff2ce',
+            '#fffdf7',
+            '#fff',
+          ]}
+          style={styles.other}
+        >
+          <View></View>
+        </LinearGradient>
       </View>
     </View>
   );
@@ -250,6 +267,13 @@ const styles = StyleSheet.create({
   },
   num: { fontWeight: 'bold', fontSize: 18 },
   bottom: { position: 'relative', top: -40 }, // 下部区域整体向上平移
+  other: {
+    position: 'relative',
+    top: -100,
+    zIndex: -1,
+    width: screenWidth,
+    height: 1000,
+  },
   bill: {
     width: screenWidth - 50,
     height: 100,

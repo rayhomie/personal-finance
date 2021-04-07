@@ -1,9 +1,10 @@
 import React from 'react';
+import { Image } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { navigationRef } from './NavigationUtil';
-import Record, { Add as RecordAdd } from '@/pages/record/index';
+import Record from '@/pages/record/index';
 import Chart from '@/pages/chart/index';
 import Mine from '@/pages/mine/index';
 import Account from '@/pages/record/account/index';
@@ -17,10 +18,62 @@ const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
 const renderTabBar = () => (
-  <Tab.Navigator>
-    <Tab.Screen name="账单" component={Record} />
-    <Tab.Screen name="图表" component={Chart} />
-    <Tab.Screen name="我的" component={Mine} />
+  <Tab.Navigator
+    tabBarOptions={{
+      activeTintColor: '#515151',
+    }}
+  >
+    <Tab.Screen
+      name="账单"
+      component={Record}
+      options={{
+        tabBarIcon: ({ focused }) => {
+          if (focused) {
+            return (
+              <Image source={require('@/assets/image/tabbar_detail_s.png')} />
+            );
+          } else {
+            return (
+              <Image source={require('@/assets/image/tabbar_detail_n.png')} />
+            );
+          }
+        },
+      }}
+    />
+    <Tab.Screen
+      name="图表"
+      component={Chart}
+      options={{
+        tabBarIcon: ({ focused }) => {
+          if (focused) {
+            return (
+              <Image source={require('@/assets/image/tabbar_chart_s.png')} />
+            );
+          } else {
+            return (
+              <Image source={require('@/assets/image/tabbar_chart_n.png')} />
+            );
+          }
+        },
+      }}
+    />
+    <Tab.Screen
+      name="我的"
+      component={Mine}
+      options={{
+        tabBarIcon: ({ focused }) => {
+          if (focused) {
+            return (
+              <Image source={require('@/assets/image/tabbar_mine_s.png')} />
+            );
+          } else {
+            return (
+              <Image source={require('@/assets/image/tabbar_mine_n.png')} />
+            );
+          }
+        },
+      }}
+    />
   </Tab.Navigator>
 );
 
@@ -32,7 +85,10 @@ export default function Router() {
           name="记账app"
           component={renderTabBar}
           options={{
-            headerRight: RecordAdd,
+            // headerTitle: RecordAdd,
+            // headerStyle: { height: screenHeight * 2 - 170 },
+            // headerTransparent: true,
+            header: () => <></>,
           }}
         />
         <Stack.Screen name="用户信息" component={UserInfo} />

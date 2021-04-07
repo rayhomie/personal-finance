@@ -93,7 +93,6 @@ const app: AppModelType = {
   },
   reducers: {
     save(state, { payload }) {
-      console.log('11111111111');
       return { ...state, ...payload };
     },
   },

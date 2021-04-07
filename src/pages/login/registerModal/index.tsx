@@ -112,7 +112,7 @@ const RegisterModal: React.FC<IProps> = props => {
               validate: [
                 {
                   validator: (value: string) => {
-                    if (value === registerForm.password) {
+                    if (value === getValue(['password']).password) {
                       return true;
                     }
                     return false;

@@ -138,7 +138,7 @@ const UserInfo: React.FC<IState> = props => {
             validate: [
               {
                 validator: (value: string) => {
-                  if (value === passwordForm.password) {
+                  if (value === getValue(['password']).password) {
                     return true;
                   }
                   return false;

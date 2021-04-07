@@ -36,7 +36,11 @@ export default function Router() {
           }}
         />
         <Stack.Screen name="用户信息" component={UserInfo} />
-        <Stack.Screen name="记账" component={Account} />
+        <Stack.Screen
+          name="记账"
+          component={Account}
+          options={{ headerTitle: () => <></> }}
+        />
         <Stack.Screen
           name="分类设置"
           component={CategorySetting}

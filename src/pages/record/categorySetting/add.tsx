@@ -143,9 +143,15 @@ const Add: React.FC<AddProps> = props => {
 };
 
 const screenWidth = Dimensions.get('window').width;
+const screenHeight = Dimensions.get('window').height;
 
 const styles = StyleSheet.create({
-  container: {},
+  container: {
+    width: screenWidth,
+    paddingBottom: 50,
+    height: screenHeight - 80,
+    backgroundColor: '#fff',
+  },
   inputContainer: { flexDirection: 'row' },
   InputImg: { height: 30, width: 30, marginLeft: 15 },
   input: { width: (screenWidth * 3) / 4, height: 40 },

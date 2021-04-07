@@ -9,7 +9,7 @@ import {
   Image,
   ScrollView,
 } from 'react-native';
-import { Modal } from '@ant-design/react-native';
+import { Modal, InputItem, Toast } from '@ant-design/react-native';
 import { ConnectProps, ConnectState, Dispatch } from '@/models/connect';
 import { connect } from 'react-redux';
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -40,6 +40,12 @@ const Record: React.FC<RecordProps> = props => {
   const dispatchRecord = dispatch as Dispatch;
   const [date, setDate] = useState(new Date());
   const [visible, setVisible] = useState<boolean>(false);
+  const [inputModal, setInputModal] = useState<{
+    input: string;
+    title: '备注' | '金额';
+    id: string;
+  }>({ input: '', title: '备注', id: '' });
+  const [visibleInput, setVisibleInput] = useState<boolean>(false);
 
   useEffect(() => {
     dispatchRecord({
@@ -51,6 +57,35 @@ const Record: React.FC<RecordProps> = props => {
       payload: { startMonth: moment(date).format('YYYY-MM') },
     });
   }, [addBillSuccess]);
+
+  const onCloseInput = () => {
+    setInputModal(pre => ({ ...pre, input: '', id: '' }));
+    setVisibleInput(false);
+  };
+
+  const hanleInputDone = async () => {
+    const { id, input, title } = inputModal;
+    if (title === '金额') {
+      if (!/^(\-?)\d+(\.\d+)?$/.test(input)) {
+        Toast.fail('请正确输入正数或负数', 1.5);
+        return;
+      }
+    }
+    await dispatchRecord({
+      type: 'record/updateBill',
+      payload: {
+        success: () => {
+          Toast.success(`${title}修改成功`, 1.5);
+        },
+        fail: () => {
+          Toast.fail(`${title}修改失败,请重试`, 1.5);
+        },
+        id,
+        ...(title === '金额' ? { amount: input } : { remark: input }),
+      },
+    });
+    await onCloseInput();
+  };
 
   const onCloseModal = () => {
     setVisible(false);
@@ -102,7 +137,10 @@ const Record: React.FC<RecordProps> = props => {
           {item.item.map((i: any, index: number) => (
             <View style={styles.itemContainer} key={i._id}>
               <View style={styles.item}>
-                <TouchableOpacity style={styles.cateImgContainer}>
+                <TouchableOpacity
+                  style={styles.cateImgContainer}
+                  onPress={() => handleCate(i._id)}
+                >
                   <Image
                     style={styles.cateImg}
                     source={IM[i.category[0].icon_l]}
@@ -115,12 +153,30 @@ const Record: React.FC<RecordProps> = props => {
                       : styles.lastRiht
                   }
                 >
-                  <TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => {
+                      setInputModal(pre => ({
+                        ...pre,
+                        title: '备注',
+                        id: i._id,
+                      }));
+                      setVisibleInput(true);
+                    }}
+                  >
                     <Text style={styles.name}>
                       {i.remark !== '' ? i.remark : i.category[0].name}
                     </Text>
                   </TouchableOpacity>
-                  <TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => {
+                      setInputModal(pre => ({
+                        ...pre,
+                        title: '金额',
+                        id: i._id,
+                      }));
+                      setVisibleInput(true);
+                    }}
+                  >
                     <Text style={styles.account}>
                       {i.category[0].is_income === 0 ? -i.amount : i.amount}
                     </Text>
@@ -134,6 +190,10 @@ const Record: React.FC<RecordProps> = props => {
     },
     [classifyList]
   );
+
+  const handleCate = (id: string) => {
+    NavigationUtil.toPage('记账', { updateId: id });
+  };
 
   return (
     <View style={{ backgroundColor: '#fff' }}>
@@ -208,6 +268,33 @@ const Record: React.FC<RecordProps> = props => {
           />
         </View>
       </Modal>
+      <Modal
+        popup
+        visible={visibleInput}
+        animationType="slide"
+        onClose={onCloseInput}
+        style={styles.modalInput}
+      >
+        <View style={styles.modalHeader}>
+          <TouchableOpacity onPress={() => onCloseInput()}>
+            <Text style={styles.btnCancel}>取消</Text>
+          </TouchableOpacity>
+          <View style={styles.input}>
+            <View style={styles.inputItem}>
+              <InputItem
+                placeholder={`请输入${inputModal.title}...`}
+                maxLength={4}
+                clear
+                value={inputModal.input}
+                onChange={input => setInputModal(pre => ({ ...pre, input }))}
+              />
+            </View>
+          </View>
+          <TouchableOpacity onPress={() => hanleInputDone()}>
+            <Text style={styles.btnConfirm}>确认</Text>
+          </TouchableOpacity>
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -264,7 +351,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  modalInput: {
+    paddingTop: 50,
+    paddingHorizontal: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   modalHeader: {
+    width: screenWidth,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -329,6 +423,12 @@ const styles = StyleSheet.create({
   noResText: {
     color: '#cbcbcb',
   },
+  input: {
+    width: screenWidth / 3,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  inputItem: { width: screenWidth / 3 },
   add: { fontSize: 16, color: '#006fff', marginRight: 10 },
 });
 

@@ -176,9 +176,15 @@ const CategorySetting: React.FC<CategorySettingProps> = props => {
 };
 
 const screenWidth = Dimensions.get('window').width;
+const screenHeight = Dimensions.get('window').height;
 
 const styles = StyleSheet.create({
-  container: { width: screenWidth, paddingBottom: 100 },
+  container: {
+    width: screenWidth,
+    paddingBottom: 50,
+    height: screenHeight - 110,
+    backgroundColor: '#fff',
+  },
   FlatList: {},
   item: {
     flexDirection: 'row',
@@ -187,7 +193,7 @@ const styles = StyleSheet.create({
     paddingLeft: 20,
     height: 50,
     borderBottomColor: '#eee',
-    borderBottomWidth: 2,
+    borderBottomWidth: 0.5,
   },
   delete: { width: 25, height: 25 },
   icon: { width: 40, height: 40, marginLeft: 10 },

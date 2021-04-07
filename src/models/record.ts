@@ -11,6 +11,8 @@ import {
   add as addBill,
   getCurMonthTotal,
   getClassifyList,
+  update as updateBill,
+  Delete as deleteBill,
 } from '@/service//bill';
 
 type noSystemItemType = {
@@ -53,6 +55,9 @@ export interface RecordModelType {
     addBill: Effect;
     getCurMonthTotal: Effect;
     getClassifyList: Effect;
+    updateBill: Effect;
+    deleteBill: Effect;
+    updateSystemCategory: Effect;
   };
   reducers: {
     save: Reducer<RecordState>;
@@ -163,11 +168,49 @@ const record: RecordModelType = {
     },
     *getClassifyList({ payload }, { call, put }) {
       const res = yield call(getClassifyList(payload));
-      console.log(res);
       if (res.data.code === 0) {
         yield put({ type: 'save', payload: { classifyList: res.data.docs } });
       } else {
         yield put({ type: 'save', payload: { classifyList: [] } });
+      }
+    },
+    *updateBill({ payload }, { call, put }) {
+      const { success, fail, ...rest } = payload;
+      const res = yield call(updateBill(rest));
+      if (res.data.code === 0) {
+        yield put({
+          type: 'save',
+          payload: { addBillSuccess: Math.random() * 100000 },
+        });
+        success();
+      } else {
+        fail();
+      }
+    },
+    *deleteBill({ payload }, { call, put }) {
+      const { success, fail, ...rest } = payload;
+      const res = yield call(deleteBill(rest));
+      if (res.data.code === 0) {
+        yield put({
+          type: 'save',
+          payload: { addBillSuccess: Math.random() * 100000 },
+        });
+        success();
+      } else {
+        fail();
+      }
+    },
+    //修改系统分类的账单
+    *updateSystemCategory({ payload }, { call, put }) {
+      const { success, fail, systemId, id } = payload;
+      const res = yield call(getSystemCategory({ id: systemId }));
+      if (res.data.code === 0) {
+        yield put({
+          type: 'updateBill',
+          payload: { success, fail, id, category_id: res.data.docs._id },
+        });
+      } else {
+        fail();
       }
     },
   },

@@ -35,6 +35,7 @@ const Account: React.FC<AccountProps> = props => {
   const [categoryList, setCategoryList] = useState<any[]>(
     category_list[payOrIncome]
   );
+  const updateId = (NavigationUtil.getParams() as any)?.updateId || '';
   const [visible, setVisible] = useState<boolean>(false);
   const [compute, setCompute] = useState<string>('');
   const [input, setInput] = useState<string>('');
@@ -80,7 +81,7 @@ const Account: React.FC<AccountProps> = props => {
           style={styles.category_item}
           key={i.id}
           onPress={() => {
-            handleClick(i);
+            updateId === '' ? handleClick(i) : handleUpdate(i);
           }}
         >
           <Image
@@ -123,6 +124,45 @@ const Account: React.FC<AccountProps> = props => {
       });
     } else {
       console.log('不是');
+    }
+  };
+
+  const handleUpdate = (item: any) => {
+    if (item.id === 'setting') {
+      NavigationUtil.toPage('分类设置', { payOrIncome });
+      return;
+    }
+    setClickItem(item);
+    if (!item._id) {
+      dispatchRecord({
+        type: 'record/updateSystemCategory',
+        payload: {
+          success: () => {
+            Toast.success('修改账单分类成功', 1.5);
+            NavigationUtil.goBack();
+          },
+          fail: () => {
+            Toast.fail('修改账单分类失败，请重试', 1.5);
+          },
+          systemId: item.id,
+          id: updateId,
+        },
+      });
+    } else {
+      dispatchRecord({
+        type: 'record/updateBill',
+        payload: {
+          success: () => {
+            Toast.success('修改账单分类成功', 1.5);
+            NavigationUtil.goBack();
+          },
+          fail: () => {
+            Toast.fail('修改账单分类失败，请重试', 1.5);
+          },
+          category_id: item._id,
+          id: updateId,
+        },
+      });
     }
   };
 
@@ -413,6 +453,7 @@ const Account: React.FC<AccountProps> = props => {
 const category_item_width = 70;
 const category_icon_width = 50;
 const screenWidth = Dimensions.get('window').width;
+const screenHeight = Dimensions.get('window').height;
 const space = (screenWidth - category_item_width * 4) / 5;
 const commonStyle: any = {
   width: screenWidth / 4,
@@ -425,7 +466,12 @@ const commonStyle: any = {
 };
 
 const styles = StyleSheet.create({
-  container: { width: screenWidth, paddingBottom: 50 },
+  container: {
+    width: screenWidth,
+    paddingBottom: 50,
+    height: screenHeight - 70,
+    backgroundColor: '#fff',
+  },
   bill_category: {
     width: screenWidth,
     color: 'pink',

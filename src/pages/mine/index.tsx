@@ -36,6 +36,8 @@ const Mine: React.FC<IProps> = props => {
   useEffect(() => {
     if (app?.isLogin) {
       dispatchApp({ type: 'app/save', payload: { openLogin: false } });
+    } else {
+      dispatchApp({ type: 'app/save', payload: { openLogin: true } });
     }
   }, [app?.isLogin]);
 
@@ -53,7 +55,7 @@ const Mine: React.FC<IProps> = props => {
       payload: {
         success: () => {},
         fail: () => {
-          Toast.fail('获取用户信息失败', 1.5);
+          // Toast.fail('获取用户信息失败', 1.5);
         },
       },
     });
@@ -65,7 +67,7 @@ const Mine: React.FC<IProps> = props => {
       payload: {
         success: () => {},
         fail: () => {
-          Toast.fail('获取打卡信息失败', 1.5);
+          // Toast.fail('获取打卡信息失败', 1.5);
         },
       },
     });
@@ -74,7 +76,7 @@ const Mine: React.FC<IProps> = props => {
       payload: {
         success: () => {},
         fail: () => {
-          Toast.fail('获取连续打卡次数失败', 1.5);
+          // Toast.fail('获取连续打卡次数失败', 1.5);
         },
       },
     });
@@ -102,7 +104,7 @@ const Mine: React.FC<IProps> = props => {
       payload: {
         success: () => {},
         fail: () => {
-          Toast.fail('获取账单信息失败', 1.5);
+          // Toast.fail('获取账单信息失败', 1.5);
         },
       },
     });
@@ -114,7 +116,7 @@ const Mine: React.FC<IProps> = props => {
       payload: {
         success: () => {},
         fail: () => {
-          Toast.fail('获取今日是否打卡失败', 1.5);
+          // Toast.fail('获取今日是否打卡失败', 1.5);
         },
       },
     });

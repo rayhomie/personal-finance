@@ -35,17 +35,14 @@ const app: AppModelType = {
       const { success, fail, ...rest } = payload;
       const res = yield call(fetchLogin(rest));
       if (res.data.code === 0) {
-        yield console.log('000');
         yield put({
           type: 'save',
           payload: { isLogin: true },
         });
-        yield console.log('111');
         yield AsyncStorage.setItem('token', res.data.data.token, () => {
           console.log('注入token成功');
           success();
         });
-        yield console.log('222');
       } else {
         yield put({
           type: 'save',

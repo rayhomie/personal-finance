@@ -9,6 +9,7 @@ import {
   StatusBar,
   TouchableOpacity,
 } from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
 import { Toast } from '@ant-design/react-native';
 import moment from 'moment';
 import { ConnectProps, ConnectState, Dispatch } from '@/models/connect';
@@ -129,42 +130,50 @@ const Mine: React.FC<IProps> = props => {
     <View>
       <StatusBar />
       <View style={styles.header}>
-        <View style={styles.avatar}>
-          <TouchableOpacity
-            activeOpacity={0.5}
-            style={styles.pic}
-            onPress={openUserInfo}
-          >
-            <Image
-              style={styles.picImage}
-              source={{
-                uri: avatar_url,
-              }}
-            />
-            <Text style={styles.nickname}>{username}</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            activeOpacity={0.5}
-            style={styles.clock}
-            onPress={clock}
-          >
-            <Text>{isClock === 0 ? '打卡' : '已打卡'}</Text>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.tab}>
-          <View style={styles.item}>
-            <Text style={styles.num}>{clockContinueCount}</Text>
-            <Text>已连续打卡</Text>
+        <LinearGradient
+          start={{ x: 0.0, y: 0.0 }}
+          end={{ x: 1.0, y: 1.0 }}
+          // locations={[0, 0.5, 0.6]}
+          colors={['#2ec173', '#2ea1b9']}
+          // colors={['#FF5980', '#FFA882']}
+        >
+          <View style={styles.avatar}>
+            <TouchableOpacity
+              activeOpacity={0.5}
+              style={styles.pic}
+              onPress={openUserInfo}
+            >
+              <Image
+                style={styles.picImage}
+                source={{
+                  uri: avatar_url,
+                }}
+              />
+              <Text style={styles.nickname}>{username}</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              activeOpacity={0.5}
+              style={styles.clock}
+              onPress={clock}
+            >
+              <Text>{isClock === 0 ? '打卡' : '已打卡'}</Text>
+            </TouchableOpacity>
           </View>
-          <View style={styles.item}>
-            <Text style={styles.num}>{clockTotal}</Text>
-            <Text>记录总天数</Text>
+          <View style={styles.tab}>
+            <View style={styles.item}>
+              <Text style={styles.num}>{clockContinueCount}</Text>
+              <Text>已连续打卡</Text>
+            </View>
+            <View style={styles.item}>
+              <Text style={styles.num}>{clockTotal}</Text>
+              <Text>记录总天数</Text>
+            </View>
+            <View style={styles.item}>
+              <Text style={styles.num}>{billTotal}</Text>
+              <Text>记录总笔数</Text>
+            </View>
           </View>
-          <View style={styles.item}>
-            <Text style={styles.num}>{billTotal}</Text>
-            <Text>记录总笔数</Text>
-          </View>
-        </View>
+        </LinearGradient>
         <View style={styles.bottom}>
           <View style={styles.bill}>
             <View style={styles.billTitleContainer}>
@@ -203,7 +212,6 @@ const styles = StyleSheet.create({
   avatar: {
     width: screenWidth,
     height: 100,
-    backgroundColor: 'pink',
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -232,7 +240,6 @@ const styles = StyleSheet.create({
     height: 120,
     flexDirection: 'row',
     justifyContent: 'space-evenly',
-    backgroundColor: 'pink',
   },
   item: {
     width: 100,

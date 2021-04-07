@@ -39,6 +39,7 @@ const Record: React.FC<RecordProps> = props => {
   const { dispatch, record } = props;
   const { incomeTotal, payTotal, classifyList, addBillSuccess } = record as any;
   const dispatchRecord = dispatch as Dispatch;
+  const dispatchApp = dispatch as Dispatch;
   const [date, setDate] = useState(new Date());
   const [visible, setVisible] = useState<boolean>(false);
   const [inputModal, setInputModal] = useState<{
@@ -52,7 +53,7 @@ const Record: React.FC<RecordProps> = props => {
     verifyToken()().then(res => {
       if (res.data.code !== 0) {
         setTimeout(() => {
-          NavigationUtil.toPage('我的');
+          dispatchApp({ type: 'app/save', payload: { openLogin: true } });
         }, 1500);
       }
     });

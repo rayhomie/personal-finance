@@ -1,7 +1,14 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react';
-import { Dimensions, View, StyleSheet } from 'react-native';
+import {
+  Dimensions,
+  View,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+} from 'react-native';
 import { Button, Modal } from '@ant-design/react-native';
+import LinearGradient from 'react-native-linear-gradient';
 import { connect } from 'react-redux';
 import { ConnectProps, ConnectState, Dispatch } from '@/models/connect';
 import LoginModal from './loginModal/index';
@@ -44,20 +51,37 @@ const Login: React.FC<IProps> = props => {
             setShowRegister(false);
           }}
         />
-        <Button
-          onPress={() => {
-            setShowLogin(true);
-          }}
+        <LinearGradient
+          start={{ x: 0.0, y: 0.25 }}
+          end={{ x: 0.5, y: 1.0 }}
+          locations={[0, 0.5, 0.6]}
+          colors={['#921850', '#a11a52', '#c12a45']}
+          style={styles.linearGradient}
         >
-          登录
-        </Button>
-        <Button
-          onPress={() => {
-            setShowRegister(true);
-          }}
+          <TouchableOpacity
+            onPress={() => {
+              setShowLogin(true);
+            }}
+          >
+            <Text style={styles.buttonText}>登录</Text>
+          </TouchableOpacity>
+        </LinearGradient>
+
+        <LinearGradient
+          start={{ x: 0.0, y: 0.25 }}
+          end={{ x: 0.5, y: 1.0 }}
+          locations={[0, 0.5, 0.6]}
+          colors={['#c12a45', '#a11a52', '#921850']}
+          style={styles.linearGradient}
         >
-          注册
-        </Button>
+          <TouchableOpacity
+            onPress={() => {
+              setShowRegister(true);
+            }}
+          >
+            <Text style={styles.buttonText}>注册</Text>
+          </TouchableOpacity>
+        </LinearGradient>
       </View>
     </Modal>
   );
@@ -73,7 +97,21 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   tabs: { width: screenWidth },
-
+  linearGradient: {
+    flex: 1,
+    width: screenWidth / 2,
+    paddingLeft: 15,
+    paddingRight: 15,
+    borderRadius: 5,
+  },
+  buttonText: {
+    fontSize: 18,
+    fontFamily: 'Gill Sans',
+    textAlign: 'center',
+    margin: 10,
+    color: '#ffffff',
+    backgroundColor: 'transparent',
+  },
   login: {},
   register: {},
   sex: {

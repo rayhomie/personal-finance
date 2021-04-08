@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import { Toast, Modal, SegmentedControl } from '@ant-design/react-native';
+import ImagePicker from 'react-native-image-crop-picker';
 import { ConnectProps, ConnectState, Dispatch } from '@/models/connect';
 import { connect } from 'react-redux';
 import NavigationUtil from '@/navigator/NavigationUtil';
@@ -357,6 +358,16 @@ const UserInfo: React.FC<IState> = props => {
     );
   };
 
+  const choosePic = () => {
+    ImagePicker.openPicker({
+      width: 500,
+      height: 500,
+      cropping: true,
+    }).then(image => {
+      console.log(image);
+    });
+  };
+
   const { avatar_url, username, email, mobile_number, _id } = user as any;
   return (
     <View>
@@ -367,7 +378,7 @@ const UserInfo: React.FC<IState> = props => {
         colors={['#ffeaaa', '#fffcdc']}
         style={styles.allContainer}
       >
-        <TouchableOpacity activeOpacity={0.5}>
+        <TouchableOpacity activeOpacity={0.5} onPress={() => choosePic()}>
           <LinearGradient
             start={{ x: 0.0, y: 0.0 }}
             end={{ x: 1, y: 1 }}

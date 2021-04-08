@@ -17,11 +17,11 @@
 		2D02E4BF1E0B4AB3006451C7 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		2DCD954D1E0B4F2C00145EB5 /* personal_financeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* personal_financeTests.m */; };
 		55CACFE8C0EC798D19DC38BF /* libPods-personal_finance-personal_financeTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 34BDA4C5DEE119B2E8ABAC70 /* libPods-personal_finance-personal_financeTests.a */; };
+		5D890ABF7D7B4443B84DADAB /* antfill.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 780A291697024953A18EFAA9 /* antfill.ttf */; };
+		5F367B32C8EE4FFC9CF818AE /* antoutline.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9206072D1B5149CF8E50622F /* antoutline.ttf */; };
 		6DD94FEA1E97A039FBEEDBCD /* libPods-personal_finance.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F14A3FA2202BFD1A2DF7075E /* libPods-personal_finance.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		9D9CABAC9CF422E4E90FDDBD /* libPods-personal_finance-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 877277B69391703A3E9802C8 /* libPods-personal_finance-tvOS.a */; };
-		5D890ABF7D7B4443B84DADAB /* antfill.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 780A291697024953A18EFAA9 /* antfill.ttf */; };
-		5F367B32C8EE4FFC9CF818AE /* antoutline.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9206072D1B5149CF8E50622F /* antoutline.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -57,9 +57,11 @@
 		2D02E4901E0B4A5D006451C7 /* personal_finance-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "personal_finance-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		34BDA4C5DEE119B2E8ABAC70 /* libPods-personal_finance-personal_financeTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-personal_finance-personal_financeTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		552ECCE1E93700F1F075736D /* Pods-personal_finance-tvOSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-personal_finance-tvOSTests.debug.xcconfig"; path = "Target Support Files/Pods-personal_finance-tvOSTests/Pods-personal_finance-tvOSTests.debug.xcconfig"; sourceTree = "<group>"; };
+		780A291697024953A18EFAA9 /* antfill.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = antfill.ttf; path = "../node_modules/@ant-design/icons-react-native/fonts/antfill.ttf"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = personal_finance/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		877277B69391703A3E9802C8 /* libPods-personal_finance-tvOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-personal_finance-tvOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8E34BE2811F81719DBC18A5A /* Pods-personal_finance-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-personal_finance-tvOS.release.xcconfig"; path = "Target Support Files/Pods-personal_finance-tvOS/Pods-personal_finance-tvOS.release.xcconfig"; sourceTree = "<group>"; };
+		9206072D1B5149CF8E50622F /* antoutline.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = antoutline.ttf; path = "../node_modules/@ant-design/icons-react-native/fonts/antoutline.ttf"; sourceTree = "<group>"; };
 		A260127460F489FA74A97723 /* Pods-personal_finance.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-personal_finance.debug.xcconfig"; path = "Target Support Files/Pods-personal_finance/Pods-personal_finance.debug.xcconfig"; sourceTree = "<group>"; };
 		AEBFF3EAC96E5234BA47D169 /* Pods-personal_finance-personal_financeTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-personal_finance-personal_financeTests.debug.xcconfig"; path = "Target Support Files/Pods-personal_finance-personal_financeTests/Pods-personal_finance-personal_financeTests.debug.xcconfig"; sourceTree = "<group>"; };
 		BF38D7B04C6DEDF03B49BA9F /* Pods-personal_finance-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-personal_finance-tvOS.debug.xcconfig"; path = "Target Support Files/Pods-personal_finance-tvOS/Pods-personal_finance-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
@@ -69,8 +71,6 @@
 		ED2971642150620600B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS12.0.sdk/System/Library/Frameworks/JavaScriptCore.framework; sourceTree = DEVELOPER_DIR; };
 		F14A3FA2202BFD1A2DF7075E /* libPods-personal_finance.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-personal_finance.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F8D6714C398EBD64D22D426E /* Pods-personal_finance-personal_financeTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-personal_finance-personal_financeTests.release.xcconfig"; path = "Target Support Files/Pods-personal_finance-personal_financeTests/Pods-personal_finance-personal_financeTests.release.xcconfig"; sourceTree = "<group>"; };
-		780A291697024953A18EFAA9 /* antfill.ttf */ = {isa = PBXFileReference; name = "antfill.ttf"; path = "../node_modules/@ant-design/icons-react-native/fonts/antfill.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		9206072D1B5149CF8E50622F /* antoutline.ttf */ = {isa = PBXFileReference; name = "antoutline.ttf"; path = "../node_modules/@ant-design/icons-react-native/fonts/antoutline.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -204,14 +204,14 @@
 			sourceTree = "<group>";
 		};
 		A6A71E8496584A518AE0929C /* Resources */ = {
-			isa = "PBXGroup";
+			isa = PBXGroup;
 			children = (
 				780A291697024953A18EFAA9 /* antfill.ttf */,
 				9206072D1B5149CF8E50622F /* antoutline.ttf */,
 			);
 			name = Resources;
-			sourceTree = "<group>";
 			path = "";
+			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
@@ -225,6 +225,7 @@
 				00E356EB1AD99517003FC87E /* Frameworks */,
 				00E356EC1AD99517003FC87E /* Resources */,
 				20159FD41D44A5B129F92E05 /* [CP] Embed Pods Frameworks */,
+				0DF43928DE15D2516497F436 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -247,6 +248,7 @@
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
 				9BD08FC63D0BD2C34F1E9B83 /* [CP] Embed Pods Frameworks */,
+				6D160BC39B0C0DF05305E79D /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -394,6 +396,26 @@
 			shellPath = /bin/sh;
 			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh";
 		};
+		0DF43928DE15D2516497F436 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-personal_finance-personal_financeTests/Pods-personal_finance-personal_financeTests-resources.sh",
+				"${PODS_CONFIGURATION_BUILD_DIR}/RNImageCropPicker/QBImagePicker.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/TOCropViewController/TOCropViewControllerBundle.bundle",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/QBImagePicker.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TOCropViewControllerBundle.bundle",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-personal_finance-personal_financeTests/Pods-personal_finance-personal_financeTests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		20159FD41D44A5B129F92E05 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -446,6 +468,26 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		6D160BC39B0C0DF05305E79D /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-personal_finance/Pods-personal_finance-resources.sh",
+				"${PODS_CONFIGURATION_BUILD_DIR}/RNImageCropPicker/QBImagePicker.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/TOCropViewController/TOCropViewControllerBundle.bundle",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/QBImagePicker.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TOCropViewControllerBundle.bundle",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-personal_finance/Pods-personal_finance-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		8A1C4AF0B63B48950CD514C3 /* [CP] Check Pods Manifest.lock */ = {

@@ -53,6 +53,8 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>select photo &amp; upload it  for 'Profile Picture'</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>antfill.ttf</string>

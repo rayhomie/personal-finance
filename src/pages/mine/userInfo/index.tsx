@@ -87,9 +87,8 @@ const UserInfo: React.FC<IState> = props => {
                 (dispatch as Dispatch)({
                   type: 'user/save',
                   payload: {
-                    avatar_url:
-                      'https://lh3.googleusercontent.com/a-/AOh14GjMcc-Wd3Sc1H7rd2VmWfhPHxucsvaxbuCb-2tb=s96-c-rg-br100',
-                    username: '未登录',
+                    avatar_url: '',
+                    username: '登录 / 注册',
                     gender: 1,
                     email: '',
                     mobile_number: '',

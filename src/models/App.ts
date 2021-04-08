@@ -37,7 +37,7 @@ const app: AppModelType = {
       if (res.data.code === 0) {
         yield put({
           type: 'save',
-          payload: { isLogin: true },
+          payload: { isLogin: true, openLogin: false },
         });
         yield AsyncStorage.setItem('token', res.data.data.token, () => {
           console.log('注入token成功');

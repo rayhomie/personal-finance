@@ -108,16 +108,8 @@ const LoginModal: React.FC<IProps> = props => {
                   username,
                   password,
                   success: () => {
-                    Toast.success('登录成功', 1.5, () => onClose());
-                    (dispatch as Dispatch)({
-                      type: 'user/getUserInfo',
-                      payload: {
-                        success: () => {},
-                        fail: () => {
-                          Toast.fail('获取用户信息失败');
-                        },
-                      },
-                    });
+                    Toast.success('登录成功', 1.5);
+                    setTimeout(() => onClose(), 0.5);
                   },
                   fail: () =>
                     Toast.fail('登录失败，请检查账号或密码是否正确', 1.5),

@@ -83,10 +83,8 @@ const mine: MineModelType = {
         success();
       } else if (res.data.code === 401) {
         fail401();
-        yield put({ type: 'save', payload: { isClock: 0 } });
       } else {
         fail();
-        yield put({ type: 'save', payload: { isClock: 0 } });
       }
     },
     *getContinueCount({ payload }, { call, put }) {

@@ -35,7 +35,7 @@ enum WeekMap {
 }
 
 const Record: React.FC<RecordProps> = props => {
-  const { dispatch, record } = props;
+  const { dispatch, record, app } = props;
   const { incomeTotal, payTotal, classifyList, addBillSuccess } = record as any;
   const dispatchRecord = dispatch as Dispatch;
   const dispatchApp = dispatch as Dispatch;
@@ -67,7 +67,7 @@ const Record: React.FC<RecordProps> = props => {
       type: 'record/getClassifyList',
       payload: { startMonth: moment(date).format('YYYY-MM') },
     });
-  }, [addBillSuccess]);
+  }, [addBillSuccess, app?.isLogin]);
 
   const onCloseInput = () => {
     setInputModal(pre => ({ ...pre, input: '', id: '' }));

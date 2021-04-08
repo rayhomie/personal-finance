@@ -59,6 +59,10 @@ const mine: MineModelType = {
         });
         success();
       } else {
+        yield put({
+          type: 'save',
+          payload: { clockList: [], clockTotal: 0 },
+        });
         fail();
       }
     },
@@ -79,8 +83,10 @@ const mine: MineModelType = {
         success();
       } else if (res.data.code === 401) {
         fail401();
+        yield put({ type: 'save', payload: { isClock: 0 } });
       } else {
         fail();
+        yield put({ type: 'save', payload: { isClock: 0 } });
       }
     },
     *getContinueCount({ payload }, { call, put }) {
@@ -93,6 +99,10 @@ const mine: MineModelType = {
         });
         success();
       } else {
+        yield put({
+          type: 'save',
+          payload: { clockContinueCount: 0 },
+        });
         fail();
       }
     },
@@ -106,6 +116,10 @@ const mine: MineModelType = {
         });
         success();
       } else {
+        yield put({
+          type: 'save',
+          payload: { billList: [], billTotal: 0 },
+        });
         fail();
       }
     },
@@ -119,6 +133,10 @@ const mine: MineModelType = {
         });
         success();
       } else {
+        yield put({
+          type: 'save',
+          payload: { isClock: 0 },
+        });
         fail();
       }
     },

@@ -13,6 +13,8 @@ import { ConnectProps, ConnectState, Dispatch } from '@/models/connect';
 import { connect } from 'react-redux';
 import NavigationUtil from '@/navigator/NavigationUtil';
 import LinearGradient from 'react-native-linear-gradient';
+import avatarArr from '@/assets/json/avatarMap';
+
 const { GiftedForm, GiftedFormManager } = require('react-native-gifted-form');
 
 interface IProps extends ConnectState, ConnectProps {
@@ -44,6 +46,7 @@ const getValue = (key: string[]) =>
 const UserInfo: React.FC<IState> = props => {
   const { dispatch, user } = props as any;
   const [gender, setGender] = useState<number>(1);
+  const [randomAvatar, setRandomAvatar] = useState<number>(0);
   const [passwordForm, setPasswordForm] = useState<PasswordFormType>({
     password: '',
     confirmPassword: '',
@@ -67,6 +70,7 @@ const UserInfo: React.FC<IState> = props => {
 
   useEffect(() => {
     getUserInfo();
+    setRandomAvatar((NavigationUtil.getParams() as any).randomAvatar);
   }, []);
 
   const loginOut = () => {
@@ -375,9 +379,13 @@ const UserInfo: React.FC<IState> = props => {
             <Text style={styles.avatar}>头像</Text>
             <Image
               style={styles.picImage}
-              source={{
-                uri: avatar_url,
-              }}
+              source={
+                avatar_url === ''
+                  ? avatarArr[randomAvatar]
+                  : {
+                      uri: avatar_url,
+                    }
+              }
             />
           </LinearGradient>
         </TouchableOpacity>

@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Dimensions,
   View,
@@ -14,6 +14,7 @@ import moment from 'moment';
 import { ConnectProps, ConnectState, Dispatch } from '@/models/connect';
 import { connect } from 'react-redux';
 import NavigationUtil from '@/navigator/NavigationUtil';
+import avatarArr from '@/assets/json/avatarMap';
 
 interface IProps extends ConnectState, ConnectProps {
   dataLoading?: boolean;
@@ -24,26 +25,27 @@ const Mine: React.FC<IProps> = props => {
   const dispatchApp = dispatch as Dispatch;
   const { avatar_url, username } = user as any;
   const { clockTotal, clockContinueCount, billTotal, isClock } = mine as any;
-
-  useEffect(() => {
-    dispatchApp({ type: 'app/verifyToken' });
-    getUserInfo();
-    getClockInfo();
-    getBillTotal();
-    getIsClock();
-  }, []);
+  const [randomAvatar, setRandomAvatar] = useState<number>(0);
 
   useEffect(() => {
     if (app?.isLogin) {
       dispatchApp({ type: 'app/save', payload: { openLogin: false } });
     } else {
+      setRandomAvatar(((Math.random() * 10000) | 0) % 27);
       dispatchApp({ type: 'app/save', payload: { openLogin: true } });
     }
+    setTimeout(() => {
+      dispatchApp({ type: 'app/verifyToken' });
+      getUserInfo();
+      getClockInfo();
+      getBillTotal();
+      getIsClock();
+    }, 0);
   }, [app?.isLogin]);
 
   const openUserInfo = () => {
     if (app?.isLogin) {
-      NavigationUtil.toPage('用户信息');
+      NavigationUtil.toPage('用户信息', { randomAvatar });
     } else {
       dispatchApp({ type: 'app/save', payload: { openLogin: true } });
     }
@@ -131,9 +133,6 @@ const Mine: React.FC<IProps> = props => {
         <LinearGradient
           start={{ x: 0.0, y: 0.0 }}
           end={{ x: 0.5, y: 1.0 }}
-          // locations={[0, 0.5, 0.6]}
-          // colors={['#2ec173', '#2ea1b9']}
-          // colors={['#FF5980', '#FFA882']}
           colors={['#fff', '#ffeaaa']}
         >
           <View style={styles.avatar}>
@@ -144,9 +143,13 @@ const Mine: React.FC<IProps> = props => {
             >
               <Image
                 style={styles.picImage}
-                source={{
-                  uri: avatar_url,
-                }}
+                source={
+                  avatar_url === ''
+                    ? avatarArr[randomAvatar]
+                    : {
+                        uri: avatar_url,
+                      }
+                }
               />
               <Text style={styles.nickname}>{username}</Text>
             </TouchableOpacity>

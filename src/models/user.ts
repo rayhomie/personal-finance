@@ -33,9 +33,8 @@ export interface UserModelType {
 const user: UserModelType = {
   namespace: 'user',
   state: {
-    avatar_url:
-      'https://lh3.googleusercontent.com/a-/AOh14GjMcc-Wd3Sc1H7rd2VmWfhPHxucsvaxbuCb-2tb=s96-c-rg-br100',
-    username: '已注销',
+    avatar_url: '',
+    username: '登录 / 注册',
     gender: 1,
     email: '',
     mobile_number: '',

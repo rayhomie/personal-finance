@@ -15,6 +15,7 @@ import { connect } from 'react-redux';
 import NavigationUtil from '@/navigator/NavigationUtil';
 import LinearGradient from 'react-native-linear-gradient';
 import avatarArr from '@/assets/json/avatarMap';
+import { updatePicture } from '@/service/upload';
 
 const { GiftedForm, GiftedFormManager } = require('react-native-gifted-form');
 
@@ -52,6 +53,7 @@ const UserInfo: React.FC<IState> = props => {
     password: '',
     confirmPassword: '',
   });
+  const [avatarModal, setAvatarModal] = useState<boolean>(false);
 
   const handlePasswordValueChange = (values: PasswordFormType) => {
     setPasswordForm(values);
@@ -364,8 +366,28 @@ const UserInfo: React.FC<IState> = props => {
       height: 500,
       cropping: true,
     }).then(image => {
-      console.log(image);
+      const formData = new FormData();
+      formData.append('image', image);
+      updatePicture(formData).then(res => {
+        if (res.data.code === 0) {
+          (dispatch as Dispatch)({
+            type: 'user/updateInfo',
+            payload: {
+              avatar_url: res.data.res.requestUrls[0],
+              success: () => {
+                getUserInfo();
+                Toast.success('头像更改成功', 1.5);
+              },
+              fail: () => Toast.fail('头像更改失败,请重试', 1.5),
+            },
+          });
+        }
+      });
     });
+  };
+
+  const openAvatar = () => {
+    setAvatarModal(true);
   };
 
   const { avatar_url, username, email, mobile_number, _id } = user as any;
@@ -387,16 +409,18 @@ const UserInfo: React.FC<IState> = props => {
             style={styles.container}
           >
             <Text style={styles.avatar}>头像</Text>
-            <Image
-              style={styles.picImage}
-              source={
-                avatar_url === ''
-                  ? avatarArr[randomAvatar]
-                  : {
-                      uri: avatar_url,
-                    }
-              }
-            />
+            <TouchableOpacity activeOpacity={0.5} onPress={() => openAvatar()}>
+              <Image
+                style={styles.picImage}
+                source={
+                  avatar_url === ''
+                    ? avatarArr[randomAvatar]
+                    : {
+                        uri: avatar_url,
+                      }
+                }
+              />
+            </TouchableOpacity>
           </LinearGradient>
         </TouchableOpacity>
         <TouchableOpacity activeOpacity={0.5}>
@@ -488,6 +512,34 @@ const UserInfo: React.FC<IState> = props => {
           </LinearGradient>
         </TouchableOpacity>
       </LinearGradient>
+      <Modal
+        popup
+        visible={avatarModal}
+        animationType="slide"
+        onClose={() => setAvatarModal(false)}
+        maskClosable
+      >
+        <LinearGradient
+          start={{ x: 0.0, y: 0.0 }}
+          end={{ x: 0.5, y: 0.65 }}
+          locations={[0, 1]}
+          colors={['#ffeaaa', '#fffcdc']}
+          style={styles.modalAvatar}
+        >
+          <View style={styles.avatarContainer}>
+            <Image
+              source={
+                avatar_url === ''
+                  ? avatarArr[randomAvatar]
+                  : {
+                      uri: avatar_url,
+                    }
+              }
+              style={styles.avatarSize}
+            />
+          </View>
+        </LinearGradient>
+      </Modal>
     </View>
   );
 };
@@ -510,7 +562,7 @@ const styles = StyleSheet.create({
     borderBottomColor: '#eee',
   },
   avatar: { fontSize: 16 },
-  picImage: { width: 30, height: 30 },
+  picImage: { width: 45, height: 45, borderRadius: 30 },
   left: {},
   right: {},
   btn: {
@@ -526,6 +578,19 @@ const styles = StyleSheet.create({
   fontButton: { color: '#3f4d5b', fontSize: 18, fontWeight: 'bold' },
   sexControl: { width: 200, height: 30 },
   GiftedForm: { width: 250 },
+  modalAvatar: {
+    paddingTop: 50,
+    paddingHorizontal: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  avatarContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: screenWidth,
+    height: screenWidth,
+  },
+  avatarSize: { width: (screenWidth * 4) / 5, height: (screenWidth * 4) / 5 },
 });
 
 export default connect(({ app, user, mine, record, loading }: IProps) => ({

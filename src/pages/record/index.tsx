@@ -9,7 +9,7 @@ import {
   Image,
   ScrollView,
 } from 'react-native';
-import { Modal, InputItem, Toast } from '@ant-design/react-native';
+import { Modal, InputItem, Toast, SwipeAction } from '@ant-design/react-native';
 import { ConnectProps, ConnectState, Dispatch } from '@/models/connect';
 import { connect } from 'react-redux';
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -17,13 +17,12 @@ import moment from 'moment';
 import NavigationUtil from '@/navigator/NavigationUtil';
 import { ImageManager } from '@/assets/json/ImageManager';
 import { verifyToken } from '@/service/app';
+import LinearGradient from 'react-native-linear-gradient';
 
 const IM: any = ImageManager;
 interface RecordProps extends ConnectState, ConnectProps {
   dataLoading?: boolean;
 }
-
-interface IState {}
 
 enum WeekMap {
   '日',
@@ -148,53 +147,84 @@ const Record: React.FC<RecordProps> = props => {
           </View>
           {item.item.map((i: any, index: number) => (
             <View style={styles.itemContainer} key={i._id}>
-              <View style={styles.item}>
-                <TouchableOpacity
-                  style={styles.cateImgContainer}
-                  onPress={() => handleCate(i._id)}
-                >
-                  <Image
-                    style={styles.cateImg}
-                    source={IM[i.category[0].icon_l]}
-                  />
-                </TouchableOpacity>
-                <View
-                  style={
-                    index !== item.item.length - 1
-                      ? styles.right
-                      : styles.lastRiht
-                  }
-                >
+              <SwipeAction
+                autoClose
+                style={styles.SwipeAction}
+                right={[
+                  {
+                    text: '删除',
+                    onPress: () => {
+                      console.log(inputModal.id);
+                      dispatchRecord({
+                        type: 'record/deleteBill',
+                        payload: {
+                          success: () => {
+                            Toast.success('删除成功', 1.5);
+                          },
+                          fail: () => {
+                            Toast.fail('删除失败，请重试', 1.5);
+                          },
+                          id: i._id,
+                        },
+                      });
+                    },
+                    style: {
+                      backgroundColor: 'red',
+                      color: 'white',
+                      fontSize: 18,
+                      letterSpacing: 1,
+                    },
+                  },
+                ]}
+              >
+                <View style={styles.item}>
                   <TouchableOpacity
-                    onPress={() => {
-                      setInputModal(pre => ({
-                        ...pre,
-                        title: '备注',
-                        id: i._id,
-                      }));
-                      setVisibleInput(true);
-                    }}
+                    style={styles.cateImgContainer}
+                    onPress={() => handleCate(i._id)}
                   >
-                    <Text style={styles.name}>
-                      {i.remark !== '' ? i.remark : i.category[0].name}
-                    </Text>
+                    <Image
+                      style={styles.cateImg}
+                      source={IM[i.category[0].icon_l]}
+                    />
                   </TouchableOpacity>
-                  <TouchableOpacity
-                    onPress={() => {
-                      setInputModal(pre => ({
-                        ...pre,
-                        title: '金额',
-                        id: i._id,
-                      }));
-                      setVisibleInput(true);
-                    }}
+                  <View
+                    style={
+                      index !== item.item.length - 1
+                        ? styles.right
+                        : styles.lastRiht
+                    }
                   >
-                    <Text style={styles.account}>
-                      {i.category[0].is_income === 0 ? -i.amount : i.amount}
-                    </Text>
-                  </TouchableOpacity>
+                    <TouchableOpacity
+                      onPress={() => {
+                        setInputModal(pre => ({
+                          ...pre,
+                          title: '备注',
+                          id: i._id,
+                        }));
+                        setVisibleInput(true);
+                      }}
+                    >
+                      <Text style={styles.name}>
+                        {i.remark !== '' ? i.remark : i.category[0].name}
+                      </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      onPress={() => {
+                        setInputModal(pre => ({
+                          ...pre,
+                          title: '金额',
+                          id: i._id,
+                        }));
+                        setVisibleInput(true);
+                      }}
+                    >
+                      <Text style={styles.account}>
+                        {i.category[0].is_income === 0 ? -i.amount : i.amount}
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
                 </View>
-              </View>
+              </SwipeAction>
             </View>
           ))}
         </View>
@@ -237,6 +267,7 @@ const Record: React.FC<RecordProps> = props => {
           <Text style={styles.topText}>支出</Text>
           <Text style={styles.bottomText}>{Number(payTotal).toFixed(2)}</Text>
         </TouchableOpacity>
+        {Add()}
       </View>
       <ScrollView style={styles.listContainer}>
         {classifyList.length ? (
@@ -253,32 +284,40 @@ const Record: React.FC<RecordProps> = props => {
         visible={visible}
         animationType="slide-up"
         onClose={onCloseModal}
-        style={styles.modal}
+        maskClosable
       >
-        <View style={styles.modalHeader}>
-          <TouchableOpacity onPress={() => onCloseModal()}>
-            <Text style={styles.btnCancel}>取消</Text>
-          </TouchableOpacity>
-          <Text style={styles.btnText}>选择日期</Text>
-          <TouchableOpacity onPress={() => onModalConfirm()}>
-            <Text style={styles.btnConfirm}>确认</Text>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.datePicker}>
-          <DateTimePicker
-            testID="datePicker"
-            value={date}
-            mode={'date'}
-            is24Hour={true}
-            locale="zh_CN"
-            display="spinner"
-            onChange={(event, selectedDate) => {
-              const currentDate = selectedDate || date;
-              console.log(selectedDate);
-              setDate(currentDate);
-            }}
-          />
-        </View>
+        <LinearGradient
+          start={{ x: 0.0, y: 0.0 }}
+          end={{ x: 0.5, y: 0.65 }}
+          locations={[0, 1]}
+          colors={['#ffeaaa', '#fffcdc']}
+          style={styles.modal}
+        >
+          <View style={styles.modalHeader}>
+            <TouchableOpacity onPress={() => onCloseModal()}>
+              <Text style={styles.btnCancel}>取消</Text>
+            </TouchableOpacity>
+            <Text style={styles.btnText}>选择日期</Text>
+            <TouchableOpacity onPress={() => onModalConfirm()}>
+              <Text style={styles.btnConfirm}>确认</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.datePicker}>
+            <DateTimePicker
+              testID="datePicker"
+              value={date}
+              mode={'date'}
+              is24Hour={true}
+              locale="zh_CN"
+              display="spinner"
+              onChange={(event, selectedDate) => {
+                const currentDate = selectedDate || date;
+                console.log(selectedDate);
+                setDate(currentDate);
+              }}
+            />
+          </View>
+        </LinearGradient>
       </Modal>
       <Modal
         popup
@@ -286,27 +325,34 @@ const Record: React.FC<RecordProps> = props => {
         animationType="slide"
         onClose={onCloseInput}
         maskClosable
-        style={styles.modalInput}
       >
-        <View style={styles.modalHeader}>
-          <TouchableOpacity onPress={() => onCloseInput()}>
-            <Text style={styles.btnCancel}>取消</Text>
-          </TouchableOpacity>
-          <View style={styles.input}>
-            <View style={styles.inputItem}>
-              <InputItem
-                placeholder={`请输入${inputModal.title}...`}
-                maxLength={4}
-                clear
-                value={inputModal.input}
-                onChange={input => setInputModal(pre => ({ ...pre, input }))}
-              />
+        <LinearGradient
+          start={{ x: 0.0, y: 0.0 }}
+          end={{ x: 0.5, y: 0.65 }}
+          locations={[0, 1]}
+          colors={['#ffeaaa', '#fffcdc']}
+          style={styles.modalInput}
+        >
+          <View style={styles.modalHeader}>
+            <TouchableOpacity onPress={() => onCloseInput()}>
+              <Text style={styles.btnCancel}>取消</Text>
+            </TouchableOpacity>
+            <View style={styles.input}>
+              <View style={styles.inputItem}>
+                <InputItem
+                  placeholder={`请输入${inputModal.title}...`}
+                  maxLength={4}
+                  clear
+                  value={inputModal.input}
+                  onChange={input => setInputModal(pre => ({ ...pre, input }))}
+                />
+              </View>
             </View>
+            <TouchableOpacity onPress={() => hanleInputDone()}>
+              <Text style={styles.btnConfirm}>确认</Text>
+            </TouchableOpacity>
           </View>
-          <TouchableOpacity onPress={() => hanleInputDone()}>
-            <Text style={styles.btnConfirm}>确认</Text>
-          </TouchableOpacity>
-        </View>
+        </LinearGradient>
       </Modal>
     </View>
   );
@@ -385,10 +431,12 @@ const styles = StyleSheet.create({
   btnCancel: {
     fontSize: 18,
     marginLeft: 10,
+    color: '#FDB99B',
   },
-  btnConfirm: { color: '#006fff', fontSize: 18, marginRight: 10 },
+  btnConfirm: { color: '#d9a7c7', fontSize: 18, marginRight: 10 },
   btnText: {
     fontSize: 20,
+    color: '#FDB99B',
   },
   datePicker: {
     width: screenWidth,
@@ -448,6 +496,7 @@ const styles = StyleSheet.create({
   },
   inputItem: { width: screenWidth / 3 },
   add: { width: 50, height: 50 },
+  SwipeAction: { backgroundColor: 'transparent' },
 });
 
 export default connect(({ app, record }: RecordProps) => ({

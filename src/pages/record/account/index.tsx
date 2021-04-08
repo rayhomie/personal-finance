@@ -278,6 +278,7 @@ const Account: React.FC<AccountProps> = props => {
         popup
         visible={visible}
         animationType="slide-up"
+        maskClosable
         onClose={onCloseModal}
       >
         <View style={styles.board}>
@@ -515,7 +516,7 @@ const styles = StyleSheet.create({
   item: {
     ...commonStyle,
   },
-  itemDone: { ...commonStyle, backgroundColor: 'pink' },
+  itemDone: { ...commonStyle, backgroundColor: '#ffde3c' },
   itemCancal: { ...commonStyle, backgroundColor: '#eee' },
   itemDate: {
     width: screenWidth / 4,

@@ -38,51 +38,57 @@ const Login: React.FC<IProps> = props => {
       }
       maskClosable
     >
-      <View style={styles.container}>
-        <LoginModal
-          visible={showLogin}
-          onClose={() => {
-            setShowLogin(false);
-          }}
-        />
-        <RegisterModal
-          visible={showRegister}
-          onClose={() => {
-            setShowRegister(false);
-          }}
-        />
-        <LinearGradient
-          start={{ x: 0.0, y: 0.25 }}
-          end={{ x: 0.5, y: 1.0 }}
-          locations={[0, 0.5, 0.6]}
-          colors={['#921850', '#a11a52', '#c12a45']}
-          style={styles.linearGradient}
-        >
-          <TouchableOpacity
-            onPress={() => {
-              setShowLogin(true);
+      <LinearGradient
+        start={{ x: 0.0, y: 0.0 }}
+        end={{ x: 0.5, y: 0.65 }}
+        locations={[0, 1]}
+        colors={['#ffeaaa', '#fffcdc']}
+        style={styles.container}
+      >
+        <View>
+          <LoginModal
+            visible={showLogin}
+            onClose={() => {
+              setShowLogin(false);
             }}
+          />
+          <RegisterModal
+            visible={showRegister}
+            onClose={() => {
+              setShowRegister(false);
+            }}
+          />
+          <LinearGradient
+            start={{ x: 0.0, y: 0.0 }}
+            end={{ x: 1.0, y: 1.0 }}
+            colors={['#d9a7c7', '#fffcdc']}
+            style={styles.linearGradient}
           >
-            <Text style={styles.buttonText}>登录</Text>
-          </TouchableOpacity>
-        </LinearGradient>
+            <TouchableOpacity
+              onPress={() => {
+                setShowLogin(true);
+              }}
+            >
+              <Text style={styles.buttonText}>登录</Text>
+            </TouchableOpacity>
+          </LinearGradient>
 
-        <LinearGradient
-          start={{ x: 0.0, y: 0.25 }}
-          end={{ x: 0.5, y: 1.0 }}
-          locations={[0, 0.5, 0.6]}
-          colors={['#c12a45', '#a11a52', '#921850']}
-          style={styles.linearGradient}
-        >
-          <TouchableOpacity
-            onPress={() => {
-              setShowRegister(true);
-            }}
+          <LinearGradient
+            start={{ x: 1.0, y: 1.0 }}
+            end={{ x: 0.0, y: 0.0 }}
+            colors={['#d9a7c7', '#fffcdc']}
+            style={styles.linearGradient}
           >
-            <Text style={styles.buttonText}>注册</Text>
-          </TouchableOpacity>
-        </LinearGradient>
-      </View>
+            <TouchableOpacity
+              onPress={() => {
+                setShowRegister(true);
+              }}
+            >
+              <Text style={styles.buttonText}>注册</Text>
+            </TouchableOpacity>
+          </LinearGradient>
+        </View>
+      </LinearGradient>
     </Modal>
   );
 };
@@ -103,6 +109,7 @@ const styles = StyleSheet.create({
     paddingLeft: 15,
     paddingRight: 15,
     borderRadius: 5,
+    marginBottom: 10,
   },
   buttonText: {
     fontSize: 18,

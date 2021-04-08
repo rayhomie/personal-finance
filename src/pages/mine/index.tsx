@@ -203,8 +203,6 @@ const Mine: React.FC<IProps> = props => {
           start={{ x: 0.0, y: 0.0 }}
           end={{ x: 0.5, y: 0.65 }}
           locations={[0, 0.2, 0.5, 0.7, 0.9, 1]}
-          // colors={['#2ec173', '#2ea1b9']}
-          // colors={['#FF5980', '#FFA882']}
           colors={[
             '#fff1c7',
             '#ffeaaa',
@@ -215,7 +213,7 @@ const Mine: React.FC<IProps> = props => {
           ]}
           style={styles.other}
         >
-          <View></View>
+          <View />
         </LinearGradient>
       </View>
     </View>

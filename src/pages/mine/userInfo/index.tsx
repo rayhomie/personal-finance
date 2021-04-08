@@ -8,15 +8,11 @@ import {
   Image,
   TouchableOpacity,
 } from 'react-native';
-import {
-  Button,
-  Toast,
-  Modal,
-  SegmentedControl,
-} from '@ant-design/react-native';
+import { Toast, Modal, SegmentedControl } from '@ant-design/react-native';
 import { ConnectProps, ConnectState, Dispatch } from '@/models/connect';
 import { connect } from 'react-redux';
 import NavigationUtil from '@/navigator/NavigationUtil';
+import LinearGradient from 'react-native-linear-gradient';
 const { GiftedForm, GiftedFormManager } = require('react-native-gifted-form');
 
 interface IProps extends ConnectState, ConnectProps {
@@ -361,82 +357,137 @@ const UserInfo: React.FC<IState> = props => {
   const { avatar_url, username, email, mobile_number, _id } = user as any;
   return (
     <View>
-      <TouchableOpacity activeOpacity={0.5} style={styles.container}>
-        <Text style={styles.avatar}>头像</Text>
-        <Image
-          style={styles.picImage}
-          source={{
-            uri: avatar_url,
-          }}
-        />
-      </TouchableOpacity>
-      <TouchableOpacity activeOpacity={0.5} style={styles.container}>
-        <Text style={styles.left}>ID</Text>
-        <Text style={styles.right}>{_id}</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        activeOpacity={0.5}
-        style={styles.container}
-        onPress={usernameChange}
+      <LinearGradient
+        start={{ x: 0.0, y: 0.0 }}
+        end={{ x: 0.5, y: 0.65 }}
+        locations={[0, 1]}
+        colors={['#ffeaaa', '#fffcdc']}
+        style={styles.allContainer}
       >
-        <Text style={styles.left}>用户名</Text>
-        <Text style={styles.right}>{username}</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        activeOpacity={0.5}
-        style={styles.container}
-        onPress={genderChange}
-      >
-        <Text style={styles.left}>性别</Text>
-        <Text style={styles.right}>{user?.gender === 0 ? '女' : '男'}</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        activeOpacity={0.5}
-        style={styles.container}
-        onPress={mobileChange}
-      >
-        <Text style={styles.left}>手机号</Text>
-        <Text style={styles.right}>{mobile_number}</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        activeOpacity={0.5}
-        style={styles.container}
-        onPress={emailChange}
-      >
-        <Text style={styles.left}>邮箱</Text>
-        <Text style={styles.right}>{email}</Text>
-      </TouchableOpacity>
-      <Button
-        style={styles.loginOut}
-        activeStyle={styles.activeStyle}
-        onPress={passwordChange}
-      >
-        <Text style={styles.fontButton}>修改密码</Text>
-      </Button>
-      <Button
-        style={styles.loginOut}
-        activeStyle={styles.activeStyle}
-        onPress={loginOut}
-      >
-        <Text style={styles.fontButton}>退出登录</Text>
-      </Button>
+        <TouchableOpacity activeOpacity={0.5}>
+          <LinearGradient
+            start={{ x: 0.0, y: 0.0 }}
+            end={{ x: 1, y: 1 }}
+            locations={[0, 1]}
+            colors={['#a1ffce', '#faffd1']}
+            style={styles.container}
+          >
+            <Text style={styles.avatar}>头像</Text>
+            <Image
+              style={styles.picImage}
+              source={{
+                uri: avatar_url,
+              }}
+            />
+          </LinearGradient>
+        </TouchableOpacity>
+        <TouchableOpacity activeOpacity={0.5}>
+          <LinearGradient
+            start={{ x: 0.0, y: 0.0 }}
+            end={{ x: 1, y: 1 }}
+            locations={[0, 1]}
+            colors={['#a1ffce', '#faffd1']}
+            style={styles.container}
+          >
+            <Text style={styles.left}>ID</Text>
+            <Text style={styles.right}>{_id}</Text>
+          </LinearGradient>
+        </TouchableOpacity>
+        <TouchableOpacity activeOpacity={0.5} onPress={usernameChange}>
+          <LinearGradient
+            start={{ x: 0.0, y: 0.0 }}
+            end={{ x: 1, y: 1 }}
+            locations={[0, 1]}
+            colors={['#a1ffce', '#faffd1']}
+            style={styles.container}
+          >
+            <Text style={styles.left}>用户名</Text>
+            <Text style={styles.right}>{username}</Text>
+          </LinearGradient>
+        </TouchableOpacity>
+        <TouchableOpacity activeOpacity={0.5} onPress={genderChange}>
+          <LinearGradient
+            start={{ x: 0.0, y: 0.0 }}
+            end={{ x: 1, y: 1 }}
+            locations={[0, 1]}
+            colors={['#a1ffce', '#faffd1']}
+            style={styles.container}
+          >
+            <Text style={styles.left}>性别</Text>
+            <Text style={styles.right}>{user?.gender === 0 ? '女' : '男'}</Text>
+          </LinearGradient>
+        </TouchableOpacity>
+        <TouchableOpacity activeOpacity={0.5} onPress={mobileChange}>
+          <LinearGradient
+            start={{ x: 0.0, y: 0.0 }}
+            end={{ x: 1, y: 1 }}
+            locations={[0, 1]}
+            colors={['#a1ffce', '#faffd1']}
+            style={styles.container}
+          >
+            <Text style={styles.left}>手机号</Text>
+            <Text style={styles.right}>{mobile_number}</Text>
+          </LinearGradient>
+        </TouchableOpacity>
+        <TouchableOpacity activeOpacity={0.5} onPress={emailChange}>
+          <LinearGradient
+            start={{ x: 0.0, y: 0.0 }}
+            end={{ x: 1, y: 1 }}
+            locations={[0, 1]}
+            colors={['#a1ffce', '#faffd1']}
+            style={styles.container}
+          >
+            <Text style={styles.left}>邮箱</Text>
+            <Text style={styles.right}>{email}</Text>
+          </LinearGradient>
+        </TouchableOpacity>
+        <TouchableOpacity activeOpacity={0.5} onPress={passwordChange}>
+          <LinearGradient
+            start={{ x: 0.0, y: 0.0 }}
+            end={{ x: 1, y: 1 }}
+            locations={[0, 1]}
+            colors={['#a1ffce', '#faffd1']}
+            style={styles.btn}
+          >
+            <Text style={styles.fontButton}>修</Text>
+            <Text style={styles.fontButton}>改</Text>
+            <Text style={styles.fontButton}>密</Text>
+            <Text style={styles.fontButton}>码</Text>
+          </LinearGradient>
+        </TouchableOpacity>
+        <TouchableOpacity activeOpacity={0.5} onPress={loginOut}>
+          <LinearGradient
+            start={{ x: 0.0, y: 0.0 }}
+            end={{ x: 1, y: 1 }}
+            locations={[0, 1]}
+            colors={['#a1ffce', '#faffd1']}
+            style={styles.btn}
+          >
+            <Text style={styles.fontButton}>退</Text>
+            <Text style={styles.fontButton}>出</Text>
+            <Text style={styles.fontButton}>登</Text>
+            <Text style={styles.fontButton}>录</Text>
+          </LinearGradient>
+        </TouchableOpacity>
+      </LinearGradient>
     </View>
   );
 };
 
 const screenWidth = Dimensions.get('window').width;
+const screenHeight = Dimensions.get('window').height;
 
 const styles = StyleSheet.create({
+  allContainer: { height: screenHeight, width: screenWidth },
   container: {
     width: screenWidth,
     height: 50,
-    backgroundColor: 'white',
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingLeft: 20,
     paddingRight: 20,
-    marginTop: 5,
+    marginTop: 10,
     borderBottomWidth: 1,
     borderBottomColor: '#eee',
   },
@@ -444,9 +495,17 @@ const styles = StyleSheet.create({
   picImage: { width: 30, height: 30 },
   left: {},
   right: {},
-  loginOut: { marginTop: 10, backgroundColor: 'pink' },
-  activeStyle: { backgroundColor: '#fbe6e6' },
-  fontButton: { color: 'white' },
+  btn: {
+    width: screenWidth,
+    height: 50,
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingLeft: 120,
+    paddingRight: 120,
+    marginTop: 10,
+    justifyContent: 'space-evenly',
+  },
+  fontButton: { color: '#3f4d5b', fontSize: 18, fontWeight: 'bold' },
   sexControl: { width: 200, height: 30 },
   GiftedForm: { width: 250 },
 });

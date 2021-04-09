@@ -10,7 +10,8 @@ import {
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { Toast } from '@ant-design/react-native';
-import { VictoryBar, VictoryChart, VictoryTheme } from 'victory-native';
+import { VictoryPie, VictoryLabel } from 'victory-native';
+import { Svg } from 'react-native-svg';
 import moment from 'moment';
 import { ConnectProps, ConnectState, Dispatch } from '@/models/connect';
 import { connect } from 'react-redux';
@@ -23,13 +24,6 @@ import { getCurMonthTotal } from '@/service/bill';
 interface IProps extends ConnectState, ConnectProps {
   dataLoading?: boolean;
 }
-
-const data = [
-  { quarter: 1, earnings: 13000 },
-  { quarter: 2, earnings: 16500 },
-  { quarter: 3, earnings: 14250 },
-  { quarter: 4, earnings: 19000 },
-];
 
 const Mine: React.FC<IProps> = props => {
   const { user, mine, app, dispatch } = props;
@@ -316,39 +310,73 @@ const Mine: React.FC<IProps> = props => {
                   </LinearGradient>
                 )}
               </View>
-              <View style={styles.budgetBottom}>
-                <View style={styles.budgetLeft}>
-                  <VictoryChart
-                    width={150}
-                    height={150}
-                    domainPadding={{ x: 10, y: 10 }}
-                    theme={VictoryTheme.material}
-                  >
-                    <VictoryBar data={data} x="quarter" y="earnings" />
-                  </VictoryChart>
+            </TouchableOpacity>
+            <View style={styles.budgetBottom}>
+              <View style={styles.budgetLeft}>
+                <Svg viewBox="0 0 400 400">
+                  <VictoryPie
+                    standalone={false}
+                    width={400}
+                    height={400}
+                    data={[
+                      {
+                        x: '',
+                        y:
+                          restBudget <= 0
+                            ? 0
+                            : +((restBudget * 100) / budget).toFixed(2),
+                      },
+                      {
+                        x: '',
+                        y:
+                          restBudget <= 0
+                            ? 100
+                            : 100 - +((restBudget * 100) / budget).toFixed(2),
+                      },
+                    ]}
+                    innerRadius={120}
+                    labelRadius={100}
+                    colorScale={['#fad749', '#eee']}
+                    style={{ labels: { fontSize: 20, fill: 'white' } }}
+                  />
+                  <VictoryLabel
+                    textAnchor="middle"
+                    verticalAnchor="middle"
+                    x={200}
+                    y={200}
+                    style={{ fontSize: 60 }}
+                    text={[
+                      '剩余',
+                      `${
+                        restBudget <= 0
+                          ? 0
+                          : +((restBudget * 100) / budget).toFixed(2)
+                      }%`,
+                    ]}
+                  />
+                </Svg>
+              </View>
+              <View style={styles.budgetRight}>
+                <View style={styles.itemTop}>
+                  <Text style={styles.itemTopText}>剩余预算：</Text>
+                  <Text style={styles.itemTopValueText}>
+                    {(restBudget >= 0 ? restBudget : 0).toFixed(2)}
+                  </Text>
                 </View>
-                <View style={styles.budgetRight}>
-                  <View style={styles.itemTop}>
-                    <Text style={styles.itemTopText}>剩余预算：</Text>
-                    <Text style={styles.itemTopValueText}>
-                      {(restBudget >= 0 ? restBudget : 0).toFixed(2)}
-                    </Text>
-                  </View>
-                  <View style={styles.budgetItem}>
-                    <Text style={styles.budgetItemText}>本月预算：</Text>
-                    <Text style={styles.budgetItemText}>
-                      {Number(budget).toFixed(2)}
-                    </Text>
-                  </View>
-                  <View style={styles.budgetItem}>
-                    <Text style={styles.budgetItemText}>本月支出：</Text>
-                    <Text style={styles.budgetItemText}>
-                      {Number(payValue).toFixed(2)}
-                    </Text>
-                  </View>
+                <View style={styles.budgetItem}>
+                  <Text style={styles.budgetItemText}>本月预算：</Text>
+                  <Text style={styles.budgetItemText}>
+                    {Number(budget).toFixed(2)}
+                  </Text>
+                </View>
+                <View style={styles.budgetItem}>
+                  <Text style={styles.budgetItemText}>本月支出：</Text>
+                  <Text style={styles.budgetItemText}>
+                    {Number(payValue).toFixed(2)}
+                  </Text>
                 </View>
               </View>
-            </TouchableOpacity>
+            </View>
           </View>
         </LinearGradient>
       </View>
@@ -494,16 +522,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   budgetLeft: {
-    backgroundColor: 'pink',
-    // flex: 1,
-    // justifyContent: 'center',
-    // alignItems: 'center',
-    // // backgroundColor: '#f5fcff',
-    height: 75,
+    height: 100,
+    position: 'relative',
+    top: -15,
     width: ((screenWidth - 50) * 2) / 5,
   },
   budgetRight: {
-    // backgroundColor: 'blue',
     height: 75,
     width: ((screenWidth - 50) * 3) / 5,
     paddingHorizontal: 10,

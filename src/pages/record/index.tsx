@@ -341,9 +341,10 @@ const Record: React.FC<RecordProps> = props => {
               <View style={styles.inputItem}>
                 <InputItem
                   placeholder={`请输入${inputModal.title}...`}
-                  maxLength={4}
+                  maxLength={6}
                   clear
                   value={inputModal.input}
+                  textAlign="center"
                   onChange={input => setInputModal(pre => ({ ...pre, input }))}
                 />
               </View>
@@ -490,11 +491,13 @@ const styles = StyleSheet.create({
     color: '#cbcbcb',
   },
   input: {
-    width: screenWidth / 3,
+    width: (screenWidth * 2) / 3,
     justifyContent: 'center',
     alignItems: 'center',
   },
-  inputItem: { width: screenWidth / 3 },
+  inputItem: {
+    width: (screenWidth * 2) / 3,
+  },
   add: { width: 50, height: 50 },
   SwipeAction: { backgroundColor: 'transparent' },
 });

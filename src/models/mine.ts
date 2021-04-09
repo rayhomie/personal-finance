@@ -75,10 +75,6 @@ const mine: MineModelType = {
           type: 'getContinueCount',
           payload: { success: () => {}, fail: () => {} },
         });
-        yield put({
-          type: 'getClockList',
-          payload: { success: () => {}, fail: () => {} },
-        });
         yield put({ type: 'save', payload: { isClock: res.data.isClock } });
         success();
       } else if (res.data.code === 401) {
@@ -93,13 +89,16 @@ const mine: MineModelType = {
       if (res.data.code === 0) {
         yield put({
           type: 'save',
-          payload: { clockContinueCount: res.data.continue_count },
+          payload: {
+            clockContinueCount: res.data.continue_count,
+            clockTotal: res.data.total,
+          },
         });
         success();
       } else {
         yield put({
           type: 'save',
-          payload: { clockContinueCount: 0 },
+          payload: { clockContinueCount: 0, clockTotal: 0 },
         });
         fail();
       }

@@ -13,8 +13,10 @@ import { Toast } from '@ant-design/react-native';
 import moment from 'moment';
 import { ConnectProps, ConnectState, Dispatch } from '@/models/connect';
 import { connect } from 'react-redux';
+import Budget from './budget/index';
 import NavigationUtil from '@/navigator/NavigationUtil';
 import avatarArr from '@/assets/json/avatarMap';
+import { getCurBudget } from '@/service/budget';
 
 interface IProps extends ConnectState, ConnectProps {
   dataLoading?: boolean;
@@ -26,6 +28,13 @@ const Mine: React.FC<IProps> = props => {
   const { avatar_url, username } = user as any;
   const { clockTotal, clockContinueCount, billTotal, isClock } = mine as any;
   const [randomAvatar, setRandomAvatar] = useState<number>(0);
+  const [budgetVis, setBudgetVis] = useState<{
+    type: 'add' | 'update' | '';
+    visible: boolean;
+  }>({ type: '', visible: false });
+  const [budget, setBudget] = useState<number>(0);
+  const [payValue, setPayValue] = useState<number>(0);
+  const restBudget = +Number(budget).toFixed(2) - +Number(payValue).toFixed(2);
 
   useEffect(() => {
     if (app?.isLogin) {
@@ -40,14 +49,32 @@ const Mine: React.FC<IProps> = props => {
       getClockInfo();
       getBillTotal();
       getIsClock();
+      getCurBudgetInfo();
     }, 0);
   }, [app?.isLogin]);
+
+  useEffect(() => {
+    if (budgetVis.visible === false && budgetVis.type !== '') {
+      getCurBudgetInfo();
+    }
+  }, [budgetVis.visible]);
 
   const openUserInfo = () => {
     if (app?.isLogin) {
       NavigationUtil.toPage('用户信息', { randomAvatar });
     } else {
       dispatchApp({ type: 'app/save', payload: { openLogin: true } });
+    }
+  };
+
+  const getCurBudgetInfo = async () => {
+    const res = await getCurBudget();
+    if (res.data.code === 0 && res.data.docs !== null) {
+      setBudget(res.data.docs.budget_value);
+      setPayValue(res.data.pay);
+    } else {
+      setPayValue(0);
+      setBudget(0);
     }
   };
 
@@ -64,15 +91,6 @@ const Mine: React.FC<IProps> = props => {
   };
 
   const getClockInfo = () => {
-    dispatchApp({
-      type: 'mine/getClockList',
-      payload: {
-        success: () => {},
-        fail: () => {
-          // Toast.fail('获取打卡信息失败', 1.5);
-        },
-      },
-    });
     dispatchApp({
       type: 'mine/getContinueCount',
       payload: {
@@ -222,46 +240,78 @@ const Mine: React.FC<IProps> = props => {
         >
           <View style={styles.budgetContainer}>
             <View style={styles.budgetTop}>
-              <Text style={styles.billTitle}>4月总预算</Text>
-              {/* <Image
-                style={styles.billIcon}
-                source={require('@/assets/image/ad_arrow.png')}
-              /> */}
-              <LinearGradient
-                start={{ x: 1, y: 1 }}
-                end={{ x: 0, y: 0 }}
-                colors={['#ffd729', '#ffd729']}
-                style={styles.budgetButtonContainer}
-              >
-                <TouchableOpacity style={styles.budgetButton}>
+              <Text style={styles.billTitle}>{`${
+                moment().month() + 1
+              }月总预算`}</Text>
+              {budget !== 0 ? (
+                <TouchableOpacity
+                  onPress={() =>
+                    setBudgetVis({ type: 'update', visible: true })
+                  }
+                >
                   <Image
-                    style={styles.icon}
-                    source={require('@/assets/image/add.png')}
+                    style={styles.billIcon}
+                    source={require('@/assets/image/ad_arrow.png')}
                   />
-                  <Text>设置预算</Text>
                 </TouchableOpacity>
-              </LinearGradient>
+              ) : (
+                <LinearGradient
+                  start={{ x: 1, y: 1 }}
+                  end={{ x: 0, y: 0 }}
+                  colors={['#ffd729', '#ffd729']}
+                  style={styles.budgetButtonContainer}
+                >
+                  <TouchableOpacity
+                    style={styles.budgetButton}
+                    onPress={() => {
+                      setBudgetVis({ type: 'add', visible: true });
+                    }}
+                  >
+                    <Image
+                      style={styles.icon}
+                      source={require('@/assets/image/add.png')}
+                    />
+                    <Text>设置预算</Text>
+                  </TouchableOpacity>
+                </LinearGradient>
+              )}
             </View>
             <View style={styles.budgetBottom}>
               <View style={styles.budgetLeft}></View>
               <View style={styles.budgetRight}>
                 <View style={styles.itemTop}>
                   <Text style={styles.itemTopText}>剩余预算：</Text>
-                  <Text style={styles.itemTopValueText}>90.00</Text>
+                  <Text style={styles.itemTopValueText}>
+                    {(restBudget >= 0 ? restBudget : 0).toFixed(2)}
+                  </Text>
                 </View>
                 <View style={styles.budgetItem}>
                   <Text style={styles.budgetItemText}>本月预算：</Text>
-                  <Text style={styles.budgetItemText}>100.00</Text>
+                  <Text style={styles.budgetItemText}>
+                    {Number(budget).toFixed(2)}
+                  </Text>
                 </View>
                 <View style={styles.budgetItem}>
                   <Text style={styles.budgetItemText}>本月支出：</Text>
-                  <Text style={styles.budgetItemText}>10.00</Text>
+                  <Text style={styles.budgetItemText}>
+                    {Number(payValue).toFixed(2)}
+                  </Text>
                 </View>
               </View>
             </View>
           </View>
         </LinearGradient>
       </View>
+      <Budget
+        visible={budgetVis.visible}
+        type={budgetVis.type}
+        budget={
+          (budget + '').includes('.')
+            ? Number(budget).toFixed(2)
+            : budget.toString()
+        }
+        onClose={() => setBudgetVis({ type: 'add', visible: false })}
+      />
     </View>
   );
 };
@@ -426,7 +476,7 @@ const styles = StyleSheet.create({
     color: '#8b8b8b',
   },
   budgetButtonContainer: {
-    marginRight: (screenWidth - 300) / 6,
+    marginRight: 10,
     borderRadius: 10,
   },
   budgetButton: {

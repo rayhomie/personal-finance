@@ -82,7 +82,7 @@ export default function Router() {
     <NavigationContainer ref={navigationRef}>
       <Stack.Navigator>
         <Stack.Screen
-          name="记账app"
+          name="返回"
           component={renderTabBar}
           options={{
             // headerTitle: RecordAdd,

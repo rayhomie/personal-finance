@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react';
 import {
@@ -336,6 +337,9 @@ const Mine: React.FC<IProps> = props => {
                     ]}
                     innerRadius={120}
                     labelRadius={100}
+                    animate={{
+                      duration: 1000,
+                    }}
                     colorScale={['#fad749', '#eee']}
                     style={{ labels: { fontSize: 20, fill: 'white' } }}
                   />

@@ -221,8 +221,8 @@ const Mine: React.FC<IProps> = props => {
             </View>
           </View>
         </LinearGradient>
-        <TouchableOpacity onPress={() => handleAccount()}>
-          <View style={styles.bottom}>
+        <View style={styles.bottom}>
+          <TouchableOpacity onPress={() => handleAccount()}>
             <View style={styles.bill}>
               <View style={styles.billTitleContainer}>
                 <Text style={styles.billTitle}>账单</Text>
@@ -256,8 +256,8 @@ const Mine: React.FC<IProps> = props => {
                 </View>
               </View>
             </View>
-          </View>
-        </TouchableOpacity>
+          </TouchableOpacity>
+        </View>
         <LinearGradient
           start={{ x: 0.0, y: 0.0 }}
           end={{ x: 0.5, y: 0.65 }}
@@ -272,11 +272,11 @@ const Mine: React.FC<IProps> = props => {
           ]}
           style={styles.other}
         >
-          <TouchableOpacity
-            onPress={() => setBudgetVis({ type: 'update', visible: true })}
-            disabled={budget === 0}
-          >
-            <View style={styles.budgetContainer}>
+          <View style={styles.budgetContainer}>
+            <TouchableOpacity
+              onPress={() => setBudgetVis({ type: 'update', visible: true })}
+              disabled={budget === 0}
+            >
               <View style={styles.budgetTop}>
                 <Text style={styles.billTitle}>{`${
                   moment().month() + 1
@@ -331,8 +331,8 @@ const Mine: React.FC<IProps> = props => {
                   </View>
                 </View>
               </View>
-            </View>
-          </TouchableOpacity>
+            </TouchableOpacity>
+          </View>
         </LinearGradient>
       </View>
       <Budget

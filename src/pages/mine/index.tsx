@@ -180,6 +180,10 @@ const Mine: React.FC<IProps> = props => {
           <View style={styles.bill}>
             <View style={styles.billTitleContainer}>
               <Text style={styles.billTitle}>账单</Text>
+              <Image
+                style={styles.billIcon}
+                source={require('@/assets/image/ad_arrow.png')}
+              />
             </View>
             <View style={styles.billContent}>
               <View style={styles.billDate}>
@@ -216,7 +220,46 @@ const Mine: React.FC<IProps> = props => {
           ]}
           style={styles.other}
         >
-          <View />
+          <View style={styles.budgetContainer}>
+            <View style={styles.budgetTop}>
+              <Text style={styles.billTitle}>4月总预算</Text>
+              {/* <Image
+                style={styles.billIcon}
+                source={require('@/assets/image/ad_arrow.png')}
+              /> */}
+              <LinearGradient
+                start={{ x: 1, y: 1 }}
+                end={{ x: 0, y: 0 }}
+                colors={['#ffd729', '#ffd729']}
+                style={styles.budgetButtonContainer}
+              >
+                <TouchableOpacity style={styles.budgetButton}>
+                  <Image
+                    style={styles.icon}
+                    source={require('@/assets/image/add.png')}
+                  />
+                  <Text>设置预算</Text>
+                </TouchableOpacity>
+              </LinearGradient>
+            </View>
+            <View style={styles.budgetBottom}>
+              <View style={styles.budgetLeft}></View>
+              <View style={styles.budgetRight}>
+                <View style={styles.itemTop}>
+                  <Text style={styles.itemTopText}>剩余预算：</Text>
+                  <Text style={styles.itemTopValueText}>90.00</Text>
+                </View>
+                <View style={styles.budgetItem}>
+                  <Text style={styles.budgetItemText}>本月预算：</Text>
+                  <Text style={styles.budgetItemText}>100.00</Text>
+                </View>
+                <View style={styles.budgetItem}>
+                  <Text style={styles.budgetItemText}>本月支出：</Text>
+                  <Text style={styles.budgetItemText}>10.00</Text>
+                </View>
+              </View>
+            </View>
+          </View>
         </LinearGradient>
       </View>
     </View>
@@ -289,11 +332,18 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderTopRightRadius: 10,
     borderTopLeftRadius: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  billIcon: {
+    width: 15,
+    height: 15,
+    marginRight: (screenWidth - 300) / 6, // 自适应定位
   },
   billTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    paddingTop: 10,
     paddingLeft: (screenWidth - 300) / 6, // 自适应定位
   },
   billContent: {
@@ -318,6 +368,76 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
   },
   billItem: {},
+  budgetContainer: {
+    width: screenWidth - 50,
+    marginLeft: 25,
+    shadowColor: '#000',
+    shadowOffset: { width: 2, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    backgroundColor: 'white',
+    height: 120,
+    borderRadius: 10,
+    position: 'relative',
+    top: 80,
+  },
+  budgetTop: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: 10,
+  },
+  budgetBottom: {
+    flexDirection: 'row',
+  },
+  budgetLeft: {
+    // backgroundColor: 'pink',
+    height: 75,
+    width: ((screenWidth - 50) * 2) / 5,
+  },
+  budgetRight: {
+    // backgroundColor: 'blue',
+    height: 75,
+    width: ((screenWidth - 50) * 3) / 5,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+  },
+  itemTop: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    height: 20,
+    marginBottom: 5,
+    borderBottomWidth: 0.7,
+    borderBottomColor: '#eee',
+  },
+  budgetItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    height: 20,
+  },
+  itemTopText: {
+    fontSize: 17,
+    marginTop: -5,
+  },
+  itemTopValueText: { fontWeight: 'bold', fontSize: 18, marginTop: -5 },
+  budgetItemText: {
+    color: '#8b8b8b',
+  },
+  budgetButtonContainer: {
+    marginRight: (screenWidth - 300) / 6,
+    borderRadius: 10,
+  },
+  budgetButton: {
+    height: 25,
+    width: 90,
+    paddingVertical: 5,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-evenly',
+  },
+  icon: { width: 15, height: 15 },
 });
 
 export default connect(({ app, user, mine, record, loading }: IProps) => ({

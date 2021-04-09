@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { Toast } from '@ant-design/react-native';
+import { VictoryBar, VictoryChart, VictoryTheme } from 'victory-native';
 import moment from 'moment';
 import { ConnectProps, ConnectState, Dispatch } from '@/models/connect';
 import { connect } from 'react-redux';
@@ -22,6 +23,13 @@ import { getCurMonthTotal } from '@/service/bill';
 interface IProps extends ConnectState, ConnectProps {
   dataLoading?: boolean;
 }
+
+const data = [
+  { quarter: 1, earnings: 13000 },
+  { quarter: 2, earnings: 16500 },
+  { quarter: 3, earnings: 14250 },
+  { quarter: 4, earnings: 19000 },
+];
 
 const Mine: React.FC<IProps> = props => {
   const { user, mine, app, dispatch } = props;
@@ -309,7 +317,16 @@ const Mine: React.FC<IProps> = props => {
                 )}
               </View>
               <View style={styles.budgetBottom}>
-                <View style={styles.budgetLeft}></View>
+                <View style={styles.budgetLeft}>
+                  <VictoryChart
+                    width={150}
+                    height={150}
+                    domainPadding={{ x: 10, y: 10 }}
+                    theme={VictoryTheme.material}
+                  >
+                    <VictoryBar data={data} x="quarter" y="earnings" />
+                  </VictoryChart>
+                </View>
                 <View style={styles.budgetRight}>
                   <View style={styles.itemTop}>
                     <Text style={styles.itemTopText}>剩余预算：</Text>
@@ -477,7 +494,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   budgetLeft: {
-    // backgroundColor: 'pink',
+    backgroundColor: 'pink',
+    // flex: 1,
+    // justifyContent: 'center',
+    // alignItems: 'center',
+    // // backgroundColor: '#f5fcff',
     height: 75,
     width: ((screenWidth - 50) * 2) / 5,
   },

@@ -17,6 +17,7 @@ import Budget from './budget/index';
 import NavigationUtil from '@/navigator/NavigationUtil';
 import avatarArr from '@/assets/json/avatarMap';
 import { getCurBudget } from '@/service/budget';
+import { getCurMonthTotal } from '@/service/bill';
 
 interface IProps extends ConnectState, ConnectProps {
   dataLoading?: boolean;
@@ -32,6 +33,10 @@ const Mine: React.FC<IProps> = props => {
     type: 'add' | 'update' | '';
     visible: boolean;
   }>({ type: '', visible: false });
+  const [curAccount, setCurAccount] = useState<{
+    pay: number;
+    income: number;
+  }>({ pay: 0, income: 0 });
   const [budget, setBudget] = useState<number>(0);
   const [payValue, setPayValue] = useState<number>(0);
   const restBudget = +Number(budget).toFixed(2) - +Number(payValue).toFixed(2);
@@ -50,6 +55,7 @@ const Mine: React.FC<IProps> = props => {
       getBillTotal();
       getIsClock();
       getCurBudgetInfo();
+      getCurSumAccount();
     }, 0);
   }, [app?.isLogin]);
 
@@ -75,6 +81,25 @@ const Mine: React.FC<IProps> = props => {
     } else {
       setPayValue(0);
       setBudget(0);
+    }
+  };
+
+  const getCurSumAccount = async () => {
+    const res = await getCurMonthTotal({
+      startMonth: moment().format('YYYY-MM'),
+    })();
+    if (res.data.code === 0) {
+      let [pay, income] = [0, 0];
+      res.data.docs.forEach((i: any) => {
+        if (i._id.is_income[0] === 0) {
+          pay = i.total;
+        } else {
+          income = i.total;
+        }
+      });
+      setCurAccount({ pay, income });
+    } else {
+      setCurAccount({ pay: 0, income: 0 });
     }
   };
 
@@ -145,6 +170,8 @@ const Mine: React.FC<IProps> = props => {
     });
   };
 
+  const handleAccount = () => {};
+
   return (
     <View>
       <View style={styles.header}>
@@ -194,36 +221,43 @@ const Mine: React.FC<IProps> = props => {
             </View>
           </View>
         </LinearGradient>
-        <View style={styles.bottom}>
-          <View style={styles.bill}>
-            <View style={styles.billTitleContainer}>
-              <Text style={styles.billTitle}>账单</Text>
-              <Image
-                style={styles.billIcon}
-                source={require('@/assets/image/ad_arrow.png')}
-              />
-            </View>
-            <View style={styles.billContent}>
-              <View style={styles.billDate}>
-                <Text>03月</Text>
+        <TouchableOpacity onPress={() => handleAccount()}>
+          <View style={styles.bottom}>
+            <View style={styles.bill}>
+              <View style={styles.billTitleContainer}>
+                <Text style={styles.billTitle}>账单</Text>
+                <Image
+                  style={styles.billIcon}
+                  source={require('@/assets/image/ad_arrow.png')}
+                />
               </View>
-              <View style={styles.billContentContainer}>
-                <View style={styles.billItem}>
-                  <Text>收入</Text>
-                  <Text>0.00</Text>
+              <View style={styles.billContent}>
+                <View style={styles.billDate}>
+                  <Text>{moment().month() + 1}月</Text>
                 </View>
-                <View style={styles.billItem}>
-                  <Text>支出</Text>
-                  <Text>0.00</Text>
-                </View>
-                <View style={styles.billItem}>
-                  <Text>结余</Text>
-                  <Text>0.00</Text>
+                <View style={styles.billContentContainer}>
+                  <View style={styles.billItem}>
+                    <Text>收入</Text>
+                    <Text>{Number(curAccount.income).toFixed(2)}</Text>
+                  </View>
+                  <View style={styles.billItem}>
+                    <Text>支出</Text>
+                    <Text>{Number(curAccount.pay).toFixed(2)}</Text>
+                  </View>
+                  <View style={styles.billItem}>
+                    <Text>结余</Text>
+                    <Text>
+                      {(
+                        +Number(curAccount.income).toFixed(2) -
+                        +Number(curAccount.pay).toFixed(2)
+                      ).toFixed(2)}
+                    </Text>
+                  </View>
                 </View>
               </View>
             </View>
           </View>
-        </View>
+        </TouchableOpacity>
         <LinearGradient
           start={{ x: 0.0, y: 0.0 }}
           end={{ x: 0.5, y: 0.65 }}
@@ -238,68 +272,67 @@ const Mine: React.FC<IProps> = props => {
           ]}
           style={styles.other}
         >
-          <View style={styles.budgetContainer}>
-            <View style={styles.budgetTop}>
-              <Text style={styles.billTitle}>{`${
-                moment().month() + 1
-              }月总预算`}</Text>
-              {budget !== 0 ? (
-                <TouchableOpacity
-                  onPress={() =>
-                    setBudgetVis({ type: 'update', visible: true })
-                  }
-                >
+          <TouchableOpacity
+            onPress={() => setBudgetVis({ type: 'update', visible: true })}
+            disabled={budget === 0}
+          >
+            <View style={styles.budgetContainer}>
+              <View style={styles.budgetTop}>
+                <Text style={styles.billTitle}>{`${
+                  moment().month() + 1
+                }月总预算`}</Text>
+                {budget !== 0 ? (
                   <Image
                     style={styles.billIcon}
                     source={require('@/assets/image/ad_arrow.png')}
                   />
-                </TouchableOpacity>
-              ) : (
-                <LinearGradient
-                  start={{ x: 1, y: 1 }}
-                  end={{ x: 0, y: 0 }}
-                  colors={['#ffd729', '#ffd729']}
-                  style={styles.budgetButtonContainer}
-                >
-                  <TouchableOpacity
-                    style={styles.budgetButton}
-                    onPress={() => {
-                      setBudgetVis({ type: 'add', visible: true });
-                    }}
+                ) : (
+                  <LinearGradient
+                    start={{ x: 1, y: 1 }}
+                    end={{ x: 0, y: 0 }}
+                    colors={['#ffd729', '#ffd729']}
+                    style={styles.budgetButtonContainer}
                   >
-                    <Image
-                      style={styles.icon}
-                      source={require('@/assets/image/add.png')}
-                    />
-                    <Text>设置预算</Text>
-                  </TouchableOpacity>
-                </LinearGradient>
-              )}
-            </View>
-            <View style={styles.budgetBottom}>
-              <View style={styles.budgetLeft}></View>
-              <View style={styles.budgetRight}>
-                <View style={styles.itemTop}>
-                  <Text style={styles.itemTopText}>剩余预算：</Text>
-                  <Text style={styles.itemTopValueText}>
-                    {(restBudget >= 0 ? restBudget : 0).toFixed(2)}
-                  </Text>
-                </View>
-                <View style={styles.budgetItem}>
-                  <Text style={styles.budgetItemText}>本月预算：</Text>
-                  <Text style={styles.budgetItemText}>
-                    {Number(budget).toFixed(2)}
-                  </Text>
-                </View>
-                <View style={styles.budgetItem}>
-                  <Text style={styles.budgetItemText}>本月支出：</Text>
-                  <Text style={styles.budgetItemText}>
-                    {Number(payValue).toFixed(2)}
-                  </Text>
+                    <TouchableOpacity
+                      style={styles.budgetButton}
+                      onPress={() => {
+                        setBudgetVis({ type: 'add', visible: true });
+                      }}
+                    >
+                      <Image
+                        style={styles.icon}
+                        source={require('@/assets/image/add.png')}
+                      />
+                      <Text>设置预算</Text>
+                    </TouchableOpacity>
+                  </LinearGradient>
+                )}
+              </View>
+              <View style={styles.budgetBottom}>
+                <View style={styles.budgetLeft}></View>
+                <View style={styles.budgetRight}>
+                  <View style={styles.itemTop}>
+                    <Text style={styles.itemTopText}>剩余预算：</Text>
+                    <Text style={styles.itemTopValueText}>
+                      {(restBudget >= 0 ? restBudget : 0).toFixed(2)}
+                    </Text>
+                  </View>
+                  <View style={styles.budgetItem}>
+                    <Text style={styles.budgetItemText}>本月预算：</Text>
+                    <Text style={styles.budgetItemText}>
+                      {Number(budget).toFixed(2)}
+                    </Text>
+                  </View>
+                  <View style={styles.budgetItem}>
+                    <Text style={styles.budgetItemText}>本月支出：</Text>
+                    <Text style={styles.budgetItemText}>
+                      {Number(payValue).toFixed(2)}
+                    </Text>
+                  </View>
                 </View>
               </View>
             </View>
-          </View>
+          </TouchableOpacity>
         </LinearGradient>
       </View>
       <Budget
@@ -417,7 +450,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-around',
   },
-  billItem: {},
+  billItem: {
+    alignItems: 'center',
+    justifyContent: 'space-evenly',
+  },
   budgetContainer: {
     width: screenWidth - 50,
     marginLeft: 25,

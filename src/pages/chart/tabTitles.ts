@@ -10,10 +10,6 @@ export const getWeekTitle = (nowUnix: number) => {
   const count = Math.ceil(
     (nowUnix - firstDayOfYearStartWeekday.unix()) / (86400 * 7)
   );
-  const dateArray = new Array(count)
-    .fill('')
-    .map((i, index) => firstDayOfYearStartWeekday.unix() + index * 86400 * 7);
-
   const Title = new Array(count).fill('').map((i, index) => ({
     title:
       index !== count - 1 && index !== count - 2
@@ -21,16 +17,57 @@ export const getWeekTitle = (nowUnix: number) => {
         : index === count - 2
         ? '上周'
         : '本周',
+    date: firstDayOfYearStartWeekday.unix() + index * 86400 * 7,
   }));
-  return { Title, dateArray };
+  return Title;
 };
 
 export const getMonthTitle = (nowUnix: number) => {
-  return 2;
+  const nowMoment = moment.unix(nowUnix);
+  const count = +nowMoment.format('MM');
+  const firstDayOfYear = nowMoment.startOf('year');
+  const Title = new Array(count).fill('').map((i, index) => ({
+    title:
+      index !== count - 1 && index !== count - 2
+        ? `${index + 1}月`
+        : index === count - 2
+        ? '上月'
+        : '本月',
+    date:
+      index !== 0
+        ? firstDayOfYear.add(1, 'month').unix()
+        : firstDayOfYear.unix(),
+  }));
+  return Title;
 };
 
 export const getYearTitle = (nowUnix: number) => {
-  return 3;
+  const nowMoment = moment.unix(nowUnix);
+  const count = 3; // 值展示近三年的
+  const YearStr = nowMoment.format('YYYY');
+  const firstDayOfYear = moment.unix(nowUnix).startOf('year');
+  const Title = new Array(count).fill('').map((i, index) => ({
+    title:
+      index !== count - 1 && index !== count - 2
+        ? `${+YearStr + index + 1 - count}`
+        : index === count - 2
+        ? '去年'
+        : '今年',
+    date:
+      index !== 2
+        ? moment
+            .unix(nowUnix)
+            .startOf('year')
+            .add(-count + index + 1, 'year')
+            .unix()
+        : firstDayOfYear.unix(),
+  }));
+  return Title;
 };
 
-export default ['', getWeekTitle, getMonthTitle, getYearTitle];
+export default [
+  () => [{ title: '', date: 0 }],
+  getWeekTitle,
+  getMonthTitle,
+  getYearTitle,
+];

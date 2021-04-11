@@ -13,29 +13,22 @@ import moment from 'moment';
 import getTitle from './tabTitles';
 
 interface MineProps {}
-const Mine: React.FC<MineProps> = props => {
+const Mine: React.FC<MineProps> = (props) => {
   const [type, setType] = useState<number>(1);
   const [showIsIncome, setShowIsIncome] = useState<{
     show: boolean;
     is_income: 0 | 1;
   }>({ show: false, is_income: 0 });
   const nowUnix = moment().unix();
-  const [tabTitle, setTabTitle] = useState<{ title: string }[]>([
+  const [tabTitle, setTabTitle] = useState<{ title: string; date?: number }[]>([
     { title: '1st Tab' },
     { title: '2nd Tab' },
-    { title: '3rd Tab' },
-    { title: '4th Tab' },
-    { title: '5th Tab' },
-    { title: '6th Tab' },
-    { title: '7th Tab' },
-    { title: '8th Tab' },
-    { title: '9th Tab' },
   ]);
 
   useEffect(() => {
-    setTabTitle(getTitle[type](nowUnix).Title);
+    setTabTitle(getTitle[type](nowUnix));
     console.log(getTitle[type](nowUnix));
-  }, [type]);
+  }, [nowUnix, type]);
 
   const handleType = (e: any) => {
     setType(e.nativeEvent.selectedSegmentIndex + 1);

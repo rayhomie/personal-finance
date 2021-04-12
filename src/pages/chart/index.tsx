@@ -49,6 +49,8 @@ const Chart: React.FC<ChartProps> = () => {
   >([]);
   // 平均值
   const [average, setAverage] = useState<number>(0);
+  // 选择的tab
+  const [selected, setSelected] = useState<string>('');
 
   useEffect(() => {
     setTabTitle(getTitle[type](nowUnix));
@@ -84,7 +86,7 @@ const Chart: React.FC<ChartProps> = () => {
       setAverage(0);
       return;
     }
-    console.log(res);
+    // console.log(res);
     setChart(res.data.classifyList);
     setRank(
       res.data.docs.map((i: any) => ({
@@ -190,9 +192,10 @@ const Chart: React.FC<ChartProps> = () => {
             height={200}
             width={450}
             containerComponent={<VictoryVoronoiContainer />}
-            // animate={{
-            //   duration: 500,
-            // }}
+            animate={{
+              duration: 500,
+              onLoad: { duration: 500 },
+            }}
           >
             <VictoryLine
               labelComponent={<VictoryTooltip renderInPortal={false} />}
@@ -276,11 +279,15 @@ const Chart: React.FC<ChartProps> = () => {
   };
 
   const handleTabClick = (tab: any) => {
+    if (tab.title === selected) {
+      return;
+    }
     getRankData(
       moment.unix(tab.date).format('YYYY-MM-DD HH:mm:ss'),
       showIsIncome.is_income,
       type
     );
+    setSelected(tab.title);
   };
 
   return (

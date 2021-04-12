@@ -13,7 +13,7 @@ import moment from 'moment';
 import getTitle from './tabTitles';
 
 interface MineProps {}
-const Mine: React.FC<MineProps> = (props) => {
+const Mine: React.FC<MineProps> = props => {
   const [type, setType] = useState<number>(1);
   const [showIsIncome, setShowIsIncome] = useState<{
     show: boolean;
@@ -21,8 +21,8 @@ const Mine: React.FC<MineProps> = (props) => {
   }>({ show: false, is_income: 0 });
   const nowUnix = moment().unix();
   const [tabTitle, setTabTitle] = useState<{ title: string; date?: number }[]>([
-    { title: '1st Tab' },
-    { title: '2nd Tab' },
+    { title: '1st Tab', date: 0 },
+    { title: '2nd Tab', date: 1 },
   ]);
 
   useEffect(() => {
@@ -116,10 +116,9 @@ const Mine: React.FC<MineProps> = (props) => {
       margin: 10,
       backgroundColor: '#ddd',
     };
-
     return (
       <ScrollView style={{ backgroundColor: '#fff' }}>
-        <View key={`${index}`} style={style}>
+        <View key={`${tab.date}_${index}`} style={style}>
           <Text>{tab.title}</Text>
         </View>
       </ScrollView>
@@ -149,7 +148,12 @@ const Mine: React.FC<MineProps> = (props) => {
         onChange={handleType}
       />
       <View style={styles.Tab}>
-        <Tabs tabs={tabTitle} initialPage={1} tabBarPosition="top">
+        <Tabs
+          key={`${Math.random().toString().slice(2)}`}
+          tabs={tabTitle}
+          tabBarPosition="top"
+          page={tabTitle.length - 1}
+        >
           {renderContent}
         </Tabs>
       </View>

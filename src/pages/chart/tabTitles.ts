@@ -49,7 +49,7 @@ export const getYearTitle = (nowUnix: number) => {
   const Title = new Array(count).fill('').map((i, index) => ({
     title:
       index !== count - 1 && index !== count - 2
-        ? `${+YearStr + index + 1 - count}`
+        ? `${+YearStr + index + 1 - count}年`
         : index === count - 2
         ? '去年'
         : '今年',

@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable react-native/no-inline-styles */
 import React, { useState, useEffect, useMemo } from 'react';
 import {
   View,
@@ -9,26 +11,86 @@ import {
   ScrollView,
 } from 'react-native';
 import { SegmentedControl, Modal, Tabs } from '@ant-design/react-native';
+import {
+  VictoryChart,
+  VictoryAxis,
+  VictoryTooltip,
+  VictoryLine,
+  VictoryScatter,
+  VictoryVoronoiContainer,
+} from 'victory-native';
 import moment from 'moment';
 import getTitle from './tabTitles';
+import { getRank } from '@/service/chart';
+import { ImageManager } from '@/assets/json/ImageManager';
 
-interface MineProps {}
-const Mine: React.FC<MineProps> = props => {
-  const [type, setType] = useState<number>(1);
+const IM: any = ImageManager;
+
+interface ChartProps {}
+const Chart: React.FC<ChartProps> = () => {
+  const [type, setType] = useState<1 | 2 | 3>(1);
   const [showIsIncome, setShowIsIncome] = useState<{
     show: boolean;
     is_income: 0 | 1;
   }>({ show: false, is_income: 0 });
-  const nowUnix = moment().unix();
-  const [tabTitle, setTabTitle] = useState<{ title: string; date?: number }[]>([
-    { title: '1st Tab', date: 0 },
-    { title: '2nd Tab', date: 1 },
-  ]);
+  const nowUnix = useMemo(() => moment().unix(), []);
+  const [tabTitle, setTabTitle] = useState<{ title: string; date?: number }[]>(
+    getTitle[type](nowUnix)
+  );
+  // 解决bug的随机key
+  const [key, setKey] = useState<string>(Math.random().toString().slice(2));
+  // 排行榜分类数据
+  const [rank, setRank] = useState<{ category: any; total: number }[]>([]);
+  // 排行榜的总值
+  const [total, setTotal] = useState<number>(0);
+  // 图标数据
+  const [chart, setChart] = useState<
+    { date: number; cur_total: number; item: any[] }[]
+  >([]);
 
   useEffect(() => {
     setTabTitle(getTitle[type](nowUnix));
     console.log(getTitle[type](nowUnix));
-  }, [nowUnix, type]);
+  }, [type]);
+
+  useEffect(() => {
+    getRankData(
+      moment.unix(nowUnix).format('YYYY-MM-DD HH:mm:ss'),
+      showIsIncome.is_income,
+      type
+    );
+  }, [type, showIsIncome.is_income]);
+
+  useEffect(() => {
+    setKey(Math.random().toString().slice(2));
+  }, [tabTitle]);
+
+  const getRankData = async (
+    date: string,
+    is_income: 0 | 1,
+    type: 1 | 2 | 3
+  ) => {
+    const res = await getRank({
+      date,
+      is_income,
+      type,
+    });
+    if (res.data.code !== 0) {
+      setRank([]);
+      setTotal(0);
+      setChart([]);
+      return;
+    }
+    console.log(res);
+    setChart(res.data.classifyList);
+    setRank(
+      res.data.docs.map((i: any) => ({
+        ...i._id.category[0],
+        total: i.total,
+      }))
+    );
+    setTotal(res.data.total);
+  };
 
   const handleType = (e: any) => {
     setType(e.nativeEvent.selectedSegmentIndex + 1);
@@ -109,19 +171,107 @@ const Mine: React.FC<MineProps> = props => {
   };
 
   const renderContent = (tab: any, index: any) => {
-    const style: any = {
-      paddingVertical: 40,
-      justifyContent: 'center',
-      alignItems: 'center',
-      margin: 10,
-      backgroundColor: '#ddd',
-    };
     return (
-      <ScrollView style={{ backgroundColor: '#fff' }}>
-        <View key={`${tab.date}_${index}`} style={style}>
-          <Text>{tab.title}</Text>
+      <ScrollView
+        key={`${tab.date}_${index}`}
+        style={{ backgroundColor: '#fff' }}
+      >
+        <View style={styles.chart}>
+          <VictoryChart
+            domainPadding={{ x: 15, y: 0 }}
+            height={200}
+            width={450}
+            containerComponent={<VictoryVoronoiContainer />}
+            // animate={{
+            //   duration: 500,
+            // }}
+          >
+            <VictoryLine
+              labelComponent={<VictoryTooltip renderInPortal={false} />}
+              style={{
+                data: { stroke: '#f9d96b' },
+              }}
+              data={chart.map((i: any) => ({
+                x:
+                  type === 1
+                    ? moment.unix(i.date).format('MM-DD')
+                    : type === 3
+                    ? moment.unix(i.date).format('M')
+                    : moment.unix(i.date).format('D'),
+                y: Math.floor((i.cur_total * 100) / (total ? total : 10000)),
+                label: i.cur_total,
+              }))}
+            />
+            <VictoryAxis
+              tickFormat={t =>
+                type === 2 &&
+                ![
+                  '1',
+                  '5',
+                  '10',
+                  '15',
+                  '20',
+                  '25',
+                  chart.length > 30 ? '31' : '30',
+                ].includes(t)
+                  ? ''
+                  : t
+              }
+            />
+          </VictoryChart>
+        </View>
+        <View style={styles.rank}>
+          <View style={styles.rankHeader}>
+            <Text style={styles.rankHeaderText}>{`${
+              showIsIncome.is_income ? '收入' : '支出'
+            }排行榜`}</Text>
+          </View>
+          <View style={styles.rankContainer}>
+            {rank.length ? (
+              rank.map((i: any) => (
+                <TouchableOpacity style={styles.rankItem} key={i._id}>
+                  <View style={styles.rankLeft}>
+                    <Image style={styles.iconCate} source={IM[i.icon_l]} />
+                  </View>
+                  <View style={styles.rankRight}>
+                    <View style={styles.rankTop}>
+                      <Text>{`${i.name}  ${
+                        Math.floor(
+                          (i.total * 10000) / (total ? total : 10000)
+                        ) / 100
+                      }%`}</Text>
+                      <Text>{i.total}</Text>
+                    </View>
+                    <View style={styles.rankBottom}>
+                      <View
+                        style={{
+                          ...styles.rankBottomlength,
+                          width:
+                            (i.total / (total ? total : 10000)) *
+                            (screenWidth - 80),
+                        }}
+                      />
+                    </View>
+                  </View>
+                </TouchableOpacity>
+              ))
+            ) : (
+              <View style={styles.noRes}>
+                <Image source={require('@/assets/image/no_data.png')} />
+                <Text style={styles.noResText}>暂无数据</Text>
+              </View>
+            )}
+          </View>
         </View>
       </ScrollView>
+    );
+  };
+
+  const handleTabClick = (tab: any) => {
+    getRankData(
+      moment.unix(tab.date).format('YYYY-MM-DD HH:mm:ss'),
+      showIsIncome.is_income,
+      type
     );
   };
 
@@ -146,13 +296,19 @@ const Mine: React.FC<MineProps> = props => {
         selectedIndex={type - 1}
         style={styles.typeControl}
         onChange={handleType}
+        tintColor="#f9d96b"
       />
       <View style={styles.Tab}>
         <Tabs
-          key={`${Math.random().toString().slice(2)}`}
+          key={key}
           tabs={tabTitle}
           tabBarPosition="top"
           page={tabTitle.length - 1}
+          tabBarTextStyle={{ fontSize: 14 }}
+          tabBarUnderlineStyle={{ backgroundColor: '#2c2c2c' }}
+          tabBarActiveTextColor="#2c2c2c"
+          tabBarInactiveTextColor="#8a8a8a"
+          onChange={handleTabClick}
         >
           {renderContent}
         </Tabs>
@@ -177,7 +333,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
   icon: { width: 15, height: 15, marginLeft: 2 },
-  typeControl: {},
+  typeControl: { backgroundColor: '#2c2c2c' },
   iscomeModal: { paddingTop: 50 },
   listItem: {
     flexDirection: 'row',
@@ -209,6 +365,55 @@ const styles = StyleSheet.create({
     width: screenWidth,
     height: screenHeight - 190,
   },
+  chart: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    margin: 10,
+  },
+  rank: { margin: 10 },
+  rankHeader: {
+    height: 40,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  rankHeaderText: { fontSize: 20, fontWeight: 'bold' },
+  rankContainer: {},
+  rankItem: {
+    flexDirection: 'row',
+    height: 70,
+  },
+  rankLeft: {
+    alignItems: 'flex-start',
+    justifyContent: 'center',
+    height: 70,
+    width: 60,
+  },
+  iconCate: { width: 40, height: 40 },
+  rankRight: {
+    width: screenWidth - 80,
+    justifyContent: 'center',
+    borderBottomWidth: 1,
+    borderBottomColor: '#f5f5f5',
+  },
+  rankTop: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  rankBottom: { alignItems: 'flex-start' },
+  rankBottomlength: {
+    height: 10,
+    backgroundColor: '#f9d96b',
+    borderRadius: 20,
+  },
+  noRes: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: 400,
+  },
+  noResText: {
+    color: '#cbcbcb',
+  },
 });
 
-export default Mine;
+export default Chart;

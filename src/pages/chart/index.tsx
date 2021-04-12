@@ -16,10 +16,10 @@ import {
   VictoryAxis,
   VictoryTooltip,
   VictoryLine,
-  VictoryScatter,
   VictoryVoronoiContainer,
 } from 'victory-native';
 import moment from 'moment';
+import LinearGradient from 'react-native-linear-gradient';
 import getTitle from './tabTitles';
 import { getRank } from '@/service/chart';
 import { ImageManager } from '@/assets/json/ImageManager';
@@ -120,7 +120,13 @@ const Chart: React.FC<ChartProps> = () => {
           setShowIsIncome(pre => ({ ...pre, show: false }));
         }}
       >
-        <View style={styles.iscomeModal}>
+        <LinearGradient
+          start={{ x: 0.0, y: 0.0 }}
+          end={{ x: 0.5, y: 0.65 }}
+          locations={[0, 1]}
+          colors={['#ffeaaa', '#fffcdc']}
+          style={styles.iscomeModal}
+        >
           <TouchableOpacity
             style={styles.listItem}
             onPress={() => selectIncome(0)}
@@ -166,7 +172,7 @@ const Chart: React.FC<ChartProps> = () => {
               )}
             </View>
           </TouchableOpacity>
-        </View>
+        </LinearGradient>
       </Modal>
     ),
     [showIsIncome]

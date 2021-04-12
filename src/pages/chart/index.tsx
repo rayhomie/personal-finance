@@ -47,10 +47,12 @@ const Chart: React.FC<ChartProps> = () => {
   const [chart, setChart] = useState<
     { date: number; cur_total: number; item: any[] }[]
   >([]);
+  // 平均值
+  const [average, setAverage] = useState<number>(0);
 
   useEffect(() => {
     setTabTitle(getTitle[type](nowUnix));
-    console.log(getTitle[type](nowUnix));
+    // console.log(getTitle[type](nowUnix));
   }, [type]);
 
   useEffect(() => {
@@ -79,6 +81,7 @@ const Chart: React.FC<ChartProps> = () => {
       setRank([]);
       setTotal(0);
       setChart([]);
+      setAverage(0);
       return;
     }
     console.log(res);
@@ -90,6 +93,7 @@ const Chart: React.FC<ChartProps> = () => {
       }))
     );
     setTotal(res.data.total);
+    setAverage(res.data.average);
   };
 
   const handleType = (e: any) => {
@@ -177,8 +181,12 @@ const Chart: React.FC<ChartProps> = () => {
         style={{ backgroundColor: '#fff' }}
       >
         <View style={styles.chart}>
+          <View style={styles.chartTop}>
+            <Text style={styles.chartTopText}>{`总支出：${total}`}</Text>
+            <Text style={styles.chartBottomText}>{`平均值：${average}`}</Text>
+          </View>
           <VictoryChart
-            domainPadding={{ x: 15, y: 0 }}
+            domainPadding={{ x: 20, y: 45 }}
             height={200}
             width={450}
             containerComponent={<VictoryVoronoiContainer />}
@@ -194,9 +202,9 @@ const Chart: React.FC<ChartProps> = () => {
               data={chart.map((i: any) => ({
                 x:
                   type === 1
-                    ? moment.unix(i.date).format('MM-DD')
+                    ? moment.unix(i.date).format('M-DD')
                     : type === 3
-                    ? moment.unix(i.date).format('M')
+                    ? moment.unix(i.date).format('M月')
                     : moment.unix(i.date).format('D'),
                 y: Math.floor((i.cur_total * 100) / (total ? total : 10000)),
                 label: i.cur_total,
@@ -369,6 +377,20 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     margin: 10,
+  },
+  chartTop: {
+    width: screenWidth - 40,
+    alignItems: 'flex-start',
+    justifyContent: 'center',
+    position: 'relative',
+    top: 20,
+  },
+  chartTopText: { fontSize: 18, color: '#2c2c2c' },
+  chartBottomText: {
+    position: 'relative',
+    top: 15,
+    fontSize: 12,
+    color: '#bfbfbf',
   },
   rank: { margin: 10 },
   rankHeader: {

@@ -196,7 +196,7 @@ const Chart: React.FC<ChartProps> = () => {
           </View>
           <VictoryChart
             domainPadding={{ x: 20, y: 45 }}
-            height={200}
+            height={300}
             width={450}
             containerComponent={<VictoryVoronoiContainer />}
             animate={{
@@ -457,7 +457,7 @@ const styles = StyleSheet.create({
   noRes: {
     alignItems: 'center',
     justifyContent: 'center',
-    height: 400,
+    height: 150,
   },
   noResText: {
     color: '#cbcbcb',

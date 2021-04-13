@@ -44,7 +44,7 @@ export const update = (payload: {
 export const Delete = (payload: { id: string }) => () =>
   request({
     url: '/bill/delete',
-    method: 'DELETE',
+    method: 'POST',
     data: payload,
   });
 

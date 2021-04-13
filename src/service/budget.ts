@@ -16,5 +16,5 @@ export const addCurBudget = (payload: { budget_value: string }) =>
 export const deleteCurBudget = () =>
   request({
     url: '/budget/delete',
-    method: 'DELETE',
+    method: 'POST',
   });

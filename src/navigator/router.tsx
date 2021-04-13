@@ -13,6 +13,7 @@ import CategorySetting, {
 } from '@/pages/record/categorySetting/index';
 import Add from '@/pages/record/categorySetting/add';
 import UserInfo from '@/pages/mine/userInfo/index';
+import RankInfo from '@/pages/chart/rankInfo/index';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -108,6 +109,11 @@ export default function Router() {
           name="添加分类"
           component={Add}
           options={{ headerTitle: () => <></> }}
+        />
+        <Stack.Screen
+          name="收支排行详情"
+          component={RankInfo}
+          options={{ header: () => <></> }}
         />
       </Stack.Navigator>
     </NavigationContainer>

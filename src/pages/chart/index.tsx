@@ -22,6 +22,7 @@ import moment from 'moment';
 import LinearGradient from 'react-native-linear-gradient';
 import getTitle from './tabTitles';
 import { getRank } from '@/service/chart';
+import NavigationUtil from '@/navigator/NavigationUtil';
 import { ImageManager } from '@/assets/json/ImageManager';
 
 const IM: any = ImageManager;
@@ -246,7 +247,19 @@ const Chart: React.FC<ChartProps> = () => {
           <View style={styles.rankContainer}>
             {rank.length ? (
               rank.map((i: any) => (
-                <TouchableOpacity style={styles.rankItem} key={i._id}>
+                <TouchableOpacity
+                  style={styles.rankItem}
+                  key={i._id}
+                  onPress={() =>
+                    NavigationUtil.toPage('收支排行详情', {
+                      type,
+                      category_id: i._id,
+                      title: i.name,
+                      date: moment.unix(nowUnix).format('YYYY-MM-DD HH:mm:ss'),
+                      total: i.total,
+                    })
+                  }
+                >
                   <View style={styles.rankLeft}>
                     <Image style={styles.iconCate} source={IM[i.icon_l]} />
                   </View>

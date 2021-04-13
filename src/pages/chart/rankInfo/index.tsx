@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react';
 import {
@@ -8,6 +9,8 @@ import {
   Text,
   TouchableOpacity,
 } from 'react-native';
+import { Switch } from '@ant-design/react-native';
+import Tooltip from 'rn-tooltip';
 import moment from 'moment';
 import NavigationUtil from '@/navigator/NavigationUtil';
 import { getRankItem } from '@/service/chart';
@@ -48,17 +51,20 @@ const RankInfo: React.FC<RankInfoProps> = () => {
   useEffect(() => {
     if (!params) return;
     getRankInfo(params);
-  }, [params]);
+  }, [params, sort]);
 
   const getRankInfo = async (payload: ParamsType) => {
     const { type, date, category_id } = payload;
     const result = await getRankItem({ type, date, category_id, sort });
-    console.log(result);
     if (result.data.code !== 0) {
       setRes([]);
       return;
     }
     setRes(result.data.docs);
+  };
+
+  const onSwitchChange = (value: any) => {
+    setSort(value ? 'bill_time' : 'amount');
   };
 
   return (
@@ -76,6 +82,30 @@ const RankInfo: React.FC<RankInfoProps> = () => {
         </TouchableOpacity>
         <View style={styles.headerTitle}>
           <Text style={styles.headerTitleText}>{params?.title}</Text>
+        </View>
+        <View style={styles.headerRight}>
+          <Tooltip
+            withOverlay
+            backgroundColor="#f9d96b"
+            actionType="press"
+            width={100}
+            popover={
+              <Text style={{ color: '#515151', fontWeight: 'bold' }}>
+                {`按${sort === 'amount' ? '金额' : '时间'}排序`}
+              </Text>
+            }
+          >
+            <Image
+              style={styles.infoIcon}
+              source={require('@/assets/image/prompt.png')}
+            />
+          </Tooltip>
+          <View style={{ width: 10 }} />
+          <Switch
+            checked={sort === 'amount' ? false : true}
+            onChange={onSwitchChange}
+            color="#f9d96b"
+          />
         </View>
       </View>
       <View style={styles.content}>
@@ -149,6 +179,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   headerTitleText: { fontSize: 20 },
+  headerRight: {
+    flexDirection: 'row',
+    width: 90,
+    marginLeft: screenWidth / 2 - 150,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   content: { margin: 10 },
   rankItem: {
     flexDirection: 'row',
@@ -181,6 +218,7 @@ const styles = StyleSheet.create({
   billtime: {
     fontSize: 12,
   },
+  infoIcon: { width: 20, height: 20 },
 });
 
 export default RankInfo;

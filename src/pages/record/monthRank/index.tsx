@@ -3,59 +3,59 @@
 import React, { useState, useEffect } from 'react';
 import {
   View,
+  Text,
   StyleSheet,
   Dimensions,
-  Image,
-  Text,
   TouchableOpacity,
+  Image,
+  ScrollView,
 } from 'react-native';
 import { Switch } from '@ant-design/react-native';
 import Tooltip from 'rn-tooltip';
 import moment from 'moment';
 import NavigationUtil from '@/navigator/NavigationUtil';
-import { getRankItem } from '@/service/chart';
+import { getMonthRanked } from '@/service/bill';
 import { ImageManager } from '@/assets/json/ImageManager';
 
 const IM: any = ImageManager;
 
 enum WeekMap {
-  '周日',
-  '周一',
-  '周二',
-  '周三',
-  '周四',
-  '周五',
-  '周六',
+  '日',
+  '一',
+  '二',
+  '三',
+  '四',
+  '五',
+  '六',
 }
 
-interface RankInfoProps {}
+interface MonthRankProps {}
 
 type ParamsType = {
-  type: 1 | 2 | 3;
-  category_id: string;
-  date: string;
-  total?: number;
-  title?: string;
-  sort?: 'amount' | 'bill_time';
+  is_income: 0 | 1;
+  startMonth: string;
+  total: number;
 };
 
-const RankInfo: React.FC<RankInfoProps> = () => {
+const MonthRank: React.FC<MonthRankProps> = () => {
   const [params, setParams] = useState<ParamsType | null>(null);
   const [sort, setSort] = useState<'amount' | 'bill_time'>('amount');
   const [res, setRes] = useState<any[]>([]);
 
   useEffect(() => {
-    setParams(NavigationUtil.getParams() as ParamsType);
+    setParams(NavigationUtil.getParams() as any);
   }, []);
 
   useEffect(() => {
     if (!params) return;
-    getRankInfo(params);
+    getMonthRankedInfo();
   }, [params, sort]);
 
-  const getRankInfo = async (payload: ParamsType) => {
-    const { type, date, category_id } = payload;
-    const result = await getRankItem({ type, date, category_id, sort });
+  const getMonthRankedInfo = async () => {
+    const result = await getMonthRanked({
+      ...(params ? params : {}),
+      sort,
+    });
     if (result.data.code !== 0) {
       setRes([]);
       return;
@@ -81,7 +81,7 @@ const RankInfo: React.FC<RankInfoProps> = () => {
           <Text style={styles.headerBackText}>返回</Text>
         </TouchableOpacity>
         <View style={styles.headerTitle}>
-          <Text style={styles.headerTitleText}>{params?.title}</Text>
+          <Text style={styles.headerTitleText}>{params?.startMonth}</Text>
         </View>
         <View style={styles.headerRight}>
           <Tooltip
@@ -108,7 +108,13 @@ const RankInfo: React.FC<RankInfoProps> = () => {
           />
         </View>
       </View>
-      <View style={styles.content}>
+      <View style={styles.middle}>
+        <Text style={styles.middleText}>{`本月总${
+          params?.is_income ? '收入' : '支出'
+        }`}</Text>
+        <Text style={styles.middleTotalText}>{params?.total}</Text>
+      </View>
+      <ScrollView style={styles.content}>
         {res.map((i: any) => (
           <View style={styles.rankItem} key={i._id}>
             <View style={styles.rankLeft}>
@@ -148,7 +154,7 @@ const RankInfo: React.FC<RankInfoProps> = () => {
             </View>
           </View>
         ))}
-      </View>
+      </ScrollView>
     </View>
   );
 };
@@ -188,7 +194,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  content: { margin: 10 },
+  content: {
+    padding: 10,
+    width: screenWidth,
+    marginBottom: 80,
+  },
   rankItem: {
     flexDirection: 'row',
     height: 70,
@@ -221,6 +231,13 @@ const styles = StyleSheet.create({
     fontSize: 12,
   },
   infoIcon: { width: 20, height: 20 },
+  middle: {
+    height: 80,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  middleText: { fontSize: 14, color: '#515151' },
+  middleTotalText: { fontSize: 25, marginTop: 15 },
 });
 
-export default RankInfo;
+export default MonthRank;

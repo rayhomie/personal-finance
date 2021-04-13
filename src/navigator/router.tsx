@@ -14,6 +14,7 @@ import CategorySetting, {
 import Add from '@/pages/record/categorySetting/add';
 import UserInfo from '@/pages/mine/userInfo/index';
 import RankInfo from '@/pages/chart/rankInfo/index';
+import MonthRank from '@/pages/record/monthRank/index';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -113,6 +114,11 @@ export default function Router() {
         <Stack.Screen
           name="收支排行详情"
           component={RankInfo}
+          options={{ header: () => <></> }}
+        />
+        <Stack.Screen
+          name="月排行"
+          component={MonthRank}
           options={{ header: () => <></> }}
         />
       </Stack.Navigator>

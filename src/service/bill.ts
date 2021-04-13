@@ -47,3 +47,14 @@ export const Delete = (payload: { id: string }) => () =>
     method: 'DELETE',
     data: payload,
   });
+
+// 获取月排行
+export const getMonthRanked = (payload: {
+  startMonth?: string;
+  is_income?: 0 | 1;
+  sort: 'amount' | 'bill_time';
+}) =>
+  request({
+    url: `/bill/monthRank?${qs.stringify(payload)}`,
+    method: 'GET',
+  });

@@ -87,11 +87,12 @@ const mine: MineModelType = {
       const { success, fail } = payload;
       const res = yield call(getContinueCount());
       if (res.data.code === 0) {
+        const { continue_count, total } = res.data;
         yield put({
           type: 'save',
           payload: {
-            clockContinueCount: res.data.continue_count,
-            clockTotal: res.data.total,
+            clockContinueCount: continue_count,
+            clockTotal: total,
           },
         });
         success();

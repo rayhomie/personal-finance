@@ -257,13 +257,33 @@ const Record: React.FC<RecordProps> = props => {
             />
           </View>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.headerItem}>
+        <TouchableOpacity
+          style={styles.headerItem}
+          onPress={() =>
+            NavigationUtil.toPage('月排行', {
+              is_income: 1,
+              startMonth: moment(date).format('YYYY-MM'),
+              total: Number(incomeTotal).toFixed(2),
+            })
+          }
+          disabled={incomeTotal === 0 ? true : false}
+        >
           <Text style={styles.topText}>收入</Text>
           <Text style={styles.bottomText}>
             {Number(incomeTotal).toFixed(2)}
           </Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.headerItem}>
+        <TouchableOpacity
+          style={styles.headerItem}
+          onPress={() =>
+            NavigationUtil.toPage('月排行', {
+              is_income: 0,
+              startMonth: moment(date).format('YYYY-MM'),
+              total: Number(payTotal).toFixed(2),
+            })
+          }
+          disabled={incomeTotal === 0 ? true : false}
+        >
           <Text style={styles.topText}>支出</Text>
           <Text style={styles.bottomText}>{Number(payTotal).toFixed(2)}</Text>
         </TouchableOpacity>

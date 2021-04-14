@@ -78,7 +78,7 @@ const Record: React.FC<RecordProps> = props => {
     const { id, input, title } = inputModal;
     if (title === '金额') {
       if (!/^(\-?)\d+(\.\d+)?$/.test(input)) {
-        Toast.fail('请正确输入正数或负数', 1.5);
+        Toast.fail('请正确输入正数或负数', 0.5);
         return;
       }
     }
@@ -86,10 +86,10 @@ const Record: React.FC<RecordProps> = props => {
       type: 'record/updateBill',
       payload: {
         success: () => {
-          Toast.success(`${title}修改成功`, 1.5);
+          Toast.success(`${title}修改成功`, 0.5);
         },
         fail: () => {
-          Toast.fail(`${title}修改失败,请重试`, 1.5);
+          Toast.fail(`${title}修改失败,请重试`, 0.5);
         },
         id,
         ...(title === '金额' ? { amount: input } : { remark: input }),
@@ -159,10 +159,10 @@ const Record: React.FC<RecordProps> = props => {
                         type: 'record/deleteBill',
                         payload: {
                           success: () => {
-                            Toast.success('删除成功', 1.5);
+                            Toast.success('删除成功', 0.5);
                           },
                           fail: () => {
-                            Toast.fail('删除失败，请重试', 1.5);
+                            Toast.fail('删除失败，请重试', 0.5);
                           },
                           id: i._id,
                         },

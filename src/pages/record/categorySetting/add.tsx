@@ -47,18 +47,18 @@ const Add: React.FC<AddProps> = props => {
   const handleAdd = () => {
     const { icon_n, icon_s, icon_l } = selected;
     if (!input) {
-      Toast.fail('请输入类别名称', 1.5);
+      Toast.fail('请输入类别名称', 0.5);
       return;
     }
     (dispatch as Dispatch)({
       type: 'record/insertCategory',
       payload: {
         success: () => {
-          Toast.success('添加自定义分类成功', 1.5);
+          Toast.success('添加自定义分类成功', 0.5);
           NavigationUtil.goBack();
         },
         fail: () => {
-          Toast.success('分类名称已存在', 1.5);
+          Toast.success('分类名称已存在', 0.5);
         },
         is_system: 0,
         name: input,
@@ -73,18 +73,18 @@ const Add: React.FC<AddProps> = props => {
   const handleUpdate = () => {
     const { icon_n, icon_s, icon_l } = selected;
     if (!input) {
-      Toast.fail('请输入类别名称', 1.5);
+      Toast.fail('请输入类别名称', 0.5);
       return;
     }
     (dispatch as Dispatch)({
       type: 'record/updateCategory',
       payload: {
         success: () => {
-          Toast.success('修改自定义分类成功', 1.5);
+          Toast.success('修改自定义分类成功', 0.5);
           NavigationUtil.goBack();
         },
         fail: () => {
-          Toast.success('分类名称已存在', 1.5);
+          Toast.success('分类名称已存在', 0.5);
         },
         query_id: updateItem._id,
         query_name: updateItem.name,

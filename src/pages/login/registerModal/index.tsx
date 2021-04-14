@@ -207,27 +207,27 @@ const RegisterModal: React.FC<IProps> = props => {
               if (!usernameRegex.test(data.username)) {
                 Toast.fail(
                   '用户名是由3至16位，a～z或A~Z的英文字母、0～9的数字或下划线组成',
-                  1.5
+                  0.5
                 );
                 return;
               }
               if (!passwordRegex.test(data.password)) {
                 Toast.fail(
                   '密码由至少包括1个小写字母，1个数字组成，且设置至少6位密码',
-                  1.5
+                  0.5
                 );
                 return;
               }
               if (data.confirmPassword !== data.password) {
-                Toast.fail('请保持两次密码一致', 1.5);
+                Toast.fail('请保持两次密码一致', 0.5);
                 return;
               }
               if (!emailRegex.test(data.email)) {
-                Toast.fail('请按照正确邮箱格式输入', 1.5);
+                Toast.fail('请按照正确邮箱格式输入', 0.5);
                 return;
               }
               if (!phoneRegex.test(data.mobile_number)) {
-                Toast.fail('请按照正确手机号格式输入', 1.5);
+                Toast.fail('请按照正确手机号格式输入', 0.5);
                 return;
               }
               await (dispatch as Dispatch)({
@@ -235,8 +235,8 @@ const RegisterModal: React.FC<IProps> = props => {
                 payload: {
                   ...data,
                   success: () =>
-                    Toast.success('注册成功', 1.5, () => onClose()),
-                  fail: () => Toast.fail('用户名已存在，注册失败', 1.5),
+                    Toast.success('注册成功', 0.5, () => onClose()),
+                  fail: () => Toast.fail('用户名已存在，注册失败', 0.5),
                 },
               });
             }}

@@ -87,10 +87,16 @@ const record: RecordModelType = {
         });
       }
     },
-    *delCategory({ payload }, { call }) {
+    *delCategory({ payload }, { call, put }) {
       const { success, fail, ...rest } = payload;
       const res = yield call(Delete(rest));
       if (res.data.code === 0) {
+        yield put({
+          type: 'save',
+          payload: {
+            addBillSuccess: Math.random() * 100000,
+          },
+        });
         success();
       } else {
         fail();
@@ -115,7 +121,10 @@ const record: RecordModelType = {
       if (res.data.code === 0) {
         yield put({
           type: 'save',
-          payload: { addSuccess: Math.random() * 100000 },
+          payload: {
+            addSuccess: Math.random() * 100000,
+            addBillSuccess: Math.random() * 100000,
+          },
         });
         success();
       } else {
@@ -208,6 +217,10 @@ const record: RecordModelType = {
         yield put({
           type: 'updateBill',
           payload: { success, fail, id, category_id: res.data.docs._id },
+        });
+        yield put({
+          type: 'save',
+          payload: { addBillSuccess: Math.random() * 100000 },
         });
       } else {
         fail();

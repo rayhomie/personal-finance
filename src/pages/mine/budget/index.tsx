@@ -30,25 +30,25 @@ const Budget: React.FC<IProps> = props => {
   const onDelete = async () => {
     const res = await deleteCurBudget();
     if (res.data.code === 0) {
-      Toast.success('删除成功', 1.5);
+      Toast.success('删除成功', 0.5);
     } else {
-      Toast.success('删除失败，请重试', 1.5);
+      Toast.success('删除失败，请重试', 0.5);
     }
     modalClose();
   };
 
   const onConfirm = async () => {
     if (input === '') {
-      Toast.fail('请输入预算值，请重试', 1.5);
+      Toast.fail('请输入预算值，请重试', 0.5);
       return;
     }
     if (!/^(\-?)\d+(\.\d+)?$/.test(input)) {
-      Toast.fail('请正确输入正数或负数', 1.5);
+      Toast.fail('请正确输入正数或负数', 0.5);
       return;
     }
     const res = await addCurBudget({ budget_value: Number(input).toFixed(2) });
     if (res.data.code === 0) {
-      Toast.success(`${type !== 'update' ? '设置' : '修改'}成功`, 1.5);
+      Toast.success(`${type !== 'update' ? '设置' : '修改'}成功`, 0.5);
       modalClose();
     } else {
       Toast.fail(
@@ -57,7 +57,7 @@ const Budget: React.FC<IProps> = props => {
             ? '设置失败，请重试'
             : '修改失败，请输入和原来不一致的预算值'
         }`,
-        1.5
+        0.5
       );
     }
   };

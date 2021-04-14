@@ -189,13 +189,13 @@ const UserInfo: React.FC<IState> = props => {
               'confirmPassword',
             ]);
             if (password !== confirmPassword) {
-              Toast.fail('二次输入的密码和首次不一致！请重新输入', 1.5);
+              Toast.fail('二次输入的密码和首次不一致！请重新输入', 0.5);
               return;
             }
             if (!passwordRegex.test(password)) {
               Toast.fail(
                 '密码由至少包括1个小写字母，1个数字组成，且设置至少6位密码',
-                1.5
+                0.5
               );
               return;
             }
@@ -204,7 +204,7 @@ const UserInfo: React.FC<IState> = props => {
               payload: {
                 password,
                 success: () => {
-                  Toast.success('密码更改成功，请重新登陆', 1.5);
+                  Toast.success('密码更改成功，请重新登陆', 0.5);
                   setPasswordForm({
                     password: '',
                     confirmPassword: '',
@@ -212,7 +212,7 @@ const UserInfo: React.FC<IState> = props => {
                   NavigationUtil.goBack();
                 },
                 fail: () => {
-                  Toast.fail('密码和之前的一致，未变动', 1.5);
+                  Toast.fail('密码和之前的一致，未变动', 0.5);
                 },
               },
             });
@@ -230,7 +230,7 @@ const UserInfo: React.FC<IState> = props => {
         if (!usernameRegex.test(value)) {
           Toast.fail(
             '用户名是由3至16位，a～z或A~Z的英文字母、0～9的数字或下划线组成',
-            1.5
+            0.5
           );
           return;
         } else {
@@ -239,11 +239,11 @@ const UserInfo: React.FC<IState> = props => {
             payload: {
               username: value,
               success: () => {
-                Toast.success('用户名修改成功，请重新登陆', 1.5);
+                Toast.success('用户名修改成功，请重新登陆', 0.5);
                 NavigationUtil.goBack();
               },
               fail: () => {
-                Toast.fail('输入的用户名已存在', 1.5);
+                Toast.fail('输入的用户名已存在', 0.5);
               },
             },
           });
@@ -285,10 +285,10 @@ const UserInfo: React.FC<IState> = props => {
                 gender: user?.gender,
                 success: () => {
                   getUserInfo();
-                  Toast.success('性别修改成功', 1.5);
+                  Toast.success('性别修改成功', 0.5);
                 },
                 fail: () => {
-                  Toast.fail('请选择和现在不一样的性别', 1.5, () =>
+                  Toast.fail('请选择和现在不一样的性别', 0.5, () =>
                     setGender(user?.gender)
                   );
                 },
@@ -306,7 +306,7 @@ const UserInfo: React.FC<IState> = props => {
       '',
       (value: string) => {
         if (!phoneRegex.test(value)) {
-          Toast.fail('请按照正确手机号格式输入', 1.5);
+          Toast.fail('请按照正确手机号格式输入', 0.5);
           return;
         } else {
           (dispatch as Dispatch)({
@@ -315,10 +315,10 @@ const UserInfo: React.FC<IState> = props => {
               mobile_number: value,
               success: () => {
                 getUserInfo();
-                Toast.success('手机号修改成功', 1.5);
+                Toast.success('手机号修改成功', 0.5);
               },
               fail: () => {
-                Toast.fail('与原来的手机号一致', 1.5);
+                Toast.fail('与原来的手机号一致', 0.5);
               },
             },
           });
@@ -336,7 +336,7 @@ const UserInfo: React.FC<IState> = props => {
       '',
       (value: string) => {
         if (!emailRegex.test(value)) {
-          Toast.fail('请按照正确邮箱格式输入', 1.5);
+          Toast.fail('请按照正确邮箱格式输入', 0.5);
           return;
         } else {
           (dispatch as Dispatch)({
@@ -345,10 +345,10 @@ const UserInfo: React.FC<IState> = props => {
               email: value,
               success: () => {
                 getUserInfo();
-                Toast.success('邮箱修改成功', 1.5);
+                Toast.success('邮箱修改成功', 0.5);
               },
               fail: () => {
-                Toast.fail('与原来的邮箱一致', 1.5);
+                Toast.fail('与原来的邮箱一致', 0.5);
               },
             },
           });
@@ -376,9 +376,9 @@ const UserInfo: React.FC<IState> = props => {
               avatar_url: res.data.res.requestUrls[0],
               success: () => {
                 getUserInfo();
-                Toast.success('头像更改成功', 1.5);
+                Toast.success('头像更改成功', 0.5);
               },
-              fail: () => Toast.fail('头像更改失败,请重试', 1.5),
+              fail: () => Toast.fail('头像更改失败,请重试', 0.5),
             },
           });
         }

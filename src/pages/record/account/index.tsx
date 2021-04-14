@@ -86,7 +86,7 @@ const Account: React.FC<AccountProps> = props => {
         >
           <Image
             style={styles.category_icon}
-            source={clickItem.icon_n === i.icon_n ? IM[i.icon_s] : IM[i.icon_n]}
+            source={clickItem.id === i.id ? IM[i.icon_s] : IM[i.icon_n]}
           />
           <Text style={styles.category_name}>{i.name}</Text>
         </TouchableOpacity>
@@ -118,7 +118,7 @@ const Account: React.FC<AccountProps> = props => {
           id: item.id,
           success: () => {},
           fail: () => {
-            Toast.fail('服务器错误请客服', 1.5);
+            Toast.fail('服务器错误请客服', 0.5);
           },
         },
       });
@@ -138,11 +138,11 @@ const Account: React.FC<AccountProps> = props => {
         type: 'record/updateSystemCategory',
         payload: {
           success: () => {
-            Toast.success('修改账单分类成功', 1.5);
+            Toast.success('修改账单分类成功', 0.5);
             NavigationUtil.goBack();
           },
           fail: () => {
-            Toast.fail('修改账单分类失败，请重试', 1.5);
+            Toast.fail('修改账单分类失败，请重试', 0.5);
           },
           systemId: item.id,
           id: updateId,
@@ -153,11 +153,11 @@ const Account: React.FC<AccountProps> = props => {
         type: 'record/updateBill',
         payload: {
           success: () => {
-            Toast.success('修改账单分类成功', 1.5);
+            Toast.success('修改账单分类成功', 0.5);
             NavigationUtil.goBack();
           },
           fail: () => {
-            Toast.fail('修改账单分类失败，请重试', 1.5);
+            Toast.fail('修改账单分类失败，请重试', 0.5);
           },
           category_id: item._id,
           id: updateId,
@@ -168,7 +168,7 @@ const Account: React.FC<AccountProps> = props => {
 
   const handleDone = () => {
     if (compute === '') {
-      Toast.fail('请输入金额', 1.5);
+      Toast.fail('请输入金额', 0.5);
       return;
     }
     const category_id = !clickItem._id
@@ -179,12 +179,12 @@ const Account: React.FC<AccountProps> = props => {
       type: 'record/addBill',
       payload: {
         success: () => {
-          Toast.success('添加账单成功', 1.5);
+          Toast.success('添加账单成功', 0.5);
           onCloseModal();
           NavigationUtil.goBack();
         },
         fail: () => {
-          Toast.fail('添加账单失败，联系客服', 1.5);
+          Toast.fail('添加账单失败，联系客服', 0.5);
         },
         category_id: category_id,
         amount: Number(compute),

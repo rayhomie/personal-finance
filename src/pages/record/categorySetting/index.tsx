@@ -85,11 +85,11 @@ const CategorySetting: React.FC<CategorySettingProps> = props => {
             type: 'record/getNoSystem',
             payload: { is_income: payOrIncome === 'pay' ? 0 : 1 },
           });
-          Toast.success(`”${name}“分类删除成功`, 1.5);
+          Toast.success(`”${name}“分类删除成功`, 0.5);
           setVisible(false);
         },
         fail: () => {
-          Toast.fail(`”${name}“分类删除失败，请重试`, 1.5);
+          Toast.fail(`”${name}“分类删除失败，请重试`, 0.5);
           setVisible(false);
         },
         id,
@@ -160,7 +160,8 @@ const CategorySetting: React.FC<CategorySettingProps> = props => {
         maskClosable
       >
         <View style={styles.modal}>
-          <Text style={styles.tip}>是否确认删除“{curDel.name}”分类</Text>
+          <Text style={styles.tip}>确认删除“{curDel.name}”分类吗？</Text>
+          <Text style={styles.tips}>删除分类也会删除对应的账单哦？</Text>
         </View>
         <View style={styles.button}>
           <Button style={styles.cancel} onPress={onCloseModal}>
@@ -209,6 +210,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   tip: { fontSize: 20 },
+  tips: { marginTop: 15, fontSize: 15, color: '#e64646' },
   button: { flexDirection: 'row' },
   cancel: { width: screenWidth / 2, height: 60, borderRadius: 0 },
   del: { width: screenWidth / 2, height: 60, borderRadius: 0 },

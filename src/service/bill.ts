@@ -58,3 +58,9 @@ export const getMonthRanked = (payload: {
     url: `/bill/monthRank?${qs.stringify(payload)}`,
     method: 'GET',
   });
+
+export const mineAccount = (payload: { date: string }) =>
+  request({
+    url: `/bill/mineAccount?${qs.stringify(payload)}`,
+    method: 'GET',
+  });

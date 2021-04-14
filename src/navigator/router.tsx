@@ -15,6 +15,7 @@ import Add from '@/pages/record/categorySetting/add';
 import UserInfo from '@/pages/mine/userInfo/index';
 import RankInfo from '@/pages/chart/rankInfo/index';
 import MonthRank from '@/pages/record/monthRank/index';
+import AccountInfo from '@/pages/mine/accountInfo/index';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -119,6 +120,11 @@ export default function Router() {
         <Stack.Screen
           name="月排行"
           component={MonthRank}
+          options={{ header: () => <></> }}
+        />
+        <Stack.Screen
+          name="我的账单"
+          component={AccountInfo}
           options={{ header: () => <></> }}
         />
       </Stack.Navigator>

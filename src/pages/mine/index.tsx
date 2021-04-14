@@ -173,7 +173,11 @@ const Mine: React.FC<IProps> = props => {
     });
   };
 
-  const handleAccount = () => {};
+  const handleAccount = () => {
+    NavigationUtil.toPage('我的账单', {
+      now_date: moment().format('YYYY-MM-DD HH:mm:ss'),
+    });
+  };
 
   return (
     <View>

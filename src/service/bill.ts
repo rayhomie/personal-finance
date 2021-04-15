@@ -64,3 +64,9 @@ export const mineAccount = (payload: { date: string }) =>
     url: `/bill/mineAccount?${qs.stringify(payload)}`,
     method: 'GET',
   });
+
+export const mineAccountItem = (payload: { date: string }) =>
+  request({
+    url: `/bill/mineAccountItem?${qs.stringify(payload)}`,
+    method: 'GET',
+  });

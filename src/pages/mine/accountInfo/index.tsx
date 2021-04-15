@@ -170,7 +170,12 @@ const AccountInfo: React.FC<AccountInfoProps> = () => {
     return item.income_total === 0 && item.pay_total === 0 ? (
       <></>
     ) : (
-      <TouchableOpacity style={styles.item}>
+      <TouchableOpacity
+        style={styles.item}
+        onPress={() =>
+          NavigationUtil.toPage('月度账单报表', { date: item.date })
+        }
+      >
         <View style={styles.date}>
           <Text style={styles.dateText}>
             {moment.unix(item.date).format('M月')}

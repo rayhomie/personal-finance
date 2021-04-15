@@ -397,7 +397,7 @@ const styles = StyleSheet.create({
   lineRight: { width: screenWidth - 50, height: 1, backgroundColor: '#bfbfbf' },
   Tab: {
     width: screenWidth,
-    height: screenHeight - 190,
+    height: screenHeight - 130,
   },
   chart: {
     justifyContent: 'center',

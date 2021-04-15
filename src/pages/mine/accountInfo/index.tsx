@@ -241,20 +241,21 @@ const AccountInfo: React.FC<AccountInfoProps> = () => {
           <Text style={styles.titleText}>结余</Text>
         </View>
       </View>
-      {nores ? (
-        <FlatList
-          data={list}
-          renderItem={renderItem}
-          keyExtractor={item => item.date}
-          style={{ marginBottom: 80 }}
-        />
-      ) : (
-        <View style={styles.noRes}>
-          <Image source={require('@/assets/image/no_data.png')} />
-          <Text style={styles.noResText}>暂无数据</Text>
-        </View>
-      )}
-
+      <View style={styles.list}>
+        {nores ? (
+          <FlatList
+            data={list}
+            renderItem={renderItem}
+            keyExtractor={item => item.date}
+            style={{ marginBottom: 80 }}
+          />
+        ) : (
+          <View style={styles.noRes}>
+            <Image source={require('@/assets/image/no_data.png')} />
+            <Text style={styles.noResText}>暂无数据</Text>
+          </View>
+        )}
+      </View>
       {DateModal}
     </View>
   );
@@ -265,9 +266,9 @@ const screenHeight = Dimensions.get('window').height;
 const styles = StyleSheet.create({
   container: {
     width: screenWidth,
-    height: screenHeight,
     backgroundColor: '#fff',
   },
+  list: { height: screenHeight - 165 },
   header: {
     flexDirection: 'row',
     height: 40,

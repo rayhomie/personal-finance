@@ -138,15 +138,14 @@ const CategorySetting: React.FC<CategorySettingProps> = props => {
 
   return (
     <View style={styles.container}>
-      <View>
-        <SegmentedControl
-          values={['支出', '收入']}
-          selectedIndex={payOrIncome === 'pay' ? 0 : 1}
-          onChange={handleTab}
-        />
+      <SegmentedControl
+        values={['支出', '收入']}
+        selectedIndex={payOrIncome === 'pay' ? 0 : 1}
+        onChange={handleTab}
+      />
+      <View style={styles.FlatList}>
         <FlatList
           key={payOrIncome}
-          style={styles.FlatList}
           data={categoryList}
           renderItem={renderItem}
           keyExtractor={item => item.name}
@@ -182,11 +181,11 @@ const screenHeight = Dimensions.get('window').height;
 const styles = StyleSheet.create({
   container: {
     width: screenWidth,
-    paddingBottom: 50,
-    height: screenHeight - 110,
     backgroundColor: '#fff',
   },
-  FlatList: {},
+  FlatList: {
+    height: screenHeight - 100,
+  },
   item: {
     flexDirection: 'row',
     justifyContent: 'flex-start',

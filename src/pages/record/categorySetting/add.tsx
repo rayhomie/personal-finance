@@ -108,6 +108,8 @@ const Add: React.FC<AddProps> = props => {
         <View style={styles.input}>
           <InputItem
             placeholder="请输入类别名称"
+            placeholderTextColor="#515151"
+            style={{ color: '#515151' }}
             maxLength={4}
             clear
             onChange={value => {
@@ -130,14 +132,16 @@ const Add: React.FC<AddProps> = props => {
           {(NavigationUtil.getParams() as any).isAdd ? '添加' : '修改'}
         </Button>
       </View>
-      <List
-        sections={datasource}
-        handleSelect={item => {
-          setSelected(item);
-        }}
-        select={(NavigationUtil.getParams() as any).selectedItem}
-        isAdd={(NavigationUtil.getParams() as any).isAdd}
-      />
+      <View style={styles.List}>
+        <List
+          sections={datasource}
+          handleSelect={item => {
+            setSelected(item);
+          }}
+          select={(NavigationUtil.getParams() as any).selectedItem}
+          isAdd={(NavigationUtil.getParams() as any).isAdd}
+        />
+      </View>
     </View>
   );
 };
@@ -148,8 +152,6 @@ const screenHeight = Dimensions.get('window').height;
 const styles = StyleSheet.create({
   container: {
     width: screenWidth,
-    paddingBottom: 50,
-    height: screenHeight - 80,
     backgroundColor: '#fff',
   },
   inputContainer: { flexDirection: 'row' },
@@ -160,6 +162,9 @@ const styles = StyleSheet.create({
     borderRadius: 0,
     borderBottomWidth: 0,
     height: 45,
+  },
+  List: {
+    height: screenHeight - 142,
   },
 });
 

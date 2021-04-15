@@ -286,8 +286,10 @@ const Account: React.FC<AccountProps> = props => {
             <View style={styles.key}>
               <InputItem
                 placeholder="点击写备注..."
+                placeholderTextColor="#515151"
                 onChange={value => setInput(value)}
                 clear
+                style={{ color: '#515151' }}
                 value={input}
               >
                 备注:
@@ -469,7 +471,6 @@ const commonStyle: any = {
 const styles = StyleSheet.create({
   container: {
     width: screenWidth,
-    paddingBottom: 50,
     height: screenHeight - 70,
     backgroundColor: '#fff',
   },

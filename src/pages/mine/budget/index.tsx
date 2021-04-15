@@ -95,6 +95,7 @@ const Budget: React.FC<IProps> = props => {
           <View style={styles.input}>
             <View style={styles.inputItem}>
               <InputItem
+                placeholderTextColor="#515151"
                 placeholder={`请输入${type !== 'update' ? '设置' : '修改'}${
                   moment().month() + 1
                 }月的预算...`}
@@ -102,6 +103,7 @@ const Budget: React.FC<IProps> = props => {
                 type="number"
                 textAlign="center"
                 clear
+                style={{ color: '#515151' }}
                 value={input}
                 onChange={input => setInput(input)}
               />

@@ -289,16 +289,18 @@ const Record: React.FC<RecordProps> = props => {
         </TouchableOpacity>
         {Add()}
       </View>
-      <ScrollView style={styles.listContainer}>
-        {classifyList.length ? (
-          renderList(classifyList)
-        ) : (
-          <View style={styles.noRes}>
-            <Image source={require('@/assets/image/no_data.png')} />
-            <Text style={styles.noResText}>暂无数据</Text>
-          </View>
-        )}
-      </ScrollView>
+      <View style={styles.list}>
+        <ScrollView style={styles.listContainer}>
+          {classifyList.length ? (
+            renderList(classifyList)
+          ) : (
+            <View style={styles.noRes}>
+              <Image source={require('@/assets/image/no_data.png')} />
+              <Text style={styles.noResText}>暂无数据</Text>
+            </View>
+          )}
+        </ScrollView>
+      </View>
       <Modal
         popup
         visible={visible}
@@ -361,8 +363,10 @@ const Record: React.FC<RecordProps> = props => {
               <View style={styles.inputItem}>
                 <InputItem
                   placeholder={`请输入${inputModal.title}...`}
+                  placeholderTextColor="#515151"
                   maxLength={6}
                   clear
+                  style={{ color: '#515151' }}
                   value={inputModal.input}
                   textAlign="center"
                   onChange={input => setInputModal(pre => ({ ...pre, input }))}
@@ -463,9 +467,9 @@ const styles = StyleSheet.create({
     width: screenWidth,
     justifyContent: 'center',
   },
+  list: { width: screenWidth, height: screenHeight - 140 },
   listContainer: {
     width: screenWidth,
-    marginBottom: 130,
   },
   title: {
     width: screenWidth,

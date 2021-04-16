@@ -357,7 +357,7 @@ const Chart: React.FC<ChartProps> = () => {
 
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
-const bottom = suitHeight.find(i => i.height === screenHeight)?.chart || 0;
+const bottom = suitHeight.find(i => i.height === screenHeight)?.chart || 185;
 
 const styles = StyleSheet.create({
   container: { width: screenWidth },

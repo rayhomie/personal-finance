@@ -407,7 +407,7 @@ const headerItemStyle: any = {
   height: 45,
 };
 
-const bottom = suitHeight.find(i => i.height === screenHeight)?.record || 0;
+const bottom = suitHeight.find(i => i.height === screenHeight)?.record || 200;
 
 const styles = StyleSheet.create({
   allContainer: { backgroundColor: '#fff', height: screenHeight },

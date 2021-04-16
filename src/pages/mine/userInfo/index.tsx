@@ -157,6 +157,7 @@ const UserInfo: React.FC<IState> = props => {
           placeholder="请输入密码"
           clearButtonMode="while-editing"
           maxLength={16}
+          style={{ color: '#515151', width: 225 }}
           value={passwordForm.password}
           secureTextEntry={true}
         />
@@ -166,6 +167,7 @@ const UserInfo: React.FC<IState> = props => {
           placeholder="请输入二次确认密码"
           clearButtonMode="while-editing"
           maxLength={16}
+          style={{ color: '#515151', width: 225 }}
           value={passwordForm.confirmPassword}
           secureTextEntry={true}
         />

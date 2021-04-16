@@ -264,7 +264,7 @@ const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
 
 const bottom =
-  suitHeight.find(i => i.height === screenHeight)?.accountInfo || 0;
+  suitHeight.find(i => i.height === screenHeight)?.accountInfo || 430;
 
 const styles = StyleSheet.create({
   container: {

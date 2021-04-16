@@ -147,7 +147,7 @@ const RegisterModal: React.FC<IProps> = props => {
             name="username"
             title="用户名"
             maxLength={16}
-            style={{ color: '#515151' }}
+            style={{ color: '#515151', width: screenWidth - 150 }}
             placeholderTextColor="#515151"
             placeholder="请填写用户名"
             clearButtonMode="while-editing"
@@ -156,7 +156,7 @@ const RegisterModal: React.FC<IProps> = props => {
           <GiftedForm.TextInputWidget
             name="password"
             title="密码"
-            style={{ color: '#515151' }}
+            style={{ color: '#515151', width: screenWidth - 150 }}
             placeholderTextColor="#515151"
             maxLength={16}
             placeholder="请填写密码"
@@ -167,7 +167,7 @@ const RegisterModal: React.FC<IProps> = props => {
           <GiftedForm.TextInputWidget
             name="confirmPassword"
             title="确认密码"
-            style={{ color: '#515151' }}
+            style={{ color: '#515151', width: screenWidth - 150 }}
             placeholderTextColor="#515151"
             maxLength={16}
             placeholder="请再次确认密码"
@@ -187,7 +187,7 @@ const RegisterModal: React.FC<IProps> = props => {
             name="email"
             title="邮箱"
             placeholderTextColor="#515151"
-            style={{ color: '#515151' }}
+            style={{ color: '#515151', width: screenWidth - 150 }}
             keyboardType="email-address"
             placeholder="example@nomads.ly"
             clearButtonMode="while-editing"
@@ -198,7 +198,7 @@ const RegisterModal: React.FC<IProps> = props => {
             title="手机号"
             maxLength={11}
             placeholderTextColor="#515151"
-            style={{ color: '#515151' }}
+            style={{ color: '#515151', width: screenWidth - 150 }}
             keyboardType="phone-pad"
             placeholder="请输入11位手机号嘛"
             clearButtonMode="while-editing"

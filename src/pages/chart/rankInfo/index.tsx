@@ -157,7 +157,7 @@ const RankInfo: React.FC<RankInfoProps> = () => {
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
 
-const bottom = suitHeight.find(i => i.height === screenHeight)?.monthRank || 0;
+const bottom = suitHeight.find(i => i.height === screenHeight)?.monthRank || 80;
 
 const styles = StyleSheet.create({
   container: {

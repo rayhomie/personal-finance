@@ -8,8 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		00E356F31AD99517003FC87E /* personal_financeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* personal_financeTests.m */; };
-		04A6DAEA262953B30066C9DA /* assets in Resources */ = {isa = PBXBuildFile; fileRef = 04A6DAE8262953B30066C9DA /* assets */; };
-		04A6DAEB262953B30066C9DA /* main.jsbundle in Resources */ = {isa = PBXBuildFile; fileRef = 04A6DAE9262953B30066C9DA /* main.jsbundle */; };
+		043FA72E262995FF006C33F2 /* main.jsbundle in Resources */ = {isa = PBXBuildFile; fileRef = 043FA72C262995FF006C33F2 /* main.jsbundle */; };
+		043FA72F262995FF006C33F2 /* assets in Resources */ = {isa = PBXBuildFile; fileRef = 043FA72D262995FF006C33F2 /* assets */; };
 		04A6DB01262965DA0066C9DA /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 04A6DB00262965DA0066C9DA /* LaunchScreen.storyboard */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
@@ -48,8 +48,8 @@
 		00E356EE1AD99517003FC87E /* personal_financeTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = personal_financeTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* personal_financeTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = personal_financeTests.m; sourceTree = "<group>"; };
-		04A6DAE8262953B30066C9DA /* assets */ = {isa = PBXFileReference; lastKnownFileType = folder; name = assets; path = ../release_ios/assets; sourceTree = "<group>"; };
-		04A6DAE9262953B30066C9DA /* main.jsbundle */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = main.jsbundle; path = ../release_ios/main.jsbundle; sourceTree = "<group>"; };
+		043FA72C262995FF006C33F2 /* main.jsbundle */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = main.jsbundle; path = ../release_ios/main.jsbundle; sourceTree = "<group>"; };
+		043FA72D262995FF006C33F2 /* assets */ = {isa = PBXFileReference; lastKnownFileType = folder; name = assets; path = ../release_ios/assets; sourceTree = "<group>"; };
 		04A6DB00262965DA0066C9DA /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = personal_finance/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* personal_finance.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = personal_finance.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = personal_finance/AppDelegate.h; sourceTree = "<group>"; };
@@ -132,8 +132,8 @@
 		13B07FAE1A68108700A75B9A /* personal_finance */ = {
 			isa = PBXGroup;
 			children = (
-				04A6DAE8262953B30066C9DA /* assets */,
-				04A6DAE9262953B30066C9DA /* main.jsbundle */,
+				043FA72D262995FF006C33F2 /* assets */,
+				043FA72C262995FF006C33F2 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
 				04A6DB00262965DA0066C9DA /* LaunchScreen.storyboard */,
@@ -363,10 +363,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				04A6DAEA262953B30066C9DA /* assets in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
-				04A6DAEB262953B30066C9DA /* main.jsbundle in Resources */,
 				04A6DB01262965DA0066C9DA /* LaunchScreen.storyboard in Resources */,
+				043FA72E262995FF006C33F2 /* main.jsbundle in Resources */,
+				043FA72F262995FF006C33F2 /* assets in Resources */,
 				5D890ABF7D7B4443B84DADAB /* antfill.ttf in Resources */,
 				5F367B32C8EE4FFC9CF818AE /* antoutline.ttf in Resources */,
 			);

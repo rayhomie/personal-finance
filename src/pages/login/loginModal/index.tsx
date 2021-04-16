@@ -85,7 +85,7 @@ const LoginModal: React.FC<IProps> = props => {
           <GiftedForm.TextInputWidget
             name="username"
             title="用户名"
-            style={{ color: '#515151' }}
+            style={{ color: '#515151', width: screenWidth - 150 }}
             placeholder="请输入用户名"
             placeholderTextColor="#515151"
             clearButtonMode="while-editing"
@@ -95,7 +95,7 @@ const LoginModal: React.FC<IProps> = props => {
           <GiftedForm.TextInputWidget
             name="password"
             title="密码"
-            style={{ color: '#515151' }}
+            style={{ color: '#515151', width: screenWidth - 150 }}
             placeholderTextColor="#515151"
             placeholder="请输入密码"
             clearButtonMode="while-editing"

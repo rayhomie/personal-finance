@@ -149,7 +149,7 @@ const Add: React.FC<AddProps> = props => {
 
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
-const bottom = suitHeight.find(i => i.height === screenHeight)?.add || 0;
+const bottom = suitHeight.find(i => i.height === screenHeight)?.add || 155;
 
 const styles = StyleSheet.create({
   container: {

@@ -179,7 +179,7 @@ const CategorySetting: React.FC<CategorySettingProps> = props => {
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
 const bottom =
-  suitHeight.find(i => i.height === screenHeight)?.categorySetting || 0;
+  suitHeight.find(i => i.height === screenHeight)?.categorySetting || 65;
 
 const styles = StyleSheet.create({
   container: {

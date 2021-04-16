@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react';
 import {
@@ -47,13 +48,14 @@ const getValue = (key: string[]) =>
 
 const UserInfo: React.FC<IState> = props => {
   const { dispatch, user } = props as any;
-  const [gender, setGender] = useState<number>(1);
+  const [gender, setGender] = useState<number>(user?.gender);
   const [randomAvatar, setRandomAvatar] = useState<number>(0);
   const [passwordForm, setPasswordForm] = useState<PasswordFormType>({
     password: '',
     confirmPassword: '',
   });
   const [avatarModal, setAvatarModal] = useState<boolean>(false);
+  const [visible, setVisible] = useState<boolean>(false);
 
   const handlePasswordValueChange = (values: PasswordFormType) => {
     setPasswordForm(values);
@@ -261,47 +263,6 @@ const UserInfo: React.FC<IState> = props => {
     setGender(value === '男' ? 1 : 0);
   };
 
-  const genderChange = () => {
-    Modal.alert(
-      '修改性别',
-      <SegmentedControl
-        values={['女', '男']}
-        selectedIndex={gender}
-        style={styles.sexControl}
-        onValueChange={handleSex}
-      />,
-      [
-        {
-          text: '取消',
-          onPress: () => {
-            setGender(user?.gender);
-          },
-          style: 'cancel',
-        },
-        {
-          text: '确认',
-          onPress: () => {
-            (dispatch as Dispatch)({
-              type: 'user/updateInfo',
-              payload: {
-                gender: user?.gender,
-                success: () => {
-                  getUserInfo();
-                  Toast.success('性别修改成功', 0.5);
-                },
-                fail: () => {
-                  Toast.fail('请选择和现在不一样的性别', 0.5, () =>
-                    setGender(user?.gender)
-                  );
-                },
-              },
-            });
-          },
-        },
-      ]
-    );
-  };
-
   const mobileChange = () => {
     Modal.prompt(
       '修改手机号',
@@ -392,7 +353,36 @@ const UserInfo: React.FC<IState> = props => {
     setAvatarModal(true);
   };
 
-  console.log(screenWidth, screenHeight);
+  const footerButtons = [
+    {
+      text: '取消',
+      onPress: () => {
+        setGender(user?.gender);
+      },
+    },
+    {
+      text: '确认',
+      onPress: () => {
+        console.log(gender, user?.gender, '确认');
+        (dispatch as Dispatch)({
+          type: 'user/updateInfo',
+          payload: {
+            gender,
+            success: () => {
+              getUserInfo();
+              setGender(gender ? 1 : 0);
+              Toast.success('性别修改成功', 0.5);
+            },
+            fail: () => {
+              Toast.fail('请选择和现在不一样的性别', 0.5, () =>
+                setGender(user?.gender)
+              );
+            },
+          },
+        });
+      },
+    },
+  ];
 
   const { avatar_url, username, email, mobile_number, _id } = user as any;
   return (
@@ -451,7 +441,7 @@ const UserInfo: React.FC<IState> = props => {
             <Text style={styles.right}>{username}</Text>
           </LinearGradient>
         </TouchableOpacity>
-        <TouchableOpacity activeOpacity={0.5} onPress={genderChange}>
+        <TouchableOpacity activeOpacity={0.5} onPress={() => setVisible(true)}>
           <LinearGradient
             start={{ x: 0.0, y: 0.0 }}
             end={{ x: 1, y: 1 }}
@@ -543,6 +533,32 @@ const UserInfo: React.FC<IState> = props => {
             />
           </View>
         </LinearGradient>
+      </Modal>
+      <Modal
+        title="修改性别"
+        transparent
+        onClose={() => {
+          setVisible(false);
+          setGender(user?.gender);
+        }}
+        maskClosable
+        visible={visible}
+        footer={footerButtons}
+      >
+        <View
+          style={{
+            paddingTop: 20,
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <SegmentedControl
+            values={['女', '男']}
+            selectedIndex={user?.gender}
+            style={styles.sexControl}
+            onValueChange={handleSex}
+          />
+        </View>
       </Modal>
     </View>
   );

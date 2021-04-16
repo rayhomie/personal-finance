@@ -459,7 +459,7 @@ const category_icon_width = 50;
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
 
-const bottom = suitHeight.find(i => i.height === screenHeight)?.account || 30;
+const bottom = suitHeight.find(i => i.height === screenHeight)?.account || 80;
 
 const space = (screenWidth - category_item_width * 4) / 5;
 const commonStyle: any = {
@@ -475,6 +475,7 @@ const commonStyle: any = {
 const styles = StyleSheet.create({
   container: {
     width: screenWidth,
+    height: screenHeight - 35 - bottom,
     backgroundColor: '#fff',
     marginBottom: bottom,
   },

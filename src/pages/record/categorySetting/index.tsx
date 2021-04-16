@@ -179,11 +179,12 @@ const CategorySetting: React.FC<CategorySettingProps> = props => {
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
 const bottom =
-  suitHeight.find(i => i.height === screenHeight)?.categorySetting || 65;
+  suitHeight.find(i => i.height === screenHeight)?.categorySetting || 95;
 
 const styles = StyleSheet.create({
   container: {
     width: screenWidth,
+    height: screenHeight + 30 - bottom,
     backgroundColor: '#fff',
   },
   FlatList: {

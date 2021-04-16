@@ -12,6 +12,7 @@ import { connect } from 'react-redux';
 import NavigationUtil from '@/navigator/NavigationUtil';
 import List from './list';
 import { ImageManager } from '@/assets/json/ImageManager';
+import suitHeight from '@/utils/suitableHeight';
 
 const IM: any = ImageManager;
 
@@ -148,6 +149,7 @@ const Add: React.FC<AddProps> = props => {
 
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
+const bottom = suitHeight.find(i => i.height === screenHeight)?.add || 0;
 
 const styles = StyleSheet.create({
   container: {
@@ -163,9 +165,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0,
     height: 45,
   },
-  List: {
-    height: screenHeight - 142,
-  },
+  List: { marginBottom: bottom },
 });
 
 export default connect(({ record }: AddProps) => ({

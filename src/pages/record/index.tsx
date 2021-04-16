@@ -18,6 +18,7 @@ import NavigationUtil from '@/navigator/NavigationUtil';
 import { ImageManager } from '@/assets/json/ImageManager';
 import { verifyToken } from '@/service/app';
 import LinearGradient from 'react-native-linear-gradient';
+import suitHeight from '@/utils/suitableHeight';
 
 const IM: any = ImageManager;
 interface RecordProps extends ConnectState, ConnectProps {
@@ -310,9 +311,8 @@ const Record: React.FC<RecordProps> = props => {
       >
         <LinearGradient
           start={{ x: 0.0, y: 0.0 }}
-          end={{ x: 0.5, y: 0.65 }}
-          locations={[0, 1]}
-          colors={['#ffeaaa', '#fffcdc']}
+          end={{ x: 1.0, y: 1.0 }}
+          colors={['#d9a7c7', '#fffcdc']}
           style={styles.modal}
         >
           <View style={styles.modalHeader}>
@@ -407,6 +407,8 @@ const headerItemStyle: any = {
   height: 45,
 };
 
+const bottom = suitHeight.find(i => i.height === screenHeight)?.record || 0;
+
 const styles = StyleSheet.create({
   allContainer: { backgroundColor: '#fff', height: screenHeight },
   header: {
@@ -456,20 +458,21 @@ const styles = StyleSheet.create({
   btnCancel: {
     fontSize: 18,
     marginLeft: 10,
-    color: '#FDB99B',
+    color: '#636e72',
   },
-  btnConfirm: { color: '#d9a7c7', fontSize: 18, marginRight: 10 },
+  btnConfirm: { color: '#636e72', fontSize: 18, marginRight: 10 },
   btnText: {
     fontSize: 20,
-    color: '#FDB99B',
+    color: '#2d3436',
   },
   datePicker: {
     width: screenWidth,
     justifyContent: 'center',
   },
-  list: { width: screenWidth, height: screenHeight - 140 },
+  list: { width: screenWidth },
   listContainer: {
     width: screenWidth,
+    marginBottom: bottom,
   },
   title: {
     width: screenWidth,

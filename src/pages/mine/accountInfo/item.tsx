@@ -89,7 +89,7 @@ const AccountInfoItem: React.FC<AccountInfoItemProps> = () => {
   const List = useMemo(
     () =>
       pieData.map((i, index) => (
-        <View style={styles.pieRightListItem}>
+        <View style={styles.pieRightListItem} key={i.name}>
           <View style={{ ...styles.color, backgroundColor: colors[index] }} />
           <Text style={styles.classValue}>{i.name}</Text>
           <Text style={styles.proportionValue}>{`${i.proportion}%`}</Text>
@@ -244,12 +244,12 @@ const styles = StyleSheet.create({
   container: {
     width: screenWidth,
     height: screenHeight,
-    backgroundColor: '#fad749',
+    backgroundColor: '#fef5dd',
   },
   header: {
     flexDirection: 'row',
     height: 40,
-    backgroundColor: '#fad749',
+    backgroundColor: '#fef6dd',
   },
   headerBack: {
     flexDirection: 'row',
@@ -268,7 +268,7 @@ const styles = StyleSheet.create({
   },
   headerTitleText: { fontSize: 20 },
   head: {
-    backgroundColor: '#fad749',
+    backgroundColor: '#fef6dd',
     height: 200,
     alignItems: 'center',
   },

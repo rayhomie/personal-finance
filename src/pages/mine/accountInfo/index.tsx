@@ -16,6 +16,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import LinearGradient from 'react-native-linear-gradient';
 import NavigationUtil from '@/navigator/NavigationUtil';
 import { mineAccount } from '@/service/bill';
+import suitHeight from '@/utils/suitableHeight';
 
 interface AccountInfoProps {}
 
@@ -105,9 +106,8 @@ const AccountInfo: React.FC<AccountInfoProps> = () => {
       >
         <LinearGradient
           start={{ x: 0.0, y: 0.0 }}
-          end={{ x: 0.5, y: 0.65 }}
-          locations={[0, 1]}
-          colors={['#ffeaaa', '#fffcdc']}
+          end={{ x: 1.0, y: 1.0 }}
+          colors={['#d9a7c7', '#fffcdc']}
           style={styles.modal}
         >
           <View style={styles.modalHeader}>
@@ -247,7 +247,6 @@ const AccountInfo: React.FC<AccountInfoProps> = () => {
             data={list}
             renderItem={renderItem}
             keyExtractor={item => item.date}
-            style={{ marginBottom: 80 }}
           />
         ) : (
           <View style={styles.noRes}>
@@ -263,16 +262,20 @@ const AccountInfo: React.FC<AccountInfoProps> = () => {
 
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
+
+const bottom =
+  suitHeight.find(i => i.height === screenHeight)?.accountInfo || 0;
+
 const styles = StyleSheet.create({
   container: {
     width: screenWidth,
-    backgroundColor: '#fff',
+    backgroundColor: '#fef6dd',
   },
-  list: { height: screenHeight - 165 },
+  list: { marginBottom: bottom },
   header: {
     flexDirection: 'row',
     height: 40,
-    backgroundColor: '#fad749',
+    backgroundColor: '#fef6dd',
   },
   headerBack: {
     flexDirection: 'row',
@@ -290,7 +293,7 @@ const styles = StyleSheet.create({
   },
   headerTitleText: { fontSize: 20 },
   icon: { width: 15, height: 15, marginLeft: 5 },
-  rest: { height: 150, backgroundColor: '#fad749' },
+  rest: { height: 150, backgroundColor: '#fef6dd' },
   restTop: {
     height: 100,
     alignItems: 'center',
@@ -345,12 +348,12 @@ const styles = StyleSheet.create({
   btnCancel: {
     fontSize: 18,
     marginLeft: 10,
-    color: '#FDB99B',
+    color: '#636e72',
   },
-  btnConfirm: { color: '#d9a7c7', fontSize: 18, marginRight: 10 },
+  btnConfirm: { color: '#636e72', fontSize: 18, marginRight: 10 },
   btnText: {
     fontSize: 20,
-    color: '#FDB99B',
+    color: '#2d3436',
   },
   datePicker: {
     width: screenWidth,

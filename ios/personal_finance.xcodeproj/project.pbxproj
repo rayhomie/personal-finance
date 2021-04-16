@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		00E356F31AD99517003FC87E /* personal_financeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* personal_financeTests.m */; };
+		04A6DAEA262953B30066C9DA /* assets in Resources */ = {isa = PBXBuildFile; fileRef = 04A6DAE8262953B30066C9DA /* assets */; };
+		04A6DAEB262953B30066C9DA /* main.jsbundle in Resources */ = {isa = PBXBuildFile; fileRef = 04A6DAE9262953B30066C9DA /* main.jsbundle */; };
+		04A6DB01262965DA0066C9DA /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 04A6DB00262965DA0066C9DA /* LaunchScreen.storyboard */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
@@ -20,7 +23,6 @@
 		5D890ABF7D7B4443B84DADAB /* antfill.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 780A291697024953A18EFAA9 /* antfill.ttf */; };
 		5F367B32C8EE4FFC9CF818AE /* antoutline.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9206072D1B5149CF8E50622F /* antoutline.ttf */; };
 		6DD94FEA1E97A039FBEEDBCD /* libPods-personal_finance.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F14A3FA2202BFD1A2DF7075E /* libPods-personal_finance.a */; };
-		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		9D9CABAC9CF422E4E90FDDBD /* libPods-personal_finance-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 877277B69391703A3E9802C8 /* libPods-personal_finance-tvOS.a */; };
 /* End PBXBuildFile section */
 
@@ -43,10 +45,12 @@
 
 /* Begin PBXFileReference section */
 		00365C9C440CC506BDEC1834 /* Pods-personal_finance-tvOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-personal_finance-tvOSTests.release.xcconfig"; path = "Target Support Files/Pods-personal_finance-tvOSTests/Pods-personal_finance-tvOSTests.release.xcconfig"; sourceTree = "<group>"; };
-		008F07F21AC5B25A0029DE68 /* main.jsbundle */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = main.jsbundle; sourceTree = "<group>"; };
 		00E356EE1AD99517003FC87E /* personal_financeTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = personal_financeTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* personal_financeTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = personal_financeTests.m; sourceTree = "<group>"; };
+		04A6DAE8262953B30066C9DA /* assets */ = {isa = PBXFileReference; lastKnownFileType = folder; name = assets; path = ../release_ios/assets; sourceTree = "<group>"; };
+		04A6DAE9262953B30066C9DA /* main.jsbundle */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = main.jsbundle; path = ../release_ios/main.jsbundle; sourceTree = "<group>"; };
+		04A6DB00262965DA0066C9DA /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = personal_finance/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* personal_finance.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = personal_finance.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = personal_finance/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = personal_finance/AppDelegate.m; sourceTree = "<group>"; };
@@ -57,11 +61,10 @@
 		2D02E4901E0B4A5D006451C7 /* personal_finance-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "personal_finance-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		34BDA4C5DEE119B2E8ABAC70 /* libPods-personal_finance-personal_financeTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-personal_finance-personal_financeTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		552ECCE1E93700F1F075736D /* Pods-personal_finance-tvOSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-personal_finance-tvOSTests.debug.xcconfig"; path = "Target Support Files/Pods-personal_finance-tvOSTests/Pods-personal_finance-tvOSTests.debug.xcconfig"; sourceTree = "<group>"; };
-		780A291697024953A18EFAA9 /* antfill.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = antfill.ttf; path = "../node_modules/@ant-design/icons-react-native/fonts/antfill.ttf"; sourceTree = "<group>"; };
-		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = personal_finance/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		780A291697024953A18EFAA9 /* antfill.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = antfill.ttf; path = "../node_modules/@ant-design/icons-react-native/fonts/antfill.ttf"; sourceTree = "<group>"; };
 		877277B69391703A3E9802C8 /* libPods-personal_finance-tvOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-personal_finance-tvOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8E34BE2811F81719DBC18A5A /* Pods-personal_finance-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-personal_finance-tvOS.release.xcconfig"; path = "Target Support Files/Pods-personal_finance-tvOS/Pods-personal_finance-tvOS.release.xcconfig"; sourceTree = "<group>"; };
-		9206072D1B5149CF8E50622F /* antoutline.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = antoutline.ttf; path = "../node_modules/@ant-design/icons-react-native/fonts/antoutline.ttf"; sourceTree = "<group>"; };
+		9206072D1B5149CF8E50622F /* antoutline.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = antoutline.ttf; path = "../node_modules/@ant-design/icons-react-native/fonts/antoutline.ttf"; sourceTree = "<group>"; };
 		A260127460F489FA74A97723 /* Pods-personal_finance.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-personal_finance.debug.xcconfig"; path = "Target Support Files/Pods-personal_finance/Pods-personal_finance.debug.xcconfig"; sourceTree = "<group>"; };
 		AEBFF3EAC96E5234BA47D169 /* Pods-personal_finance-personal_financeTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-personal_finance-personal_financeTests.debug.xcconfig"; path = "Target Support Files/Pods-personal_finance-personal_financeTests/Pods-personal_finance-personal_financeTests.debug.xcconfig"; sourceTree = "<group>"; };
 		BF38D7B04C6DEDF03B49BA9F /* Pods-personal_finance-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-personal_finance-tvOS.debug.xcconfig"; path = "Target Support Files/Pods-personal_finance-tvOS/Pods-personal_finance-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
@@ -129,12 +132,13 @@
 		13B07FAE1A68108700A75B9A /* personal_finance */ = {
 			isa = PBXGroup;
 			children = (
-				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
+				04A6DAE8262953B30066C9DA /* assets */,
+				04A6DAE9262953B30066C9DA /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
+				04A6DB00262965DA0066C9DA /* LaunchScreen.storyboard */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
-				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
 				13B07FB71A68108700A75B9A /* main.m */,
 			);
 			name = personal_finance;
@@ -165,7 +169,6 @@
 				552ECCE1E93700F1F075736D /* Pods-personal_finance-tvOSTests.debug.xcconfig */,
 				00365C9C440CC506BDEC1834 /* Pods-personal_finance-tvOSTests.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -210,7 +213,6 @@
 				9206072D1B5149CF8E50622F /* antoutline.ttf */,
 			);
 			name = Resources;
-			path = "";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -308,17 +310,21 @@
 				TargetAttributes = {
 					00E356ED1AD99517003FC87E = {
 						CreatedOnToolsVersion = 6.2;
+						DevelopmentTeam = 857DAJRUP5;
 						TestTargetID = 13B07F861A680F5B00A75B9A;
 					};
 					13B07F861A680F5B00A75B9A = {
+						DevelopmentTeam = 857DAJRUP5;
 						LastSwiftMigration = 1120;
 					};
 					2D02E47A1E0B4A5D006451C7 = {
 						CreatedOnToolsVersion = 8.2.1;
+						DevelopmentTeam = 857DAJRUP5;
 						ProvisioningStyle = Automatic;
 					};
 					2D02E48F1E0B4A5D006451C7 = {
 						CreatedOnToolsVersion = 8.2.1;
+						DevelopmentTeam = 857DAJRUP5;
 						ProvisioningStyle = Automatic;
 						TestTargetID = 2D02E47A1E0B4A5D006451C7;
 					};
@@ -357,8 +363,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
+				04A6DAEA262953B30066C9DA /* assets in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
+				04A6DAEB262953B30066C9DA /* main.jsbundle in Resources */,
+				04A6DB01262965DA0066C9DA /* LaunchScreen.storyboard in Resources */,
 				5D890ABF7D7B4443B84DADAB /* antfill.ttf in Resources */,
 				5F367B32C8EE4FFC9CF818AE /* antoutline.ttf in Resources */,
 			);
@@ -670,6 +678,7 @@
 			baseConfigurationReference = AEBFF3EAC96E5234BA47D169 /* Pods-personal_finance-personal_financeTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				DEVELOPMENT_TEAM = 857DAJRUP5;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -694,6 +703,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
+				DEVELOPMENT_TEAM = 857DAJRUP5;
 				INFOPLIST_FILE = personal_financeTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -715,6 +725,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 857DAJRUP5;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = personal_finance/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -738,6 +749,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 857DAJRUP5;
 				INFOPLIST_FILE = personal_finance/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
@@ -763,6 +775,7 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = 857DAJRUP5;
 				ENABLE_TESTABILITY = YES;
 				GCC_NO_COMMON_BLOCKS = YES;
 				INFOPLIST_FILE = "personal_finance-tvOS/Info.plist";
@@ -792,6 +805,7 @@
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = 857DAJRUP5;
 				GCC_NO_COMMON_BLOCKS = YES;
 				INFOPLIST_FILE = "personal_finance-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -818,6 +832,7 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = 857DAJRUP5;
 				ENABLE_TESTABILITY = YES;
 				GCC_NO_COMMON_BLOCKS = YES;
 				INFOPLIST_FILE = "personal_finance-tvOSTests/Info.plist";
@@ -846,6 +861,7 @@
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = 857DAJRUP5;
 				GCC_NO_COMMON_BLOCKS = YES;
 				INFOPLIST_FILE = "personal_finance-tvOSTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";

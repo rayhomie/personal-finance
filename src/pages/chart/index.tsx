@@ -24,6 +24,7 @@ import getTitle from './tabTitles';
 import { getRank } from '@/service/chart';
 import NavigationUtil from '@/navigator/NavigationUtil';
 import { ImageManager } from '@/assets/json/ImageManager';
+import suitHeight from '@/utils/suitableHeight';
 
 const IM: any = ImageManager;
 
@@ -199,10 +200,10 @@ const Chart: React.FC<ChartProps> = () => {
             height={300}
             width={450}
             containerComponent={<VictoryVoronoiContainer />}
-            animate={{
-              duration: 500,
-              onLoad: { duration: 500 },
-            }}
+            // animate={{
+            //   duration: 500,
+            //   onLoad: { duration: 500 },
+            // }}
           >
             <VictoryLine
               labelComponent={<VictoryTooltip renderInPortal={false} />}
@@ -325,13 +326,15 @@ const Chart: React.FC<ChartProps> = () => {
           />
         </TouchableOpacity>
       </View>
-      <SegmentedControl
-        values={['周', '月', '年']}
-        selectedIndex={type - 1}
-        style={styles.typeControl}
-        onChange={handleType}
-        tintColor="#f9d96b"
-      />
+      <View style={styles.type}>
+        <SegmentedControl
+          values={['周', '月', '年']}
+          selectedIndex={type - 1}
+          style={styles.typeControl}
+          onChange={handleType}
+          tintColor="#f9d96b"
+        />
+      </View>
       <View style={styles.Tab}>
         <Tabs
           key={key}
@@ -354,6 +357,7 @@ const Chart: React.FC<ChartProps> = () => {
 
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
+const bottom = suitHeight.find(i => i.height === screenHeight)?.chart || 0;
 
 const styles = StyleSheet.create({
   container: { width: screenWidth },
@@ -362,12 +366,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 5,
+    backgroundColor: '#fef6dd',
   },
   headerText: {
     fontSize: 20,
   },
   icon: { width: 15, height: 15, marginLeft: 2 },
-  typeControl: { backgroundColor: '#2c2c2c' },
+  type: { backgroundColor: '#fef6dd' },
+  typeControl: {
+    backgroundColor: '#2c2c2c',
+    width: screenWidth - 20,
+    marginLeft: 10,
+  },
   iscomeModal: { paddingTop: 50 },
   listItem: {
     flexDirection: 'row',
@@ -397,7 +407,7 @@ const styles = StyleSheet.create({
   lineRight: { width: screenWidth - 50, height: 1, backgroundColor: '#bfbfbf' },
   Tab: {
     width: screenWidth,
-    height: screenHeight - 130,
+    height: screenHeight - bottom,
   },
   chart: {
     justifyContent: 'center',

@@ -373,7 +373,7 @@ const UserInfo: React.FC<IState> = props => {
           (dispatch as Dispatch)({
             type: 'user/updateInfo',
             payload: {
-              avatar_url: res.data.res.requestUrls[0],
+              avatar_url: res.data.res.requestUrls[0].split('?')[0],
               success: () => {
                 getUserInfo();
                 Toast.success('头像更改成功', 0.5);
@@ -389,6 +389,8 @@ const UserInfo: React.FC<IState> = props => {
   const openAvatar = () => {
     setAvatarModal(true);
   };
+
+  console.log(screenWidth, screenHeight);
 
   const { avatar_url, username, email, mobile_number, _id } = user as any;
   return (

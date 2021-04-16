@@ -19,6 +19,7 @@ import { ConnectProps, ConnectState, Dispatch } from '@/models/connect';
 import { connect } from 'react-redux';
 import NavigationUtil from '@/navigator/NavigationUtil';
 import { ImageManager } from '@/assets/json/ImageManager';
+import suitHeight from '@/utils/suitableHeight';
 
 const category_list = require('@/assets/json/Category.json');
 
@@ -177,6 +178,8 @@ const CategorySetting: React.FC<CategorySettingProps> = props => {
 
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
+const bottom =
+  suitHeight.find(i => i.height === screenHeight)?.categorySetting || 0;
 
 const styles = StyleSheet.create({
   container: {
@@ -184,7 +187,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   FlatList: {
-    height: screenHeight - 100,
+    marginBottom: bottom,
   },
   item: {
     flexDirection: 'row',

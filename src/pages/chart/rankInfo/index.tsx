@@ -15,6 +15,7 @@ import moment from 'moment';
 import NavigationUtil from '@/navigator/NavigationUtil';
 import { getRankItem } from '@/service/chart';
 import { ImageManager } from '@/assets/json/ImageManager';
+import suitHeight from '@/utils/suitableHeight';
 
 const IM: any = ImageManager;
 
@@ -156,6 +157,8 @@ const RankInfo: React.FC<RankInfoProps> = () => {
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
 
+const bottom = suitHeight.find(i => i.height === screenHeight)?.monthRank || 0;
+
 const styles = StyleSheet.create({
   container: {
     width: screenWidth,
@@ -188,7 +191,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  content: { margin: 10 },
+  content: { padding: 10, width: screenWidth, marginBottom: bottom },
   rankItem: {
     flexDirection: 'row',
     height: 70,

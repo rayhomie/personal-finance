@@ -22,6 +22,7 @@ import { connect } from 'react-redux';
 import moment from 'moment';
 import NavigationUtil from '@/navigator/NavigationUtil';
 import { ImageManager } from '@/assets/json/ImageManager';
+import suitHeight from '@/utils/suitableHeight';
 
 const category_list = require('@/assets/json/Category.json');
 
@@ -457,6 +458,9 @@ const category_item_width = 70;
 const category_icon_width = 50;
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
+
+const bottom = suitHeight.find(i => i.height === screenHeight)?.account || 0;
+
 const space = (screenWidth - category_item_width * 4) / 5;
 const commonStyle: any = {
   width: screenWidth / 4,
@@ -471,8 +475,8 @@ const commonStyle: any = {
 const styles = StyleSheet.create({
   container: {
     width: screenWidth,
-    height: screenHeight - 70,
     backgroundColor: '#fff',
+    marginBottom: bottom,
   },
   bill_category: {
     width: screenWidth,

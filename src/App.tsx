@@ -7,7 +7,6 @@ import dva from './models/dva';
 import models from './models/index';
 // import AppNavigators from './navigator/AppNavigators';
 import Router from './navigator/router';
-import { Colors } from 'react-native/Libraries/NewAppScreen';
 import { Provider as AntdProvider } from '@ant-design/react-native';
 import Login from '@/pages/login/index';
 
@@ -35,7 +34,7 @@ const App = () => {
 const styles = StyleSheet.create({
   safeAreaView: {
     flex: 1,
-    backgroundColor: Colors.lighter,
+    backgroundColor: '#fef6dd',
   },
 });
 

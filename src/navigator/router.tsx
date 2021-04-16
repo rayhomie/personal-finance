@@ -25,6 +25,7 @@ const renderTabBar = () => (
   <Tab.Navigator
     tabBarOptions={{
       activeTintColor: '#515151',
+      tabStyle: { backgroundColor: '#fef6dd' },
     }}
   >
     <Tab.Screen
@@ -90,28 +91,40 @@ export default function Router() {
           component={renderTabBar}
           options={{
             // headerTitle: RecordAdd,
-            // headerStyle: { height: screenHeight * 2 - 170 },
             // headerTransparent: true,
             header: () => <></>,
           }}
         />
-        <Stack.Screen name="用户信息" component={UserInfo} />
+        <Stack.Screen
+          name="用户信息"
+          options={{
+            headerStyle: { backgroundColor: '#fef6dd' },
+          }}
+          component={UserInfo}
+        />
         <Stack.Screen
           name="记账"
           component={Account}
-          options={{ headerTitle: () => <></> }}
+          options={{
+            headerTitle: () => <></>,
+            headerStyle: { backgroundColor: '#fef6dd' },
+          }}
         />
         <Stack.Screen
           name="分类设置"
           component={CategorySetting}
           options={{
             headerRight: CategorySettingAdd,
+            headerStyle: { backgroundColor: '#fef6dd' },
           }}
         />
         <Stack.Screen
           name="添加分类"
           component={Add}
-          options={{ headerTitle: () => <></> }}
+          options={{
+            headerTitle: () => <></>,
+            headerStyle: { backgroundColor: '#fef6dd' },
+          }}
         />
         <Stack.Screen
           name="收支排行详情"

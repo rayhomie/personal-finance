@@ -16,6 +16,7 @@ import moment from 'moment';
 import NavigationUtil from '@/navigator/NavigationUtil';
 import { getMonthRanked } from '@/service/bill';
 import { ImageManager } from '@/assets/json/ImageManager';
+import suitHeight from '@/utils/suitableHeight';
 
 const IM: any = ImageManager;
 
@@ -161,6 +162,7 @@ const MonthRank: React.FC<MonthRankProps> = () => {
 
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
+const bottom = suitHeight.find(i => i.height === screenHeight)?.monthRank || 0;
 
 const styles = StyleSheet.create({
   container: {
@@ -197,7 +199,7 @@ const styles = StyleSheet.create({
   content: {
     padding: 10,
     width: screenWidth,
-    marginBottom: 80,
+    marginBottom: bottom,
   },
   rankItem: {
     flexDirection: 'row',

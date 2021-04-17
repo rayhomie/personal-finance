@@ -333,8 +333,7 @@ const UserInfo: React.FC<IState> = props => {
       let file = {
         uri: image.path,
         name: image.filename,
-        type: image.mime,
-        'content-type': 'multipart/form-data',
+        // type: image.mime,
       };
       console.log(image);
       formData.append('image', file);

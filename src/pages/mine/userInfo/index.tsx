@@ -330,7 +330,14 @@ const UserInfo: React.FC<IState> = props => {
       cropping: true,
     }).then(image => {
       const formData = new FormData();
-      formData.append('image', image);
+      let file = {
+        uri: image.path,
+        name: image.filename,
+        type: image.mime,
+        'content-type': 'multipart/form-data',
+      };
+      console.log(image);
+      formData.append('image', file);
       updatePicture(formData).then(res => {
         if (res.data.code === 0) {
           (dispatch as Dispatch)({

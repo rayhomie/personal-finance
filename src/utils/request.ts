@@ -11,7 +11,10 @@ const instance = axios.create({
   },
   transformRequest: [
     data => {
-      data = JSON.stringify(data);
+      // 上传判断是否是formdata，否则不需要转
+      if (!(data instanceof FormData)) {
+        data = JSON.stringify(data);
+      }
       return data;
     },
   ],

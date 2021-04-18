@@ -42,14 +42,14 @@ const CategorySetting: React.FC<CategorySettingProps> = props => {
   const [visible, setVisible] = useState<boolean>(false);
   const [curDel, setCurDel] = useState<curDelType>({ id: '', name: '' });
   const { dispatch, record } = props;
-  const { noSystemList } = record as any;
+  const { noSystemList, addSuccess } = record as any;
 
   useEffect(() => {
     (dispatch as Dispatch)({
       type: 'record/getNoSystem',
       payload: { is_income: payOrIncome === 'pay' ? 0 : 1 },
     });
-  }, [payOrIncome]);
+  }, [payOrIncome, addSuccess]);
 
   useEffect(() => {
     setCategoryList([

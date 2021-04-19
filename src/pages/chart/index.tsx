@@ -54,6 +54,8 @@ const Chart: React.FC<ChartProps> = () => {
   // 选择的tab
   const [selected, setSelected] = useState<string>('');
 
+  const [time, setTime] = useState<number>(nowUnix);
+
   useEffect(() => {
     setTabTitle(getTitle[type](nowUnix));
     // console.log(getTitle[type](nowUnix));
@@ -61,11 +63,11 @@ const Chart: React.FC<ChartProps> = () => {
 
   useEffect(() => {
     getRankData(
-      moment.unix(nowUnix).format('YYYY-MM-DD HH:mm:ss'),
+      moment.unix(time).format('YYYY-MM-DD HH:mm:ss'),
       showIsIncome.is_income,
       type
     );
-  }, [type, showIsIncome.is_income]);
+  }, [type, showIsIncome.is_income, time]);
 
   useEffect(() => {
     setKey(Math.random().toString().slice(2));
@@ -256,7 +258,7 @@ const Chart: React.FC<ChartProps> = () => {
                       type,
                       category_id: i._id,
                       title: i.name,
-                      date: moment.unix(nowUnix).format('YYYY-MM-DD HH:mm:ss'),
+                      date: moment.unix(time).format('YYYY-MM-DD HH:mm:ss'),
                       total: i.total,
                     })
                   }
@@ -302,12 +304,14 @@ const Chart: React.FC<ChartProps> = () => {
     if (tab.title === selected) {
       return;
     }
-    getRankData(
-      moment.unix(tab.date).format('YYYY-MM-DD HH:mm:ss'),
-      showIsIncome.is_income,
-      type
-    );
+    setTime(tab.date);
     setSelected(tab.title);
+    // console.log(moment.unix(tab.date).format('YYYY-MM-DD HH:mm:ss'));
+    // getRankData(
+    //   moment.unix(tab.date).format('YYYY-MM-DD HH:mm:ss'),
+    //   showIsIncome.is_income,
+    //   type
+    // );
   };
 
   return (

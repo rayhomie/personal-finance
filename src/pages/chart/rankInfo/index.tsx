@@ -56,6 +56,7 @@ const RankInfo: React.FC<RankInfoProps> = () => {
 
   const getRankInfo = async (payload: ParamsType) => {
     const { type, date, category_id } = payload;
+    console.log(date);
     const result = await getRankItem({ type, date, category_id, sort });
     if (result.data.code !== 0) {
       setRes([]);

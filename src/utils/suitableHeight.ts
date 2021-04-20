@@ -23,7 +23,7 @@ const deviceMap = [
     add: 155,
     chart: 125,
     accountInfo: 440,
-    monthAccount: 10,
+    monthAccount: 20,
   },
   {
     name: 'iPhone8Plus',
@@ -36,7 +36,7 @@ const deviceMap = [
     add: 155,
     chart: 125,
     accountInfo: 440,
-    monthAccount: 10,
+    monthAccount: 20,
   },
 ];
 

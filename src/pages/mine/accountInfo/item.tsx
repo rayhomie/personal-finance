@@ -12,7 +12,9 @@ import {
 import { VictoryPie } from 'victory-native';
 import { Svg } from 'react-native-svg';
 import moment from 'moment';
+import Tooltip from 'rn-tooltip';
 import { mineAccountItem, getMonthRanked } from '@/service/bill';
+import { pay_income } from '@/service/analyse';
 import avatarArr from '@/assets/json/avatarMap';
 import NavigationUtil from '@/navigator/NavigationUtil';
 import { ImageManager } from '@/assets/json/ImageManager';
@@ -48,6 +50,7 @@ enum colors {
 }
 
 const AccountInfoItem: React.FC<AccountInfoItemProps> = () => {
+  const date = (NavigationUtil.getParams() as any).date;
   const [randomAvatar, setRandomAvatar] = useState<number>(0);
   const [userinfo, setUserinfo] = useState<UserinfoType>({
     username: '',
@@ -61,12 +64,14 @@ const AccountInfoItem: React.FC<AccountInfoItemProps> = () => {
   });
   const [pieData, setPieData] = useState<PieDataType[]>([]);
   const [rank, setRank] = useState<any[]>([]);
+  const [msg, setMsg] = useState<any>({});
 
   useEffect(() => {
-    getMineAccountItem((NavigationUtil.getParams() as any).date);
-    getMonthRank((NavigationUtil.getParams() as any).date);
+    getMineAccountItem(date);
+    getMonthRank(date);
+    getAnalyse(date);
     setRandomAvatar(((Math.random() * 10000) | 0) % 27);
-  }, []);
+  }, [date]);
 
   const getMineAccountItem = async (date: number) => {
     const res = await mineAccountItem({
@@ -98,12 +103,22 @@ const AccountInfoItem: React.FC<AccountInfoItemProps> = () => {
       is_income: 0,
       sort: 'amount',
     });
-    console.log(res);
     if (res.data.code !== 0) {
       setRank([]);
       return;
     }
     setRank(res.data.docs);
+  };
+
+  const getAnalyse = async (date: number) => {
+    const res = await pay_income({
+      date: moment.unix(date).format('YYYY-MM-DD HH:mm:ss'),
+      type: 'all',
+    });
+    if (res.data.code !== 0) {
+      setMsg({});
+    }
+    setMsg(res.data.all_msg);
   };
 
   const List = useMemo(
@@ -156,9 +171,7 @@ const AccountInfoItem: React.FC<AccountInfoItemProps> = () => {
         </TouchableOpacity>
         <View style={styles.headerTitle}>
           <Text style={styles.headerTitleText}>
-            {moment
-              .unix((NavigationUtil.getParams() as any).date)
-              .format('YYYY年M月账单')}
+            {moment.unix(date).format('YYYY年M月账单')}
           </Text>
         </View>
       </View>
@@ -180,6 +193,7 @@ const AccountInfoItem: React.FC<AccountInfoItemProps> = () => {
           <Text
             style={styles.joinday}
           >{`这是我与爱记账相识的第${userinfo.joinDays}天`}</Text>
+          <Text style={styles.msg}>{msg?.cur_msg?.curmsg}</Text>
         </View>
         <View style={styles.incomepay}>
           <View style={styles.topIC}>
@@ -196,8 +210,49 @@ const AccountInfoItem: React.FC<AccountInfoItemProps> = () => {
           </View>
           <View style={styles.bottomIC}>
             <View style={styles.bottomLeftIC}>
-              <Text style={styles.bottomLeftTextIC}>支出</Text>
-              <Text style={styles.bottomLeftTextIC}>收入</Text>
+              <View style={styles.bottomLeft}>
+                <Text style={styles.bottomLeftTextIC}>支出</Text>
+                <Tooltip
+                  withOverlay
+                  backgroundColor="#f9d96b"
+                  actionType="press"
+                  height={100}
+                  popover={
+                    <Text style={{ color: '#515151', fontWeight: 'bold' }}>
+                      {msg?.pay_msg?.msgpay}
+                    </Text>
+                  }
+                >
+                  <Image
+                    style={styles.infoIcon}
+                    source={require('@/assets/image/prompt.png')}
+                  />
+                </Tooltip>
+              </View>
+              <View style={styles.bottomLeft}>
+                <Text style={styles.bottomLeftTextIC}>收入</Text>
+                <Tooltip
+                  withOverlay
+                  backgroundColor="#f9d96b"
+                  actionType="press"
+                  height={100}
+                  popover={
+                    <Text
+                      style={{
+                        color: '#515151',
+                        fontWeight: 'bold',
+                      }}
+                    >
+                      {msg?.income_msg?.msgincome}
+                    </Text>
+                  }
+                >
+                  <Image
+                    style={styles.infoIcon}
+                    source={require('@/assets/image/prompt.png')}
+                  />
+                </Tooltip>
+              </View>
             </View>
             <View style={styles.line} />
             <View style={styles.bottomRightIC}>
@@ -282,7 +337,7 @@ const AccountInfoItem: React.FC<AccountInfoItemProps> = () => {
               onPress={() =>
                 NavigationUtil.toPage('账单排行更多', {
                   rankList: rank,
-                  date: (NavigationUtil.getParams() as any).date,
+                  date,
                 })
               }
             >
@@ -335,7 +390,7 @@ const styles = StyleSheet.create({
   headerTitleText: { fontSize: 20 },
   head: {
     backgroundColor: '#fef6dd',
-    height: 200,
+    height: 250,
     alignItems: 'center',
   },
   avatarContainer: {
@@ -350,6 +405,12 @@ const styles = StyleSheet.create({
   avatar: { width: 80, height: 80, borderRadius: 50 },
   username: { fontSize: 30, marginTop: 15 },
   joinday: { fontSize: 15, marginTop: 5 },
+  msg: {
+    fontSize: 15,
+    marginTop: 5,
+    paddingHorizontal: 50,
+    textAlign: 'center',
+  },
   incomepay: { height: 200, backgroundColor: '#fff', paddingHorizontal: 10 },
   topIC: {
     marginTop: 20,
@@ -364,7 +425,7 @@ const styles = StyleSheet.create({
   topTextRestIC: { fontSize: 24, color: '#515151' },
   bottomIC: { height: 100, flexDirection: 'row' },
   bottomLeftIC: { width: 50 },
-  bottomLeftTextIC: { color: '#515151', marginTop: 20, fontSize: 13 },
+  bottomLeftTextIC: { color: '#515151', marginTop: 18, fontSize: 13 },
   line: { width: 1, backgroundColor: '#eee', height: 70, marginTop: 10 },
   bottomRightIC: { width: screenWidth - 70 },
   viewContainer: {
@@ -479,6 +540,8 @@ const styles = StyleSheet.create({
   rankTypeValue: { fontSize: 15 },
   rankDate: { fontSize: 12, color: '#515151' },
   rankItemRight: {},
+  bottomLeft: { flexDirection: 'row' },
+  infoIcon: { width: 15, height: 15, marginTop: 18 },
 });
 
 export default AccountInfoItem;

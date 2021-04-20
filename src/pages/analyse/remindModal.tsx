@@ -1,7 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { Text, StyleSheet } from 'react-native';
 import { Modal } from '@ant-design/react-native';
+import AsyncStorage from '@react-native-community/async-storage';
 import LinearGradient from 'react-native-linear-gradient';
 import { connect } from 'react-redux';
 import moment from 'moment';
@@ -13,10 +14,14 @@ interface RemindModalProps extends ConnectProps, ConnectState {}
 const RemindModal: React.FC<RemindModalProps> = ({ dispatch, app, record }) => {
   const dispatchApp = dispatch as Dispatch;
   const [msg, setMsg] = useState<any>({});
+  const [remind, setRemind] = useState<boolean>(false);
 
   useEffect(() => {
     if (app?.isLogin === true) {
       getAnalyse();
+      AsyncStorage.getItem('noRemind').then(data => {
+        setRemind(data === 'yes' ? true : false);
+      });
     }
   }, [app?.isLogin, record?.addBillSuccess]);
 
@@ -34,7 +39,10 @@ const RemindModal: React.FC<RemindModalProps> = ({ dispatch, app, record }) => {
 
   useEffect(() => {
     if (msg?.type !== 1) {
-      dispatchApp({ type: 'app/save', payload: { openRemind: true } });
+      if (msg?.type === 0 && remind) {
+      } else {
+        dispatchApp({ type: 'app/save', payload: { openRemind: true } });
+      }
     }
   }, [msg]);
 
@@ -43,9 +51,14 @@ const RemindModal: React.FC<RemindModalProps> = ({ dispatch, app, record }) => {
       popup
       animationType="slide-up"
       visible={app?.openRemind}
-      onClose={() =>
-        dispatchApp({ type: 'app/save', payload: { openRemind: false } })
-      }
+      onClose={() => {
+        if (msg?.type === 0) {
+          AsyncStorage.setItem('noRemind', 'yes', () => {
+            console.log('注入noRemind');
+          });
+        }
+        dispatchApp({ type: 'app/save', payload: { openRemind: false } });
+      }}
       maskClosable
     >
       <LinearGradient

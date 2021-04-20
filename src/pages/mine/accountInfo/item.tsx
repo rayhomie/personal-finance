@@ -390,7 +390,7 @@ const styles = StyleSheet.create({
   headerTitleText: { fontSize: 20 },
   head: {
     backgroundColor: '#fef6dd',
-    height: 250,
+    height: 270,
     alignItems: 'center',
   },
   avatarContainer: {

@@ -12,9 +12,13 @@ import {
 import { VictoryPie } from 'victory-native';
 import { Svg } from 'react-native-svg';
 import moment from 'moment';
-import { mineAccountItem } from '@/service/bill';
+import { mineAccountItem, getMonthRanked } from '@/service/bill';
 import avatarArr from '@/assets/json/avatarMap';
 import NavigationUtil from '@/navigator/NavigationUtil';
+import { ImageManager } from '@/assets/json/ImageManager';
+import suitHeight from '@/utils/suitableHeight';
+
+const IM: any = ImageManager;
 
 interface AccountInfoItemProps {}
 
@@ -56,9 +60,11 @@ const AccountInfoItem: React.FC<AccountInfoItemProps> = () => {
     pre_month_rest: 0,
   });
   const [pieData, setPieData] = useState<PieDataType[]>([]);
+  const [rank, setRank] = useState<any[]>([]);
 
   useEffect(() => {
     getMineAccountItem((NavigationUtil.getParams() as any).date);
+    getMonthRank((NavigationUtil.getParams() as any).date);
     setRandomAvatar(((Math.random() * 10000) | 0) % 27);
   }, []);
 
@@ -86,6 +92,20 @@ const AccountInfoItem: React.FC<AccountInfoItemProps> = () => {
     setPieData(pieData);
   };
 
+  const getMonthRank = async (date: number) => {
+    const res = await getMonthRanked({
+      startMonth: moment.unix(date).format('YYYY-MM'),
+      is_income: 0,
+      sort: 'amount',
+    });
+    console.log(res);
+    if (res.data.code !== 0) {
+      setRank([]);
+      return;
+    }
+    setRank(res.data.docs);
+  };
+
   const List = useMemo(
     () =>
       pieData.map((i, index) => (
@@ -97,6 +117,28 @@ const AccountInfoItem: React.FC<AccountInfoItemProps> = () => {
         </View>
       )),
     [pieData]
+  );
+
+  const RankList = useMemo(
+    () =>
+      rank.slice(0, 3).map((i, index) => (
+        <View style={styles.rankItem} key={index}>
+          <View style={styles.rankItemLeft}>
+            <Text style={styles.rankNum}>{index + 1}</Text>
+            <View style={styles.RankIcon}>
+              <Image style={styles.rankImg} source={IM[i.category[0].icon_l]} />
+            </View>
+            <View style={styles.rankType}>
+              <Text style={styles.rankTypeValue}>{i.category[0].name}</Text>
+              <Text style={styles.rankDate}>
+                {moment.unix(i.bill_time).format('M月D日')}
+              </Text>
+            </View>
+          </View>
+          <Text style={styles.rankItemRight}>{'-' + i.amount}</Text>
+        </View>
+      )),
+    [rank]
   );
 
   return (
@@ -120,7 +162,7 @@ const AccountInfoItem: React.FC<AccountInfoItemProps> = () => {
           </Text>
         </View>
       </View>
-      <ScrollView>
+      <ScrollView style={styles.ScrollView}>
         <View style={styles.head}>
           <View style={styles.avatarContainer}>
             <Image
@@ -232,7 +274,27 @@ const AccountInfoItem: React.FC<AccountInfoItemProps> = () => {
             </View>
           </View>
         </View>
-        <View style={{ height: 200, backgroundColor: '#fff' }}></View>
+        <View style={styles.rank}>
+          <View style={styles.rankTitleContainer}>
+            <Text style={styles.rankTitle}>支出排行</Text>
+            <TouchableOpacity
+              style={styles.rankMore}
+              onPress={() =>
+                NavigationUtil.toPage('账单排行更多', {
+                  rankList: rank,
+                  date: (NavigationUtil.getParams() as any).date,
+                })
+              }
+            >
+              <Text style={styles.rankMoreText}>查看更多</Text>
+              <Image
+                style={styles.billIcon}
+                source={require('@/assets/image/ad_arrow.png')}
+              />
+            </TouchableOpacity>
+          </View>
+          <View style={styles.rankListContainer}>{RankList}</View>
+        </View>
       </ScrollView>
     </View>
   );
@@ -240,7 +302,11 @@ const AccountInfoItem: React.FC<AccountInfoItemProps> = () => {
 
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
+
+const bottom =
+  suitHeight.find(i => i.height === screenHeight)?.monthAccount || 80;
 const styles = StyleSheet.create({
+  ScrollView: { marginBottom: bottom },
   container: {
     width: screenWidth,
     height: screenHeight,
@@ -342,9 +408,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 5,
   },
-  classTitle: { width: 30 },
-  proportionTitle: { width: 30, marginLeft: 87 },
-  totalTitle: { width: 30, marginLeft: screenWidth - 367 },
+  classTitle: {
+    width: 30,
+  },
+  proportionTitle: {
+    width: 110,
+    textAlign: 'right',
+  },
+  totalTitle: {
+    textAlign: 'right',
+    width: 60,
+  },
   pieRightListItem: {
     flexDirection: 'row',
     height: 20,
@@ -352,13 +426,59 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   color: { width: 15, height: 15, borderRadius: 2 },
-  classValue: { width: 70, marginLeft: 10 },
-  proportionValue: { width: 50, textAlign: 'right' },
+  classValue: {
+    width: 70,
+    marginLeft: 10,
+  },
+  proportionValue: {
+    width: 50,
+    textAlign: 'right',
+  },
   totalValue: {
     marginLeft: 0,
     width: 55,
     textAlign: 'right',
   },
+  billIcon: {
+    width: 12,
+    height: 12,
+  },
+  rank: { backgroundColor: '#fff' },
+  rankTitleContainer: {
+    marginTop: 10,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 10,
+  },
+  rankTitle: { color: '#515151', fontSize: 17 },
+  rankMore: { flexDirection: 'row', alignItems: 'center' },
+  rankMoreText: { color: '#9d9d9d' },
+  rankListContainer: {
+    paddingVertical: 20,
+  },
+  rankItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 15,
+    height: 50,
+  },
+  rankItemLeft: { flexDirection: 'row', alignItems: 'center' },
+  RankIcon: {
+    width: 50,
+    height: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  rankImg: { width: 35, height: 35 },
+  rankNum: { fontSize: 16, width: 20 },
+  rankType: {
+    justifyContent: 'space-evenly',
+  },
+  rankTypeValue: { fontSize: 15 },
+  rankDate: { fontSize: 12, color: '#515151' },
+  rankItemRight: {},
 });
 
 export default AccountInfoItem;

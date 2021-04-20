@@ -17,6 +17,7 @@ import RankInfo from '@/pages/chart/rankInfo/index';
 import MonthRank from '@/pages/record/monthRank/index';
 import AccountInfo from '@/pages/mine/accountInfo/index';
 import AccountInfoItem from '@/pages/mine/accountInfo/item';
+import AccountRankMore from '@/pages/mine/accountInfo/rankMore';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -144,6 +145,11 @@ export default function Router() {
         <Stack.Screen
           name="月度账单报表"
           component={AccountInfoItem}
+          options={{ header: () => <></> }}
+        />
+        <Stack.Screen
+          name="账单排行更多"
+          component={AccountRankMore}
           options={{ header: () => <></> }}
         />
       </Stack.Navigator>

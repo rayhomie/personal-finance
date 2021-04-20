@@ -217,7 +217,25 @@ const UserInfo: React.FC<IState> = props => {
                     password: '',
                     confirmPassword: '',
                   });
-                  NavigationUtil.goBack();
+                  (dispatch as Dispatch)({
+                    type: 'app/loginOut',
+                    payload: {
+                      callback: () => {
+                        NavigationUtil.goBack();
+                        (dispatch as Dispatch)({
+                          type: 'user/save',
+                          payload: {
+                            avatar_url: '',
+                            username: '登录 / 注册',
+                            gender: 1,
+                            email: '',
+                            mobile_number: '',
+                            _id: '',
+                          },
+                        });
+                      },
+                    },
+                  });
                 },
                 fail: () => {
                   Toast.fail('密码和之前的一致，未变动', 0.5);
@@ -244,7 +262,25 @@ const UserInfo: React.FC<IState> = props => {
           username: value,
           success: () => {
             Toast.success('用户名修改成功，请重新登陆', 0.5);
-            NavigationUtil.goBack();
+            (dispatch as Dispatch)({
+              type: 'app/loginOut',
+              payload: {
+                callback: () => {
+                  NavigationUtil.goBack();
+                  (dispatch as Dispatch)({
+                    type: 'user/save',
+                    payload: {
+                      avatar_url: '',
+                      username: '登录 / 注册',
+                      gender: 1,
+                      email: '',
+                      mobile_number: '',
+                      _id: '',
+                    },
+                  });
+                },
+              },
+            });
           },
           fail: () => {
             Toast.fail('输入的用户名已存在', 0.5);

@@ -17,6 +17,7 @@ import NavigationUtil from '@/navigator/NavigationUtil';
 import LinearGradient from 'react-native-linear-gradient';
 import avatarArr from '@/assets/json/avatarMap';
 import { updatePicture } from '@/service/upload';
+import MyModal from './Modal';
 
 const { GiftedForm, GiftedFormManager } = require('react-native-gifted-form');
 
@@ -56,6 +57,7 @@ const UserInfo: React.FC<IState> = props => {
   });
   const [avatarModal, setAvatarModal] = useState<boolean>(false);
   const [visible, setVisible] = useState<boolean>(false);
+  const [visibleType, setVisibleType] = useState<number>(0);
 
   const handlePasswordValueChange = (values: PasswordFormType) => {
     setPasswordForm(values);
@@ -161,6 +163,7 @@ const UserInfo: React.FC<IState> = props => {
           maxLength={16}
           style={{ color: '#515151', width: 225 }}
           value={passwordForm.password}
+          placeholderTextColor="#515151"
           secureTextEntry={true}
         />
         <GiftedForm.TextInputWidget
@@ -169,6 +172,7 @@ const UserInfo: React.FC<IState> = props => {
           placeholder="请输入二次确认密码"
           clearButtonMode="while-editing"
           maxLength={16}
+          placeholderTextColor="#515151"
           style={{ color: '#515151', width: 225 }}
           value={passwordForm.confirmPassword}
           secureTextEntry={true}
@@ -226,101 +230,159 @@ const UserInfo: React.FC<IState> = props => {
     );
   };
 
-  const usernameChange = () => {
-    Modal.prompt(
-      '修改用户名',
-      '',
-      (value: string) => {
-        if (!usernameRegex.test(value)) {
-          Toast.fail(
-            '用户名是由3至16位，a～z或A~Z的英文字母、0～9的数字或下划线组成',
-            0.5
-          );
-          return;
-        } else {
-          (dispatch as Dispatch)({
-            type: 'user/updateUsername',
-            payload: {
-              username: value,
-              success: () => {
-                Toast.success('用户名修改成功，请重新登陆', 0.5);
-                NavigationUtil.goBack();
-              },
-              fail: () => {
-                Toast.fail('输入的用户名已存在', 0.5);
-              },
-            },
-          });
-        }
-      },
-      'default',
-      '',
-      ['请输入用户名']
-    );
+  const usernameChange = (value: string) => {
+    if (!usernameRegex.test(value)) {
+      Toast.fail(
+        '用户名是由3至16位，a～z或A~Z的英文字母、0～9的数字或下划线组成',
+        0.5
+      );
+      return;
+    } else {
+      (dispatch as Dispatch)({
+        type: 'user/updateUsername',
+        payload: {
+          username: value,
+          success: () => {
+            Toast.success('用户名修改成功，请重新登陆', 0.5);
+            NavigationUtil.goBack();
+          },
+          fail: () => {
+            Toast.fail('输入的用户名已存在', 0.5);
+          },
+        },
+      });
+    }
+    // Modal.prompt(
+    //   '修改用户名',
+    //   '',
+    //   (value: string) => {
+    //     if (!usernameRegex.test(value)) {
+    //       Toast.fail(
+    //         '用户名是由3至16位，a～z或A~Z的英文字母、0～9的数字或下划线组成',
+    //         0.5
+    //       );
+    //       return;
+    //     } else {
+    //       (dispatch as Dispatch)({
+    //         type: 'user/updateUsername',
+    //         payload: {
+    //           username: value,
+    //           success: () => {
+    //             Toast.success('用户名修改成功，请重新登陆', 0.5);
+    //             NavigationUtil.goBack();
+    //           },
+    //           fail: () => {
+    //             Toast.fail('输入的用户名已存在', 0.5);
+    //           },
+    //         },
+    //       });
+    //     }
+    //   },
+    //   'default',
+    //   '',
+    //   ['请输入用户名']
+    // );
   };
 
   const handleSex = (value: string) => {
     setGender(value === '男' ? 1 : 0);
   };
 
-  const mobileChange = () => {
-    Modal.prompt(
-      '修改手机号',
-      '',
-      (value: string) => {
-        if (!phoneRegex.test(value)) {
-          Toast.fail('请按照正确手机号格式输入', 0.5);
-          return;
-        } else {
-          (dispatch as Dispatch)({
-            type: 'user/updateInfo',
-            payload: {
-              mobile_number: value,
-              success: () => {
-                getUserInfo();
-                Toast.success('手机号修改成功', 0.5);
-              },
-              fail: () => {
-                Toast.fail('与原来的手机号一致', 0.5);
-              },
-            },
-          });
-        }
-      },
-      'default',
-      '',
-      ['请输入手机号']
-    );
+  const mobileChange = (value: string) => {
+    if (!phoneRegex.test(value)) {
+      Toast.fail('请按照正确手机号格式输入', 0.5);
+      return;
+    } else {
+      (dispatch as Dispatch)({
+        type: 'user/updateInfo',
+        payload: {
+          mobile_number: value,
+          success: () => {
+            getUserInfo();
+            Toast.success('手机号修改成功', 0.5);
+          },
+          fail: () => {
+            Toast.fail('与原来的手机号一致', 0.5);
+          },
+        },
+      });
+    }
+    // Modal.prompt(
+    //   '修改手机号',
+    //   '',
+    //   (value: string) => {
+    //     if (!phoneRegex.test(value)) {
+    //       Toast.fail('请按照正确手机号格式输入', 0.5);
+    //       return;
+    //     } else {
+    //       (dispatch as Dispatch)({
+    //         type: 'user/updateInfo',
+    //         payload: {
+    //           mobile_number: value,
+    //           success: () => {
+    //             getUserInfo();
+    //             Toast.success('手机号修改成功', 0.5);
+    //           },
+    //           fail: () => {
+    //             Toast.fail('与原来的手机号一致', 0.5);
+    //           },
+    //         },
+    //       });
+    //     }
+    //   },
+    //   'default',
+    //   '',
+    //   ['请输入手机号']
+    // );
   };
 
-  const emailChange = () => {
-    Modal.prompt(
-      '修改邮箱',
-      '',
-      (value: string) => {
-        if (!emailRegex.test(value)) {
-          Toast.fail('请按照正确邮箱格式输入', 0.5);
-          return;
-        } else {
-          (dispatch as Dispatch)({
-            type: 'user/updateInfo',
-            payload: {
-              email: value,
-              success: () => {
-                getUserInfo();
-                Toast.success('邮箱修改成功', 0.5);
-              },
-              fail: () => {
-                Toast.fail('与原来的邮箱一致', 0.5);
-              },
-            },
-          });
-        }
-      },
-      'default',
-      '',
-      ['请输入邮箱']
-    );
+  const emailChange = (value: string) => {
+    if (!emailRegex.test(value)) {
+      Toast.fail('请按照正确邮箱格式输入', 0.5);
+      return;
+    } else {
+      (dispatch as Dispatch)({
+        type: 'user/updateInfo',
+        payload: {
+          email: value,
+          success: () => {
+            getUserInfo();
+            Toast.success('邮箱修改成功', 0.5);
+          },
+          fail: () => {
+            Toast.fail('与原来的邮箱一致', 0.5);
+          },
+        },
+      });
+    }
+
+    // Modal.prompt(
+    //   '修改邮箱',
+    //   '',
+    //   (value: string) => {
+    //     if (!emailRegex.test(value)) {
+    //       Toast.fail('请按照正确邮箱格式输入', 0.5);
+    //       return;
+    //     } else {
+    //       (dispatch as Dispatch)({
+    //         type: 'user/updateInfo',
+    //         payload: {
+    //           email: value,
+    //           success: () => {
+    //             getUserInfo();
+    //             Toast.success('邮箱修改成功', 0.5);
+    //           },
+    //           fail: () => {
+    //             Toast.fail('与原来的邮箱一致', 0.5);
+    //           },
+    //         },
+    //       });
+    //     }
+    //   },
+    //   'default',
+    //   '',
+    //   ['请输入邮箱']
+    // );
   };
 
   const choosePic = () => {
@@ -435,7 +497,7 @@ const UserInfo: React.FC<IState> = props => {
             <Text style={styles.right}>{_id}</Text>
           </LinearGradient>
         </TouchableOpacity>
-        <TouchableOpacity activeOpacity={0.5} onPress={usernameChange}>
+        <TouchableOpacity activeOpacity={0.5} onPress={() => setVisibleType(1)}>
           <LinearGradient
             start={{ x: 0.0, y: 0.0 }}
             end={{ x: 1, y: 1 }}
@@ -459,7 +521,7 @@ const UserInfo: React.FC<IState> = props => {
             <Text style={styles.right}>{user?.gender === 0 ? '女' : '男'}</Text>
           </LinearGradient>
         </TouchableOpacity>
-        <TouchableOpacity activeOpacity={0.5} onPress={mobileChange}>
+        <TouchableOpacity activeOpacity={0.5} onPress={() => setVisibleType(2)}>
           <LinearGradient
             start={{ x: 0.0, y: 0.0 }}
             end={{ x: 1, y: 1 }}
@@ -471,7 +533,7 @@ const UserInfo: React.FC<IState> = props => {
             <Text style={styles.right}>{mobile_number}</Text>
           </LinearGradient>
         </TouchableOpacity>
-        <TouchableOpacity activeOpacity={0.5} onPress={emailChange}>
+        <TouchableOpacity activeOpacity={0.5} onPress={() => setVisibleType(3)}>
           <LinearGradient
             start={{ x: 0.0, y: 0.0 }}
             end={{ x: 1, y: 1 }}
@@ -566,6 +628,28 @@ const UserInfo: React.FC<IState> = props => {
           />
         </View>
       </Modal>
+
+      <MyModal
+        title="修改用户名"
+        visible={visibleType === 1 ? true : false}
+        onClose={() => setVisibleType(0)}
+        Input={[{ type: 'text', placeholder: '请输入用户名', maxLength: 16 }]}
+        handleConfirm={values => usernameChange(values[0])}
+      />
+      <MyModal
+        title="修改手机号"
+        visible={visibleType === 2 ? true : false}
+        onClose={() => setVisibleType(0)}
+        Input={[{ type: 'phone', placeholder: '请输入手机号', maxLength: 11 }]}
+        handleConfirm={values => mobileChange(values[0].split(' ').join(''))}
+      />
+      <MyModal
+        title="修改邮箱"
+        visible={visibleType === 3 ? true : false}
+        onClose={() => setVisibleType(0)}
+        Input={[{ type: 'text', placeholder: '请输入邮箱' }]}
+        handleConfirm={values => emailChange(values[0])}
+      />
     </View>
   );
 };

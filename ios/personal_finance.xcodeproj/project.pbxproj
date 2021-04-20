@@ -8,9 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		00E356F31AD99517003FC87E /* personal_financeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* personal_financeTests.m */; };
-		049865B6262C63FF0025C46B /* main.jsbundle in Resources */ = {isa = PBXBuildFile; fileRef = 049865B4262C63FF0025C46B /* main.jsbundle */; };
-		049865B7262C63FF0025C46B /* assets in Resources */ = {isa = PBXBuildFile; fileRef = 049865B5262C63FF0025C46B /* assets */; };
 		04A6DB01262965DA0066C9DA /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 04A6DB00262965DA0066C9DA /* LaunchScreen.storyboard */; };
+		04E3EE6A262D83E200C6F4BD /* assets in Resources */ = {isa = PBXBuildFile; fileRef = 04E3EE68262D83E200C6F4BD /* assets */; };
+		04E3EE6B262D83E200C6F4BD /* main.jsbundle in Resources */ = {isa = PBXBuildFile; fileRef = 04E3EE69262D83E200C6F4BD /* main.jsbundle */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
@@ -48,9 +48,9 @@
 		00E356EE1AD99517003FC87E /* personal_financeTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = personal_financeTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* personal_financeTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = personal_financeTests.m; sourceTree = "<group>"; };
-		049865B4262C63FF0025C46B /* main.jsbundle */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = main.jsbundle; path = ../release_ios/main.jsbundle; sourceTree = "<group>"; };
-		049865B5262C63FF0025C46B /* assets */ = {isa = PBXFileReference; lastKnownFileType = folder; name = assets; path = ../release_ios/assets; sourceTree = "<group>"; };
 		04A6DB00262965DA0066C9DA /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = personal_finance/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		04E3EE68262D83E200C6F4BD /* assets */ = {isa = PBXFileReference; lastKnownFileType = folder; name = assets; path = ../release_ios/assets; sourceTree = "<group>"; };
+		04E3EE69262D83E200C6F4BD /* main.jsbundle */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = main.jsbundle; path = ../release_ios/main.jsbundle; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* personal_finance.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = personal_finance.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = personal_finance/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = personal_finance/AppDelegate.m; sourceTree = "<group>"; };
@@ -132,11 +132,11 @@
 		13B07FAE1A68108700A75B9A /* personal_finance */ = {
 			isa = PBXGroup;
 			children = (
+				04E3EE68262D83E200C6F4BD /* assets */,
+				04E3EE69262D83E200C6F4BD /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
 				04A6DB00262965DA0066C9DA /* LaunchScreen.storyboard */,
-				049865B5262C63FF0025C46B /* assets */,
-				049865B4262C63FF0025C46B /* main.jsbundle */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				13B07FB71A68108700A75B9A /* main.m */,
@@ -364,10 +364,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				04E3EE6A262D83E200C6F4BD /* assets in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				04A6DB01262965DA0066C9DA /* LaunchScreen.storyboard in Resources */,
-				049865B6262C63FF0025C46B /* main.jsbundle in Resources */,
-				049865B7262C63FF0025C46B /* assets in Resources */,
+				04E3EE6B262D83E200C6F4BD /* main.jsbundle in Resources */,
 				5D890ABF7D7B4443B84DADAB /* antfill.ttf in Resources */,
 				5F367B32C8EE4FFC9CF818AE /* antoutline.ttf in Resources */,
 			);

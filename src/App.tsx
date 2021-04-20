@@ -9,6 +9,7 @@ import models from './models/index';
 import Router from './navigator/router';
 import { Provider as AntdProvider } from '@ant-design/react-native';
 import Login from '@/pages/login/index';
+import RemindModal from '@/pages/analyse/remindModal';
 
 const dvaApp: any = dva.createApp({
   initialState: {},
@@ -25,6 +26,7 @@ const App = () => {
         <SafeAreaView style={styles.safeAreaView}>
           <Router />
           <Login />
+          <RemindModal />
         </SafeAreaView>
       </AntdProvider>
     </Provider>

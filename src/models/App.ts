@@ -7,6 +7,7 @@ export interface AppState {
   isLogin: boolean;
   isRegister: boolean;
   openLogin: boolean;
+  openRemind: boolean;
 }
 
 export interface AppModelType {
@@ -29,6 +30,7 @@ const app: AppModelType = {
     isLogin: false,
     isRegister: false,
     openLogin: false,
+    openRemind: false,
   },
   effects: {
     *login({ payload }, { call, put }) {

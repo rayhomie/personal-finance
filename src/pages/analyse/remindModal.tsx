@@ -20,7 +20,10 @@ const RemindModal: React.FC<RemindModalProps> = ({ dispatch, app, record }) => {
     if (app?.isLogin === true) {
       getAnalyse();
       AsyncStorage.getItem('noRemind').then(data => {
-        setRemind(data === 'yes' ? true : false);
+        console.log(data, moment().unix() - Number(data) > 30);
+        setRemind(
+          moment().unix() - Number(data) > 86400 || !data ? false : true
+        );
       });
     }
   }, [app?.isLogin, record?.addBillSuccess]);
@@ -41,10 +44,12 @@ const RemindModal: React.FC<RemindModalProps> = ({ dispatch, app, record }) => {
     if (msg?.type !== 1) {
       if (msg?.type === 0 && remind) {
       } else {
-        dispatchApp({ type: 'app/save', payload: { openRemind: true } });
+        setTimeout(() => {
+          dispatchApp({ type: 'app/save', payload: { openRemind: true } });
+        }, 3000);
       }
     }
-  }, [msg]);
+  }, [msg, remind]);
 
   return (
     <Modal
@@ -53,8 +58,16 @@ const RemindModal: React.FC<RemindModalProps> = ({ dispatch, app, record }) => {
       visible={app?.openRemind}
       onClose={() => {
         if (msg?.type === 0) {
-          AsyncStorage.setItem('noRemind', 'yes', () => {
-            console.log('注入noRemind');
+          AsyncStorage.getItem('noRemind').then(data => {
+            if (moment().unix() - Number(data) > 86400 || !data) {
+              AsyncStorage.setItem(
+                'noRemind',
+                moment().unix().toString(),
+                () => {
+                  console.log('注入noRemind');
+                }
+              );
+            }
           });
         }
         dispatchApp({ type: 'app/save', payload: { openRemind: false } });

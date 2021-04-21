@@ -58,6 +58,7 @@ const Modal: React.FC<ModalProps> = ({
       <View style={{ marginTop: 15 }}>
         {Input.map((i: Input, index: number) => (
           <InputItem
+            key={index}
             placeholderTextColor="#515151"
             style={{
               color: '#515151',

@@ -8,6 +8,8 @@ import {
   StyleSheet,
   Image,
   TouchableOpacity,
+  ScrollView,
+  RefreshControl,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { Toast } from '@ant-design/react-native';
@@ -21,6 +23,7 @@ import NavigationUtil from '@/navigator/NavigationUtil';
 import avatarArr from '@/assets/json/avatarMap';
 import { getCurBudget } from '@/service/budget';
 import { getCurMonthTotal } from '@/service/bill';
+import suitHeight from '@/utils/suitableHeight';
 
 interface IProps extends ConnectState, ConnectProps {
   dataLoading?: boolean;
@@ -42,6 +45,7 @@ const Mine: React.FC<IProps> = props => {
   }>({ pay: 0, income: 0 });
   const [budget, setBudget] = useState<number>(0);
   const [payValue, setPayValue] = useState<number>(0);
+  const [refreshing, setRefreshing] = React.useState(false);
   const restBudget = +Number(budget).toFixed(2) - +Number(payValue).toFixed(2);
 
   useEffect(() => {
@@ -179,232 +183,261 @@ const Mine: React.FC<IProps> = props => {
     });
   };
 
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+
+    wait().then(() => setRefreshing(false));
+  }, []);
+
+  const wait = () => {
+    return new Promise(resolve => {
+      setRandomAvatar(((Math.random() * 10000) | 0) % 27);
+      dispatchApp({ type: 'app/verifyToken' });
+      getUserInfo();
+      getClockInfo();
+      getBillTotal();
+      getIsClock();
+      getCurBudgetInfo();
+      getCurSumAccount();
+      resolve(false);
+    });
+  };
   return (
-    <View>
-      <View style={styles.header}>
-        <LinearGradient
-          start={{ x: 0.0, y: 0.0 }}
-          end={{ x: 0.5, y: 1.0 }}
-          colors={['#fff', '#ffeaaa']}
-        >
-          <View style={styles.avatar}>
-            <TouchableOpacity
-              activeOpacity={0.5}
-              style={styles.pic}
-              onPress={openUserInfo}
-            >
-              <Image
-                style={styles.picImage}
-                source={
-                  avatar_url === ''
-                    ? avatarArr[randomAvatar]
-                    : {
-                        uri: avatar_url,
-                      }
-                }
-              />
-              <Text style={styles.nickname}>{username}</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              activeOpacity={0.5}
-              style={styles.clock}
-              onPress={clock}
-            >
-              <Text>{isClock === 0 ? '打卡' : '已打卡'}</Text>
-            </TouchableOpacity>
-          </View>
-          <View style={styles.tab}>
-            <View style={styles.item}>
-              <Text style={styles.num}>{clockContinueCount}</Text>
-              <Text>已连续打卡</Text>
-            </View>
-            <View style={styles.item}>
-              <Text style={styles.num}>{clockTotal}</Text>
-              <Text>记录总天数</Text>
-            </View>
-            <View style={styles.item}>
-              <Text style={styles.num}>{billTotal}</Text>
-              <Text>记录总笔数</Text>
-            </View>
-          </View>
-        </LinearGradient>
-        <View style={styles.bottom}>
-          <TouchableOpacity onPress={() => handleAccount()}>
-            <View style={styles.bill}>
-              <View style={styles.billTitleContainer}>
-                <Text style={styles.billTitle}>账单</Text>
+    <View style={styles.ScrollView}>
+      <ScrollView
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+      >
+        <View style={styles.header}>
+          <LinearGradient
+            start={{ x: 0.0, y: 0.0 }}
+            end={{ x: 0.5, y: 1.0 }}
+            colors={['#fff', '#ffeaaa']}
+          >
+            <View style={styles.avatar}>
+              <TouchableOpacity
+                activeOpacity={0.5}
+                style={styles.pic}
+                onPress={openUserInfo}
+              >
                 <Image
-                  style={styles.billIcon}
-                  source={require('@/assets/image/ad_arrow.png')}
+                  style={styles.picImage}
+                  source={
+                    avatar_url === ''
+                      ? avatarArr[randomAvatar]
+                      : {
+                          uri: avatar_url,
+                        }
+                  }
                 />
+                <Text style={styles.nickname}>{username}</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                activeOpacity={0.5}
+                style={styles.clock}
+                onPress={clock}
+              >
+                <Text>{isClock === 0 ? '打卡' : '已打卡'}</Text>
+              </TouchableOpacity>
+            </View>
+            <View style={styles.tab}>
+              <View style={styles.item}>
+                <Text style={styles.num}>{clockContinueCount}</Text>
+                <Text>已连续打卡</Text>
               </View>
-              <View style={styles.billContent}>
-                <View style={styles.billDate}>
-                  <Text>{moment().month() + 1}月</Text>
+              <View style={styles.item}>
+                <Text style={styles.num}>{clockTotal}</Text>
+                <Text>记录总天数</Text>
+              </View>
+              <View style={styles.item}>
+                <Text style={styles.num}>{billTotal}</Text>
+                <Text>记录总笔数</Text>
+              </View>
+            </View>
+          </LinearGradient>
+          <View style={styles.bottom}>
+            <TouchableOpacity onPress={() => handleAccount()}>
+              <View style={styles.bill}>
+                <View style={styles.billTitleContainer}>
+                  <Text style={styles.billTitle}>账单</Text>
+                  <Image
+                    style={styles.billIcon}
+                    source={require('@/assets/image/ad_arrow.png')}
+                  />
                 </View>
-                <View style={styles.billContentContainer}>
-                  <View style={styles.billItem}>
-                    <Text>收入</Text>
-                    <Text>{Number(curAccount.income).toFixed(2)}</Text>
+                <View style={styles.billContent}>
+                  <View style={styles.billDate}>
+                    <Text>{moment().month() + 1}月</Text>
                   </View>
-                  <View style={styles.billItem}>
-                    <Text>支出</Text>
-                    <Text>{Number(curAccount.pay).toFixed(2)}</Text>
+                  <View style={styles.billContentContainer}>
+                    <View style={styles.billItem}>
+                      <Text>收入</Text>
+                      <Text>{Number(curAccount.income).toFixed(2)}</Text>
+                    </View>
+                    <View style={styles.billItem}>
+                      <Text>支出</Text>
+                      <Text>{Number(curAccount.pay).toFixed(2)}</Text>
+                    </View>
+                    <View style={styles.billItem}>
+                      <Text>结余</Text>
+                      <Text>
+                        {(
+                          +Number(curAccount.income).toFixed(2) -
+                          +Number(curAccount.pay).toFixed(2)
+                        ).toFixed(2)}
+                      </Text>
+                    </View>
                   </View>
-                  <View style={styles.billItem}>
-                    <Text>结余</Text>
-                    <Text>
-                      {(
-                        +Number(curAccount.income).toFixed(2) -
-                        +Number(curAccount.pay).toFixed(2)
-                      ).toFixed(2)}
+                </View>
+              </View>
+            </TouchableOpacity>
+          </View>
+          <LinearGradient
+            start={{ x: 0.0, y: 0.0 }}
+            end={{ x: 0.5, y: 0.65 }}
+            locations={[0, 0.2, 0.5, 0.7, 0.9, 1]}
+            colors={[
+              '#fff1c7',
+              '#ffeaaa',
+              '#ffeebc',
+              '#fff2ce',
+              '#fffdf7',
+              '#fff',
+            ]}
+            style={styles.other}
+          >
+            <View style={styles.budgetContainer}>
+              <TouchableOpacity
+                onPress={() => setBudgetVis({ type: 'update', visible: true })}
+                disabled={budget === 0}
+              >
+                <View style={styles.budgetTop}>
+                  <Text style={styles.billTitle}>{`${
+                    moment().month() + 1
+                  }月总预算`}</Text>
+                  {budget !== 0 ? (
+                    <Image
+                      style={styles.billIcon}
+                      source={require('@/assets/image/ad_arrow.png')}
+                    />
+                  ) : (
+                    <LinearGradient
+                      start={{ x: 1, y: 1 }}
+                      end={{ x: 0, y: 0 }}
+                      colors={['#ffd729', '#ffd729']}
+                      style={styles.budgetButtonContainer}
+                    >
+                      <TouchableOpacity
+                        style={styles.budgetButton}
+                        onPress={() => {
+                          setBudgetVis({ type: 'add', visible: true });
+                        }}
+                      >
+                        <Image
+                          style={styles.icon}
+                          source={require('@/assets/image/add.png')}
+                        />
+                        <Text>设置预算</Text>
+                      </TouchableOpacity>
+                    </LinearGradient>
+                  )}
+                </View>
+              </TouchableOpacity>
+              <View style={styles.budgetBottom}>
+                <View style={styles.budgetLeft}>
+                  <Svg viewBox="0 0 400 400">
+                    <VictoryPie
+                      standalone={false}
+                      width={400}
+                      height={400}
+                      data={[
+                        {
+                          x: '',
+                          y:
+                            restBudget <= 0
+                              ? 0
+                              : +((restBudget * 100) / budget).toFixed(2),
+                        },
+                        {
+                          x: '',
+                          y:
+                            restBudget <= 0
+                              ? 100
+                              : 100 - +((restBudget * 100) / budget).toFixed(2),
+                        },
+                      ]}
+                      innerRadius={120}
+                      labelRadius={100}
+                      animate={{
+                        duration: 1000,
+                      }}
+                      colorScale={['#fad749', '#eee']}
+                      style={{ labels: { fontSize: 20, fill: 'white' } }}
+                    />
+                    <VictoryLabel
+                      textAnchor="middle"
+                      verticalAnchor="middle"
+                      x={200}
+                      y={200}
+                      style={{ fontSize: 60 }}
+                      text={[
+                        '剩余',
+                        `${
+                          restBudget <= 0
+                            ? 0
+                            : +((restBudget * 100) / budget).toFixed(2)
+                        }%`,
+                      ]}
+                    />
+                  </Svg>
+                </View>
+                <View style={styles.budgetRight}>
+                  <View style={styles.itemTop}>
+                    <Text style={styles.itemTopText}>剩余预算：</Text>
+                    <Text style={styles.itemTopValueText}>
+                      {(restBudget >= 0 ? restBudget : 0).toFixed(2)}
+                    </Text>
+                  </View>
+                  <View style={styles.budgetItem}>
+                    <Text style={styles.budgetItemText}>本月预算：</Text>
+                    <Text style={styles.budgetItemText}>
+                      {Number(budget).toFixed(2)}
+                    </Text>
+                  </View>
+                  <View style={styles.budgetItem}>
+                    <Text style={styles.budgetItemText}>本月支出：</Text>
+                    <Text style={styles.budgetItemText}>
+                      {Number(payValue).toFixed(2)}
                     </Text>
                   </View>
                 </View>
               </View>
             </View>
-          </TouchableOpacity>
+          </LinearGradient>
         </View>
-        <LinearGradient
-          start={{ x: 0.0, y: 0.0 }}
-          end={{ x: 0.5, y: 0.65 }}
-          locations={[0, 0.2, 0.5, 0.7, 0.9, 1]}
-          colors={[
-            '#fff1c7',
-            '#ffeaaa',
-            '#ffeebc',
-            '#fff2ce',
-            '#fffdf7',
-            '#fff',
-          ]}
-          style={styles.other}
-        >
-          <View style={styles.budgetContainer}>
-            <TouchableOpacity
-              onPress={() => setBudgetVis({ type: 'update', visible: true })}
-              disabled={budget === 0}
-            >
-              <View style={styles.budgetTop}>
-                <Text style={styles.billTitle}>{`${
-                  moment().month() + 1
-                }月总预算`}</Text>
-                {budget !== 0 ? (
-                  <Image
-                    style={styles.billIcon}
-                    source={require('@/assets/image/ad_arrow.png')}
-                  />
-                ) : (
-                  <LinearGradient
-                    start={{ x: 1, y: 1 }}
-                    end={{ x: 0, y: 0 }}
-                    colors={['#ffd729', '#ffd729']}
-                    style={styles.budgetButtonContainer}
-                  >
-                    <TouchableOpacity
-                      style={styles.budgetButton}
-                      onPress={() => {
-                        setBudgetVis({ type: 'add', visible: true });
-                      }}
-                    >
-                      <Image
-                        style={styles.icon}
-                        source={require('@/assets/image/add.png')}
-                      />
-                      <Text>设置预算</Text>
-                    </TouchableOpacity>
-                  </LinearGradient>
-                )}
-              </View>
-            </TouchableOpacity>
-            <View style={styles.budgetBottom}>
-              <View style={styles.budgetLeft}>
-                <Svg viewBox="0 0 400 400">
-                  <VictoryPie
-                    standalone={false}
-                    width={400}
-                    height={400}
-                    data={[
-                      {
-                        x: '',
-                        y:
-                          restBudget <= 0
-                            ? 0
-                            : +((restBudget * 100) / budget).toFixed(2),
-                      },
-                      {
-                        x: '',
-                        y:
-                          restBudget <= 0
-                            ? 100
-                            : 100 - +((restBudget * 100) / budget).toFixed(2),
-                      },
-                    ]}
-                    innerRadius={120}
-                    labelRadius={100}
-                    animate={{
-                      duration: 1000,
-                    }}
-                    colorScale={['#fad749', '#eee']}
-                    style={{ labels: { fontSize: 20, fill: 'white' } }}
-                  />
-                  <VictoryLabel
-                    textAnchor="middle"
-                    verticalAnchor="middle"
-                    x={200}
-                    y={200}
-                    style={{ fontSize: 60 }}
-                    text={[
-                      '剩余',
-                      `${
-                        restBudget <= 0
-                          ? 0
-                          : +((restBudget * 100) / budget).toFixed(2)
-                      }%`,
-                    ]}
-                  />
-                </Svg>
-              </View>
-              <View style={styles.budgetRight}>
-                <View style={styles.itemTop}>
-                  <Text style={styles.itemTopText}>剩余预算：</Text>
-                  <Text style={styles.itemTopValueText}>
-                    {(restBudget >= 0 ? restBudget : 0).toFixed(2)}
-                  </Text>
-                </View>
-                <View style={styles.budgetItem}>
-                  <Text style={styles.budgetItemText}>本月预算：</Text>
-                  <Text style={styles.budgetItemText}>
-                    {Number(budget).toFixed(2)}
-                  </Text>
-                </View>
-                <View style={styles.budgetItem}>
-                  <Text style={styles.budgetItemText}>本月支出：</Text>
-                  <Text style={styles.budgetItemText}>
-                    {Number(payValue).toFixed(2)}
-                  </Text>
-                </View>
-              </View>
-            </View>
-          </View>
-        </LinearGradient>
-      </View>
-      <Budget
-        visible={budgetVis.visible}
-        type={budgetVis.type}
-        budget={
-          (budget + '').includes('.')
-            ? Number(budget).toFixed(2)
-            : budget.toString()
-        }
-        onClose={() => setBudgetVis({ type: 'add', visible: false })}
-      />
+        <Budget
+          visible={budgetVis.visible}
+          type={budgetVis.type}
+          budget={
+            (budget + '').includes('.')
+              ? Number(budget).toFixed(2)
+              : budget.toString()
+          }
+          onClose={() => setBudgetVis({ type: 'add', visible: false })}
+        />
+      </ScrollView>
     </View>
   );
 };
 
 const screenWidth = Dimensions.get('window').width;
+const screenHeight = Dimensions.get('window').height;
+const bottom =
+  suitHeight.find(i => i.height === screenHeight)?.accountInfo || 185;
 
 const styles = StyleSheet.create({
+  ScrollView: { backgroundColor: '#fef6dd', height: screenHeight + bottom },
   header: {},
   avatar: {
     width: screenWidth,
@@ -452,7 +485,7 @@ const styles = StyleSheet.create({
     top: -100,
     zIndex: -1,
     width: screenWidth,
-    height: 1000,
+    height: screenHeight - bottom + 100,
   },
   bill: {
     width: screenWidth - 50,

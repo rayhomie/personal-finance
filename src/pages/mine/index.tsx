@@ -433,8 +433,7 @@ const Mine: React.FC<IProps> = props => {
 
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
-const bottom =
-  suitHeight.find(i => i.height === screenHeight)?.accountInfo || 185;
+const bottom = suitHeight.find(i => i.height === screenHeight)?.mine || 430;
 
 const styles = StyleSheet.create({
   ScrollView: { backgroundColor: '#fef6dd', height: screenHeight + bottom },

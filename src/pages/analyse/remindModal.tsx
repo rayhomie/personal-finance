@@ -20,7 +20,6 @@ const RemindModal: React.FC<RemindModalProps> = ({ dispatch, app, record }) => {
     if (app?.isLogin === true) {
       getAnalyse();
       AsyncStorage.getItem('noRemind').then(data => {
-        console.log(data, moment().unix() - Number(data) > 30);
         setRemind(
           moment().unix() - Number(data) > 86400 || !data ? false : true
         );

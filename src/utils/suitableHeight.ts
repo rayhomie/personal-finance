@@ -10,6 +10,7 @@ const deviceMap = [
     add: 155,
     chart: 185,
     accountInfo: 430,
+    mine: 430,
     monthAccount: 80,
   },
   {
@@ -23,6 +24,7 @@ const deviceMap = [
     add: 155,
     chart: 125,
     accountInfo: 440,
+    mine: 380,
     monthAccount: 20,
   },
   {
@@ -36,6 +38,7 @@ const deviceMap = [
     add: 155,
     chart: 125,
     accountInfo: 440,
+    mine: 380,
     monthAccount: 20,
   },
 ];

@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-	<string>personal_finance</string>
+	<string>晓财</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -40,7 +40,7 @@
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string></string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>select photo &amp; upload it  for 'Profile Picture'</string>
+	<string>select photo &amp; upload it  for &apos;Profile Picture&apos;</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>antfill.ttf</string>

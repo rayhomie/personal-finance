@@ -189,7 +189,7 @@ const RegisterModal: React.FC<IProps> = props => {
             placeholderTextColor="#515151"
             style={{ color: '#515151', width: screenWidth - 150 }}
             keyboardType="email-address"
-            placeholder="example@nomads.ly"
+            placeholder="example@xxx.com"
             clearButtonMode="while-editing"
             value={registerForm.email}
           />
@@ -200,7 +200,7 @@ const RegisterModal: React.FC<IProps> = props => {
             placeholderTextColor="#515151"
             style={{ color: '#515151', width: screenWidth - 150 }}
             keyboardType="phone-pad"
-            placeholder="请输入11位手机号嘛"
+            placeholder="请输入11位手机号"
             clearButtonMode="while-editing"
             value={registerForm.mobile_number}
           />
